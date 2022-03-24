@@ -40,10 +40,10 @@ class WorkItemOpenContent extends React.Component<{}, {}> {
             <Page className="sample-hub flex-grow">
                 <Header title="Work Item Open Sample" />
                 <div className="page-content">
-                    <div className="sample-form-section flex-row flex-center">
+                    {/* <div className="sample-form-section flex-row flex-center">
                         <TextField className="sample-work-item-id-input" label="Existing work item id" value={this.workItemIdValue} onChange={(ev, newValue) => { this.workItemIdValue.value = newValue; }} />
                         <Button className="sample-work-item-button" text="Open..." onClick={() => this.onOpenExistingWorkItemClick()} />
-                    </div>
+                    </div> */}
                     <div className="sample-form-section flex-row flex-center">
                         <div className="flex-column">
                             <label htmlFor="work-item-type-picker">New work item type:</label>
