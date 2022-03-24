@@ -1,0 +1,18 @@
+{
+    "contributions": [
+        {
+            "id": "timelog-entries",
+            "type": "ms.vss-work-web.work-item-form-page",
+            "targets": [
+                "ms.vss-admin-web.project-overview-toolbar-menu"
+            ],
+            "properties": {
+                "name": "Timelog Entries",
+                "uri": "dist/TimelogEntries/TimelogAdmin.html"
+            }
+        }
+    ],
+    "scopes": [
+        "vso.work"
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "contributions": [
+        {
+            "id": "timelog-summary",
+            "type": "ms.vss-web.hub",
+            "targets": [
+                "ms.vss-work-web.work-hub-group"
+            ],
+            "properties": {
+                "name": "Timelog Summary",
+                "uri": "dist/TimelogEntries/TimelogSummary.html"
+            }
+        }
+    ],
+    "scopes": [
+        "vso.work"
+    ]
+}
