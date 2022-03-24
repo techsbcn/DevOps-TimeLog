@@ -16,7 +16,8 @@ fs.readdirSync(contributionsDir).filter(dir => {
 module.exports = {
     entry: entries,
     output: {
-        filename: "[name]/[name].js"
+        filename: "[name]/[name].js",
+        publicPath: "/dist/"
     },
     resolve: {
         extensions: [".ts", ".tsx", ".js"],
@@ -52,6 +53,11 @@ module.exports = {
                 loader: "file-loader"
             }
         ]
+    },
+    devtool: "inline-source-map",
+    devServer: {
+        https: true,
+        port: 3000
     },
     plugins: [
         new CopyWebpackPlugin({
