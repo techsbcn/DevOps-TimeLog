@@ -8,7 +8,7 @@
             ],
             "properties": {
                 "name": "Timelog Summary",
-                "uri": "dist/TimelogEntries/TimelogSummary.html"
+                "uri": "dist/TimelogSummary/TimelogSummary.html"
             }
         }
     ],

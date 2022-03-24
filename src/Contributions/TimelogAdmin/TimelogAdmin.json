@@ -1,14 +1,14 @@
 {
     "contributions": [
         {
-            "id": "timelog-entries",
+            "id": "timelog-admin",
             "type": "ms.vss-work-web.work-item-form-page",
             "targets": [
                 "ms.vss-admin-web.project-overview-toolbar-menu"
             ],
             "properties": {
-                "name": "Timelog Entries",
-                "uri": "dist/TimelogEntries/TimelogAdmin.html"
+                "name": "Timelog Admin",
+                "uri": "dist/TimelogAdmin/TimelogAdmin.html"
             }
         }
     ],
