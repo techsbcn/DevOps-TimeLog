@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import * as SDK from "azure-devops-extension-sdk";
+import { showRootComponent } from "../../Common";
+
 
 export const TimelogAdmin: React.FC = () => {
     useEffect(() => {
@@ -12,3 +14,5 @@ export const TimelogAdmin: React.FC = () => {
         <div>TimelogAdmin</div>
     );
 }
+
+showRootComponent(<TimelogAdmin />);

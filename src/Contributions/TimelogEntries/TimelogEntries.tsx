@@ -5,11 +5,15 @@ import {
     IWorkItemFieldChangedArgs,
     IWorkItemLoadedArgs
   } from "azure-devops-extension-api/WorkItemTracking";
+  import { showRootComponent } from "../../Common";
 
 export const TimelogEntries: React.FC = () => {
+    console.log("Inicio")
     useEffect(() => {
-        SDK.init().then(async () => {
+        SDK.init().then(() => {
+            console.log("Init")
             SDK.register(SDK.getContributionId(), () => {
+                console.log(SDK.getContributionId());
                 return {
                   // Called when the active work item is modified
                   onFieldChanged: (args: IWorkItemFieldChangedArgs) => {
@@ -42,3 +46,5 @@ export const TimelogEntries: React.FC = () => {
         <div>TimelogEntries</div>
     );
 }
+
+showRootComponent(<TimelogEntries />);

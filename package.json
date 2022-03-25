@@ -1,7 +1,7 @@
 {
   "name": "azure-devops-extension-sample",
   "version": "1.0.4",
-  "description": "Sample Azure DevOps web extension",
+  "description": "DevOps Timelog",
   "keywords": [
     "extensions",
     "Azure DevOps",
@@ -10,7 +10,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Microsoft/azure-devops-extension-sample.git"
+    "url": "https://github.com/techsbcn/DevOps-TimeLog"
   },
   "scripts": {
     "clean": "rimraf ./dist",
