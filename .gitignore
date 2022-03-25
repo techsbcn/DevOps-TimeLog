@@ -5,6 +5,7 @@ dist/
 
 # JUNIT testresult
 test-results.xml
+test-report.xml
 
 # Coverage directory used by tools like istanbul
 coverage
