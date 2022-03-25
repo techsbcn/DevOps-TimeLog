@@ -8,12 +8,9 @@ import {
   import { showRootComponent } from "../../Common";
 
 export const TimelogEntries: React.FC = () => {
-    console.log("Inicio")
     useEffect(() => {
         SDK.init().then(() => {
-            console.log("Init")
-            SDK.register(SDK.getContributionId(), () => {
-                console.log(SDK.getContributionId());
+            SDK.register(SDK.getContributionId(), () => {                
                 return {
                   // Called when the active work item is modified
                   onFieldChanged: (args: IWorkItemFieldChangedArgs) => {
