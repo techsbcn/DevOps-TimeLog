@@ -3,3 +3,17 @@
  */
 // tslint:disable-next-line: no-empty
 export function showRootComponent(component: React.ReactElement<any>) {}
+
+export function getTimeTypes() : TimeType[] {
+    return [
+        {
+            typeName: "Development"
+        },
+        {
+            typeName: "Business"
+        },
+        {
+            typeName: "UAT"
+        }
+    ]
+}
