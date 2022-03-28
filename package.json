@@ -16,7 +16,7 @@
     "start": "yarn webpack serve --mode development",
     "clean": "rimraf ./dist",
     "compile": "yarn clean && yarn test && webpack --mode production",
-    "compile:dev": "yarn clean && yarn test && webpack --mode development",
+    "compile:dev": "yarn clean && webpack --mode development",
     "build": "yarn compile",
     "build:dev": "yarn compile:dev && yarn postbuild",
     "postbuild": "yarn package-extension -- --rev-version",
@@ -28,8 +28,11 @@
     "azure-devops-extension-api": "^1.158.0",
     "azure-devops-extension-sdk": "^2.0.11",
     "azure-devops-ui": "^2.167.31",
+    "i18next": "^21.6.14",
+    "i18next-browser-languagedetector": "^6.1.4",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-i18next": "^11.16.2"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.2",
