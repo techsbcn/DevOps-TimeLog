@@ -12,7 +12,7 @@ const resources = {
   },
 };
 
-i18n
+ i18n
   .use(detector)
   .use(initReactI18next)
   .init({

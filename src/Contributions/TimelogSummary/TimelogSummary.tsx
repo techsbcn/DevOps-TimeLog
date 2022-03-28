@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import * as SDK from "azure-devops-extension-sdk";
 import { showRootComponent } from "../../Common";
-//import { _VALUES } from '../../resources';
+import { _VALUES } from '../../resources';
 
 export const TimelogSummary: React.FC = () => {
     useEffect(() => {
@@ -11,7 +11,7 @@ export const TimelogSummary: React.FC = () => {
     }, [])
 
     return (
-        <div>Yewee</div>
+        <div>{_VALUES.USERS}</div>
     );
 }
 showRootComponent(<TimelogSummary />);

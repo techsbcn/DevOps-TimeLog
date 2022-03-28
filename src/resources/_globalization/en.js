@@ -1,4 +1,4 @@
-export default GLOBAL_EN = {
+export const GLOBAL_EN = {
   add: 'Add',
   search: 'Search',
   requiredField: 'Required field!',

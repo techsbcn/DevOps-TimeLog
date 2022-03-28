@@ -1,4 +1,4 @@
-interface TimeLogEntry 
+export interface TimeLogEntry 
 {
   id?: number,
   user: String,
