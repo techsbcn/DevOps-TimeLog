@@ -25,12 +25,21 @@
     "test": "set TEST_REPORT_FILENAME=test-results.xml jest --verbose"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.1.1",
+    "@fortawesome/free-solid-svg-icons": "^6.1.1",
+    "@fortawesome/react-fontawesome": "^0.1.18",
+    "@hookform/resolvers": "^2.8.8",
+    "@mui/icons-material": "^5.5.1",
+    "@mui/material": "^5.5.3",
+    "@types/yup": "^0.29.13",
     "azure-devops-extension-api": "^1.158.0",
     "azure-devops-extension-sdk": "^2.0.11",
     "azure-devops-ui": "^2.167.31",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "techsbcn-storybook": "^0.17.3"
+    "react-hook-form": "^7.28.1",
+    "techsbcn-storybook": "^0.17.3",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.2",
