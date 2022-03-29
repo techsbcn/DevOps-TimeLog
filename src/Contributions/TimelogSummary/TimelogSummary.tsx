@@ -11,7 +11,7 @@ export const TimelogSummary: React.FC = () => {
     }, [])
 
     return (
-        <div>{_VALUES.USERS}</div>
+        <div>{_VALUES.USERS} +</div>
     );
 }
 showRootComponent(<TimelogSummary />);
