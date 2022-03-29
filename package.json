@@ -39,7 +39,7 @@
     "i18next-browser-languagedetector": "^6.1.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-i18next": "^11.16.2"
+    "react-i18next": "^11.16.2",
     "react-hook-form": "^7.28.1",
     "techsbcn-storybook": "^0.17.3",
     "yup": "^0.32.11"
