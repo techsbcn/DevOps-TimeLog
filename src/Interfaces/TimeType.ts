@@ -1,4 +1,4 @@
-interface TimeType{
-    id?: number
-    typeName: string
+export interface TimeType {
+    id?: string,
+    name: string
 }
