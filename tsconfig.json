@@ -3,7 +3,7 @@
     "compilerOptions": {
        // "charset": "utf8",
         "experimentalDecorators": true,
-        "module": "esnext",
+        "module": "amd",
         "moduleResolution": "node",
         "noImplicitAny": false,
         "noImplicitThis": true,
