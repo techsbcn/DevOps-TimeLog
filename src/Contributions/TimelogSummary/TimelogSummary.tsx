@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import * as SDK from 'azure-devops-extension-sdk';
-import { showRootComponent } from '../../Common';
+import { showRootComponent } from '../..';
 import { _VALUES } from '../../resources';
 
 export const TimelogSummary: React.FC = () => {

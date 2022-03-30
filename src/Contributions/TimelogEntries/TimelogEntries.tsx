@@ -5,7 +5,7 @@ import {
   IWorkItemFieldChangedArgs,
   IWorkItemLoadedArgs,
 } from 'azure-devops-extension-api/WorkItemTracking';
-import { showRootComponent } from '../../Common';
+import { showRootComponent } from '../..';
 
 export const TimelogEntries: React.FC = () => {
   useEffect(() => {
