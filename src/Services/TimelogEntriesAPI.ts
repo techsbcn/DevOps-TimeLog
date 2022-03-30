@@ -13,9 +13,9 @@ export const getAllEntries = async () => {
 };
 
 export const getEntriesByWorkItemId = async (witId: number) => {
-    const allEntries = await getAllEntries()
-    return allEntries?.filter(entry => entry.workItemId == witId) ?? []
-}
+  const allEntries = await getAllEntries();
+  return allEntries?.filter((entry) => entry.workItemId == witId) ?? [];
+};
 
 export const addEntry = async (timelogEntry: TimeLogEntry) => {
   try {

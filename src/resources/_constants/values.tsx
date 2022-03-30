@@ -48,4 +48,8 @@ export const _VALUES: ObjectKey = {
   REMOVE_TEXT_INFO: (text: any) => Translate.t('removeTextInfo', [text]),
   REMOVE_TITLE: (text: any) => Translate.t('removeTitle', [text]),
   CREATE_TITLE: (text: any) => Translate.t('createTitle', [text]),
+  TIME: Translate.t('time'),
+  ACTIVITY: Translate.t('activity'),
+  NOTES: Translate.t('notes'),
+  TIMELOG_ENTRIES: Translate.t('timelogEntries'),
 };
