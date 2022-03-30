@@ -16,7 +16,7 @@ export const TimelogEntries: React.FC = () => {
 
     const [witEntries, setWitEntries] = useState<TimeLogEntry[]>([]);
 
-    useEffect(() => {
+  useEffect(() => {
         SDK.init().then(async () => {
           SDK.register(SDK.getContributionId(), () => {                
             return {

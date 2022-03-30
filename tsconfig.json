@@ -1,13 +1,14 @@
 {
+    "include": ["src", "types"],
     "compilerOptions": {
-        "charset": "utf8",
+       // "charset": "utf8",
         "experimentalDecorators": true,
-        "module": "amd",
+        "module": "esnext",
         "moduleResolution": "node",
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "noImplicitThis": true,
         "strict": true,
-        "target": "es5",
+        "target": "es6",
         "rootDir": "src/",
         "outDir": "dist/",
         "jsx": "react",
@@ -15,13 +16,14 @@
           "es5",
           "es6",
           "dom",
+          "esnext",
           "es2015.promise"
         ],
-        "types": [
-            "react",
-            "jest",
-            "node"
-        ],
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        //"allowJs": true,
+        "skipLibCheck": true,
+        //"isolatedModules": true,
+        "resolveJsonModule": true,
     }
 }
