@@ -7,7 +7,7 @@
       "noImplicitAny": false,
       "noImplicitThis": true,
       "strict": true,
-      "target": "es5",
+      "target": "es6",
       "rootDir": "src/",
       "outDir": "dist/",
       "jsx": "react",
@@ -15,6 +15,7 @@
         "es5",
         "es6",
         "dom",
+        "esnext",
         "es2015.promise"
       ],
       "types": [
@@ -22,18 +23,16 @@
         "jest",
         "node"
       ],
-      "allowJs": true,
+      //"allowJs": true,
       "skipLibCheck": true,
       "esModuleInterop": true,
       "allowSyntheticDefaultImports": true,
       "allowUmdGlobalAccess": true,
       "forceConsistentCasingInFileNames": true,
       "resolveJsonModule": true,
-      "isolatedModules": false,
+      //"isolatedModules": false,
       "noEmit": false,
     },
-    "include": [
-      "src"
-    ]
+    "include": ["src", "types"],
   }
   
