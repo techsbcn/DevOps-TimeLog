@@ -2,6 +2,7 @@ import * as SDK from "azure-devops-extension-sdk";
 import { TimeType } from "../Interfaces/TimeType";
 import { ExtensionDataManager } from "./ExtensionDataManager";
 
+
 export const getAllTimeTypes = async ()  => {
     try {
         const accessToken = await SDK.getAccessToken()
