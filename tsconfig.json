@@ -1,8 +1,9 @@
 {
+    "include": ["src", "types"],
     "compilerOptions": {
        // "charset": "utf8",
         "experimentalDecorators": true,
-        "module": "es6",
+        "module": "esnext",
         "moduleResolution": "node",
         "noImplicitAny": false,
         "noImplicitThis": true,
@@ -17,11 +18,6 @@
           "dom",
           "esnext",
           "es2015.promise"
-        ],
-        "types": [
-            "react",
-            "jest",
-            "node"
         ],
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
