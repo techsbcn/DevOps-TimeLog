@@ -1,5 +1,5 @@
 import * as SDK from 'azure-devops-extension-sdk';
-import { TimeLogEntry } from '../Interfaces/TimeLogEntry';
+import { TimeLogEntry } from '../Interfaces/extensionDataManager/TimeLogEntry';
 import { ExtensionDataManager } from './ExtensionDataManager';
 
 export const getAllEntries = async () => {

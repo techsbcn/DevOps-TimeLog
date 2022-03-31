@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Grid, Container } from '@mui/material';
+import { Grid, Container } from '@mui/material';
 import * as SDK from 'azure-devops-extension-sdk';
 import { showRootComponent } from '../..';
 // eslint-disable-next-line jest/no-mocks-import
@@ -10,7 +10,7 @@ import {
   IWorkItemFieldChangedArgs,
   IWorkItemLoadedArgs,
 } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTrackingServices';
-import { TimeLogEntry } from '../../Interfaces/TimeLogEntry';
+import { TimeLogEntry } from '../../Interfaces/extensionDataManager/TimeLogEntry';
 //import { addEntry } from '../../Services/TimelogEntriesAPI';
 import TimelogEntriesForm from '../../components/compTimelogEntries/forms/TimelogEntriesForm';
 import TimelogEntriesTable from '../../components/compTimelogEntries/tables/TimelogEntriesTable';
@@ -19,7 +19,7 @@ import { _VALUES } from '../../resources';
 import { getHoursFromMinutes, getMinutesFromHours } from '../../helpers/TimeHelper';
 
 export const TimelogEntries: React.FC = () => {
-  const [witId, setWitId] = useState<number>(0);
+  const [workItemId, setWorkItemId] = useState<number>();
 
   useEffect(() => {
     SDK.init().then(async () => {
@@ -45,18 +45,18 @@ export const TimelogEntries: React.FC = () => {
       });
 
       const workItemFormService = await WorkItemFormService;
-      const witId = await workItemFormService.getId();
-      setWitId(witId);
+      const workItemId = await workItemFormService.getId();
+      setWorkItemId(workItemId);
     });
   }, []);
 
   const createNewEntry = async (data: any): Promise<TimeLogEntry> => {
     const userName = SDK.getUser().displayName;
     const workItemFormService = await WorkItemFormService;
-    const witId = await workItemFormService.getId();
+    const workItemId = await workItemFormService.getId();
     const timeEntry: TimeLogEntry = {
       user: userName,
-      workItemId: witId,
+      workItemId: workItemId,
       date: data.date,
       time: Number(getMinutesFromHours(data.timeHours)) + Number(data.timeMinutes),
       notes: data.notes,
@@ -82,34 +82,30 @@ export const TimelogEntries: React.FC = () => {
     const workItemFormService = await WorkItemFormService;
 
     if (data.timeHours == 0 && data.timeMinutes == 0) return;
-
-    //Crear entry
     const newEntry = await createNewEntry(data);
-
-    //Actualizar formulario
     const success = await updateWitForm(newEntry);
-
-    //Guardar entrada
     if (success) {
       create({ collectionName: 'TimeLogData', doc: newEntry })
         .then(async () => {
-          //Salvar formulario
           await workItemFormService.save();
         })
         .catch(async () => {
-          //Si falla, reseteamos formulario
           await workItemFormService.reset();
         });
     }
   };
 
   return (
-    <Box>
-      <Container maxWidth={false}>
-        <TimelogEntriesForm action={onSubmit} loading={isCreating} />
-        <TimelogEntriesTable witId={witId} />
-      </Container>
-    </Box>
+    <Container maxWidth={false}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <TimelogEntriesForm action={onSubmit} loading={isCreating} />
+        </Grid>
+        <Grid item xs={12}>
+          {workItemId && <TimelogEntriesTable workItemId={workItemId} />}
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 

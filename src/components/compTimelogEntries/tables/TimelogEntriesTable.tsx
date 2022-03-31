@@ -3,24 +3,26 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { MainWrapperComponent, TableComponent } from 'techsbcn-storybook';
 import { _VALUES } from '../../../resources/_constants/values';
-import { SearchFilters } from '../../../interfaces';
+import { SearchBaseDefaults, TimeLogEntry } from '../../../interfaces';
 import {
   useFetchGetDocumentsQuery,
   useFetchRemoveDocumentMutation,
 } from '../../../redux/extensionDataManager/extensionDataManagerSlice';
 import { WorkItemFormService } from '../../../Services/WorkItemService';
 import { getHoursAndMinutes, getHoursFromMinutes } from '../../../helpers/TimeHelper';
-import { TimeLogEntry } from '../../../Interfaces/TimeLogEntry';
 
 interface TimelogEntriesTableProps {
-  witId: number;
+  workItemId: number;
 }
 
 const TimelogEntriesTable: React.FC<TimelogEntriesTableProps> = (props) => {
-  const [filters] = useState<SearchFilters>(JSON.parse(JSON.stringify({})));
+  const [filters, setFilters] = useState(SearchBaseDefaults);
 
-  const useFetchDocuments = useFetchGetDocumentsQuery('TimeLogData');
-  const [remove, { isLoading: isCreating }] = useFetchRemoveDocumentMutation();
+  const useFetchDocuments = useFetchGetDocumentsQuery({
+    collectionName: 'TimeLogData',
+    filters: { ...filters, filter: { workItemId: props.workItemId } },
+  });
+  const [remove] = useFetchRemoveDocumentMutation();
 
   const updateWitForm = async (entry: TimeLogEntry): Promise<boolean> => {
     const workItemFormService = await WorkItemFormService;
@@ -44,13 +46,9 @@ const TimelogEntriesTable: React.FC<TimelogEntriesTableProps> = (props) => {
       }}
     >
       <TableComponent
-        rows={
-          useFetchDocuments.data && useFetchDocuments.data.filter((entry) => entry.workItemId == props.witId).length > 0
-            ? useFetchDocuments.data.filter((entry) => entry.workItemId == props.witId)
-            : []
-        }
+        rows={useFetchDocuments.data && useFetchDocuments.data.items.length > 0 ? useFetchDocuments.data.items : []}
         columns={[
-          { id: 'date', label: _VALUES.DATE, minWidth: 100 },
+          { id: 'date', label: _VALUES.DATE, minWidth: 100, isDate: true },
           {
             id: 'time',
             label: _VALUES.TIME,
@@ -83,8 +81,9 @@ const TimelogEntriesTable: React.FC<TimelogEntriesTableProps> = (props) => {
           },
         ]}
         values={_VALUES}
-        totalCount={useFetchDocuments.data ? useFetchDocuments.data.length : 0}
+        totalCount={useFetchDocuments.data ? useFetchDocuments.data.totalCount : 0}
         loading={useFetchDocuments.isFetching}
+        onFiltersChange={(filters: any) => setFilters(filters)}
         baseFilters={filters}
       />
     </MainWrapperComponent>

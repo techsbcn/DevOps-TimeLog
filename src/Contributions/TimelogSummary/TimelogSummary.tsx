@@ -2,12 +2,9 @@ import React, { useEffect } from 'react';
 import * as SDK from 'azure-devops-extension-sdk';
 import { showRootComponent } from '../..';
 import { _VALUES } from '../../resources';
-import {
-  useFetchGetDocumentsQuery,
-  useFetchCreateDocumentMutation,
-} from '../../redux/extensionDataManager/extensionDataManagerSlice';
-import { ButtonComponent } from 'techsbcn-storybook';
+import { useFetchGetDocumentsQuery } from '../../redux/extensionDataManager/extensionDataManagerSlice';
 import { Box } from '@mui/material';
+import { SearchBaseDefaults } from '../../interfaces';
 
 export const TimelogSummary: React.FC = () => {
   useEffect(() => {
@@ -16,26 +13,16 @@ export const TimelogSummary: React.FC = () => {
     });
   }, []);
 
-  const useFetchDocuments = useFetchGetDocumentsQuery('TimeLogData');
+  const useFetchDocuments = useFetchGetDocumentsQuery({ collectionName: 'TimeLogData', filters: SearchBaseDefaults });
   console.log('Redux', useFetchDocuments);
 
-  const useFetchTest = useFetchGetDocumentsQuery('Test');
-  const [create, { isLoading: isCreating }] = useFetchCreateDocumentMutation();
-  console.log('Redux documents', useFetchTest);
   return (
     <Box>
-      <ButtonComponent
-        label={_VALUES.SAVE}
-        onClick={() =>
-          create({ collectionName: 'Test', doc: { name: `test-${Math.random().toString(36).substring(7)}` } })
-        }
-        loading={isCreating}
-      />
-      {useFetchTest.data &&
-        useFetchTest.data.length > 0 &&
-        useFetchTest.data.map((item) => (
+      {useFetchDocuments.data &&
+        useFetchDocuments.data.items.length > 0 &&
+        useFetchDocuments.data.items.map((item) => (
           <Box m={2} key={item.id}>
-            {item.name}
+            {item.user}
           </Box>
         ))}
     </Box>
