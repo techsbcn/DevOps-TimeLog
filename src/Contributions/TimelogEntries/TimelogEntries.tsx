@@ -11,9 +11,11 @@ import {
   IWorkItemLoadedArgs,
 } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTrackingServices';
 import { TimeLogEntry } from '../../Interfaces/TimeLogEntry';
-import { addEntry } from '../../Services/TimelogEntriesAPI';
-import TimelogEntriesForm from '../../components/TimelogEntries/forms/TimelogEntriesForm';
-import TimelogEntriesTable from '../../components/TimelogEntries/tables/TimelogEntriesTable';
+//import { addEntry } from '../../Services/TimelogEntriesAPI';
+import TimelogEntriesForm from '../../components/compTimelogEntries/forms/TimelogEntriesForm';
+import TimelogEntriesTable from '../../components/compTimelogEntries/tables/TimelogEntriesTable';
+import { useFetchCreateDocumentMutation } from '../../redux/extensionDataManager/extensionDataManagerSlice';
+import { _VALUES } from '../../resources';
 
 export const TimelogEntries: React.FC = () => {
   const [witId, setWitId] = useState<number>(0);
@@ -81,6 +83,8 @@ export const TimelogEntries: React.FC = () => {
     );
   };
 
+  const [create, { isLoading: isCreating }] = useFetchCreateDocumentMutation();
+
   const onSubmit = async (data: any) => {
     const workItemFormService = await WorkItemFormService;
 
@@ -94,7 +98,7 @@ export const TimelogEntries: React.FC = () => {
 
     //Guardar entrada
     if (success) {
-      addEntry(newEntry)
+      create({ collectionName: 'TimeLogData', doc: newEntry })
         .then(async () => {
           //Salvar formulario
           await workItemFormService.save();
@@ -109,7 +113,7 @@ export const TimelogEntries: React.FC = () => {
   return (
     <Box>
       <Container maxWidth={false}>
-        <TimelogEntriesForm action={onSubmit} />
+        <TimelogEntriesForm action={onSubmit} loading={isCreating} />
         <TimelogEntriesTable witId={witId} />
       </Container>
     </Box>

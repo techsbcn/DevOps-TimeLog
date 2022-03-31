@@ -6,9 +6,11 @@ import { faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
 import { MainWrapperComponent, TextFieldComponent, SelectAsyncField, ButtonComponent } from 'techsbcn-storybook';
 // eslint-disable-next-line jest/no-mocks-import
 import { getAllTimeTypesMock } from '../../../__mocks__/Common';
+import { _VALUES } from '../../../resources/_constants/values';
 
 interface TimelogEntriesFormProps {
   action: (data: any) => void;
+  loading: boolean;
 }
 
 const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
@@ -36,7 +38,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
             defaultValue={new Date().toLocaleDateString('sv-SE')}
             render={({ field: { onChange, value, name, ref } }) => (
               <TextFieldComponent
-                label="Date"
+                label={_VALUES.DATE}
                 placeholder="Date"
                 type="date"
                 error={!!errors.date}
@@ -146,6 +148,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
             label={'Add Time Log'}
             startIcon={<FontAwesomeIcon icon={faFloppyDisk} />}
             onClick={handleSubmit(onSubmit)}
+            loading={props.loading}
           />
         </Grid>
       </Grid>
