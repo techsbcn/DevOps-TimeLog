@@ -16,6 +16,7 @@ import TimelogEntriesForm from '../../components/compTimelogEntries/forms/Timelo
 import TimelogEntriesTable from '../../components/compTimelogEntries/tables/TimelogEntriesTable';
 import { useFetchCreateDocumentMutation } from '../../redux/extensionDataManager/extensionDataManagerSlice';
 import { _VALUES } from '../../resources';
+import { getHoursFromMinutes, getMinutesFromHours } from '../../helpers/TimeHelper';
 
 export const TimelogEntries: React.FC = () => {
   const [witId, setWitId] = useState<number>(0);
@@ -48,14 +49,6 @@ export const TimelogEntries: React.FC = () => {
       setWitId(witId);
     });
   }, []);
-
-  const getHoursFromMinutes = (minutes: number) => {
-    return minutes / 60;
-  };
-
-  const getMinutesFromHours = (hours: number) => {
-    return hours * 60;
-  };
 
   const createNewEntry = async (data: any): Promise<TimeLogEntry> => {
     const userName = SDK.getUser().displayName;
