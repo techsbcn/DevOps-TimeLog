@@ -2,21 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Grid, Container } from '@mui/material';
 import * as SDK from 'azure-devops-extension-sdk';
 import { showRootComponent } from '../..';
-// eslint-disable-next-line jest/no-mocks-import
-import { getAllTimeTypesMock } from '../../__mocks__/Documents/TimeTypes';
-import { WorkItemFormService } from '../../Services/WorkItemService';
 import {
   IWorkItemChangedArgs,
   IWorkItemFieldChangedArgs,
   IWorkItemLoadedArgs,
 } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTrackingServices';
 import { TimeLogEntry } from '../../Interfaces/extensionDataManager/TimeLogEntry';
-//import { addEntry } from '../../Services/TimelogEntriesAPI';
 import TimelogEntriesForm from '../../components/compTimelogEntries/forms/TimelogEntriesForm';
 import TimelogEntriesTable from '../../components/compTimelogEntries/tables/TimelogEntriesTable';
 import { useFetchCreateDocumentMutation } from '../../redux/extensionDataManager/extensionDataManagerSlice';
 import { _VALUES } from '../../resources';
 import { getHoursFromMinutes, getMinutesFromHours } from '../../helpers/TimeHelper';
+import { PatchWorkItem, WorkItemFormService } from '../../redux/workItem/workItemAPI';
 
 export const TimelogEntries: React.FC = () => {
   const [workItemId, setWorkItemId] = useState<number>();
@@ -52,28 +49,15 @@ export const TimelogEntries: React.FC = () => {
 
   const createNewEntry = async (data: any): Promise<TimeLogEntry> => {
     const userName = SDK.getUser().displayName;
-    const workItemFormService = await WorkItemFormService;
-    const workItemId = await workItemFormService.getId();
     const timeEntry: TimeLogEntry = {
       user: userName,
-      workItemId: workItemId,
+      workItemId: workItemId ?? 0,
       date: data.date,
       time: Number(getMinutesFromHours(data.timeHours)) + Number(data.timeMinutes),
       notes: data.notes,
       activity: data.activity.label,
     };
     return timeEntry;
-  };
-
-  const updateWitForm = async (entry: TimeLogEntry): Promise<boolean> => {
-    const workItemFormService = await WorkItemFormService;
-    const remainingWork = Number(await workItemFormService.getFieldValue('Remaining Work'));
-    const completedWork = Number(await workItemFormService.getFieldValue('Completed Work'));
-    const hours = getHoursFromMinutes(entry.time);
-    return (
-      (await workItemFormService.setFieldValue('Remaining Work', remainingWork - hours)) &&
-      (await workItemFormService.setFieldValue('Completed Work', completedWork + hours))
-    );
   };
 
   const [create, { isLoading: isCreating }] = useFetchCreateDocumentMutation();
@@ -83,8 +67,13 @@ export const TimelogEntries: React.FC = () => {
 
     if (data.timeHours == 0 && data.timeMinutes == 0) return;
     const newEntry = await createNewEntry(data);
-    const success = await updateWitForm(newEntry);
-    if (success) {
+    const hours = getHoursFromMinutes(newEntry.time);
+
+    PatchWorkItem(['Completed Work', 'Remaining Work'], (item: any) => {
+      item['Completed Work'] += hours;
+      item['Remaining Work'] -= hours;
+      return item;
+    }).then(() => {
       create({ collectionName: 'TimeLogData', doc: newEntry })
         .then(async () => {
           await workItemFormService.save();
@@ -92,7 +81,7 @@ export const TimelogEntries: React.FC = () => {
         .catch(async () => {
           await workItemFormService.reset();
         });
-    }
+    });
   };
 
   return (

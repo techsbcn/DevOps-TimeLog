@@ -1,4 +1,4 @@
-import { TimeType } from '../../Interfaces/TimeType';
+import { TimeType } from '../../interfaces';
 
 export const getAllTimeTypesMock = async (): Promise<TimeType[]> => {
   return [

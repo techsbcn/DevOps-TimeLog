@@ -3,13 +3,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { MainWrapperComponent, TableComponent } from 'techsbcn-storybook';
 import { _VALUES } from '../../../resources/_constants/values';
-import { SearchBaseDefaults, TimeLogEntry } from '../../../interfaces';
+import { SearchBaseDefaults } from '../../../interfaces';
 import {
   useFetchGetDocumentsQuery,
   useFetchRemoveDocumentMutation,
 } from '../../../redux/extensionDataManager/extensionDataManagerSlice';
-import { WorkItemFormService } from '../../../Services/WorkItemService';
 import { getHoursAndMinutes, getHoursFromMinutes } from '../../../helpers/TimeHelper';
+import { PatchWorkItem, WorkItemFormService } from '../../../redux/workItem/workItemAPI';
 
 interface TimelogEntriesTableProps {
   workItemId: number;
@@ -22,22 +22,8 @@ const TimelogEntriesTable: React.FC<TimelogEntriesTableProps> = (props) => {
     collectionName: 'TimeLogData',
     filters: { ...filters, filter: { workItemId: props.workItemId } },
   });
-  const [remove] = useFetchRemoveDocumentMutation();
 
-  const updateWitForm = async (entry: TimeLogEntry): Promise<boolean> => {
-    const workItemFormService = await WorkItemFormService;
-    const remainingWork = Number(
-      await workItemFormService.getFieldValue('Remaining Work', { returnOriginalValue: false })
-    );
-    const completedWork = Number(
-      await workItemFormService.getFieldValue('Completed Work', { returnOriginalValue: false })
-    );
-    const hours = getHoursFromMinutes(entry.time);
-    return (
-      (await workItemFormService.setFieldValue('Remaining Work', remainingWork + hours)) &&
-      (await workItemFormService.setFieldValue('Completed Work', completedWork - hours))
-    );
-  };
+  const [remove] = useFetchRemoveDocumentMutation();
 
   return (
     <MainWrapperComponent
@@ -55,7 +41,7 @@ const TimelogEntriesTable: React.FC<TimelogEntriesTableProps> = (props) => {
             minWidth: 100,
             rowViewFormat: (row) => getHoursAndMinutes(row.time),
           },
-          { id: 'user', label: _VALUES.USER, minWidth: 100 },
+          { id: 'user', label: _VALUES.USER, minWidth: 100, noSort: true },
           { id: 'activity', label: _VALUES.ACTIVITY, minWidth: 100 },
           { id: 'notes', label: _VALUES.NOTES, minWidth: 100 },
 
@@ -67,14 +53,20 @@ const TimelogEntriesTable: React.FC<TimelogEntriesTableProps> = (props) => {
                 children: <FontAwesomeIcon icon={faTrashAlt} />,
                 onClick: async (row: any) => {
                   const workItemFormService = await WorkItemFormService;
-                  updateWitForm(row);
-                  remove({ collectionName: 'TimeLogData', id: row.id })
-                    .then(() => {
-                      workItemFormService.save();
-                    })
-                    .catch(() => {
-                      workItemFormService.reset();
-                    });
+                  const hours = getHoursFromMinutes(row.time);
+                  PatchWorkItem(['Completed Work', 'Remaining Work'], (item: any) => {
+                    item['Completed Work'] -= hours;
+                    item['Remaining Work'] += hours;
+                    return item;
+                  }).then(() => {
+                    remove({ collectionName: 'TimeLogData', id: row.id })
+                      .then(() => {
+                        workItemFormService.save();
+                      })
+                      .catch(() => {
+                        workItemFormService.reset();
+                      });
+                  });
                 },
               },
             ],
