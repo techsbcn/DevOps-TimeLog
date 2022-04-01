@@ -12,6 +12,20 @@ export const WorkItemTrackingClient: WorkItemTracking.WorkItemTrackingRestClient
   return API.getClient(WorkItemTracking.WorkItemTrackingRestClient, {});
 })();
 
+export const GetWorkItemId = async () => {
+  const workItemFormService = await WorkItemFormService;
+  return new Promise<number>((resolve, reject) =>
+    workItemFormService
+      .getId()
+      .then((result: number) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(ErrorHandler(error));
+      })
+  );
+};
+
 export const GetFields = async (fieldReferenceNames: string[]) => {
   const workItemFormService = await WorkItemFormService;
   return new Promise<any>((resolve, reject) =>
