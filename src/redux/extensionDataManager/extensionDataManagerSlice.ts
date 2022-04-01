@@ -1,24 +1,40 @@
+import { ListResultCollection } from './../../Interfaces/search/ListResultCollection';
+import { SearchFilters } from './../../Interfaces/search/SearchFilters';
 import { ErrorHandler } from '../../helpers';
 import { apiSlice } from '../apiSlice';
 import { GetDocuments, CreateDocument, RemoveDocument, UpdateDocument, SetDocument } from './extensionDataManagerAPI';
+import * as _ from 'lodash';
 
 const extensionDataEndpoints = apiSlice.injectEndpoints({
   endpoints(builder) {
     return {
-      fetchGetDocuments: builder.query<any[], string>({
-        keepUnusedDataFor: 0,
+      fetchGetDocuments: builder.query<ListResultCollection<any>, { collectionName: string; filters: SearchFilters }>({
+        keepUnusedDataFor: 60,
         queryFn: async (request) => {
-          return { data: await GetDocuments(request) };
+          let documents = await GetDocuments(request.collectionName);
+          if (request.filters.filter) documents = _.filter(documents, request.filters.filter);
+          const totalCount = documents.length;
+          if (request.filters.limit && request.filters.page) {
+            const startIndex = request.filters.page * request.filters.limit - request.filters.limit;
+            const endIndex = startIndex + request.filters.limit;
+            documents = _.slice(documents, startIndex, endIndex);
+          }
+          return {
+            data: {
+              items: _.orderBy(documents, request.filters.orderBy, request.filters.orderAsc ? 'asc' : 'desc'),
+              totalCount: totalCount,
+            },
+          };
         },
         async onQueryStarted(_request, { queryFulfilled }) {
           await queryFulfilled.catch((err) => {
             ErrorHandler(err);
           });
         },
-        providesTags: (result, _error, collectionName) =>
+        providesTags: (result, _error, { collectionName }) =>
           result
             ? [
-                ...result.map(({ id }) => ({ type: 'extensionData' as const, id, collectionName })),
+                ...result.items.map(({ id }) => ({ type: 'extensionData' as const, id, collectionName })),
                 { type: 'extensionData', id: 'LIST', collectionName },
               ]
             : [{ type: 'extensionData', id: 'LIST', collectionName }],

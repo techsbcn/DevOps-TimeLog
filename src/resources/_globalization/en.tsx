@@ -49,4 +49,11 @@ export const GLOBAL_EN = {
   total: 'Total',
   users: 'Users',
   actions: 'Actions',
+  time: 'Time',
+  activity: 'Activity',
+  notes: 'Notes',
+  timelogEntries: 'Timelog Entries',
+  minutes: 'Minutes',
+  hours: 'Hours',
+  newTimelogEntry: 'New Timelog Entry',
 };

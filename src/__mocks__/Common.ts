@@ -1,4 +1,4 @@
-import { TimeType } from '../Interfaces/TimeType';
+import { TimeType } from '../interfaces';
 
 // tslint:disable-next-line: no-empty
 export function showRootComponent(component: React.ReactElement<any>) {}
