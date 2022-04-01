@@ -134,6 +134,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
               control={control}
               defaultValue={SelectSimpleAsyncHelper(activities[0])}
               render={({ field: { onChange, value, name, ref } }) => {
+                value?.value && setValue(name, { id: value.value, name: value.label });
                 return (
                   <SelectField
                     label={_VALUES.ACTIVITY}
