@@ -52,7 +52,7 @@ export const GLOBAL_EN = {
   time: 'Time',
   activity: 'Activity',
   notes: 'Notes',
-  timelogEntries: 'Timelog Entries',
+  timelogEntries: 'Time log Entries',
   minutes: 'Minutes',
   hours: 'Hours',
   newTimelogEntry: 'New Timelog Entry',
