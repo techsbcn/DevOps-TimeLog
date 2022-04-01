@@ -53,4 +53,7 @@ export const GLOBAL_EN = {
   activity: 'Activity',
   notes: 'Notes',
   timelogEntries: 'Timelog Entries',
+  minutes: 'Minutes',
+  hours: 'Hours',
+  newTimelogEntry: 'New Timelog Entry',
 };

@@ -52,5 +52,8 @@ export const GLOBAL_ES = {
   time: 'Tiempo',
   activity: 'Actividad',
   notes: 'Notas',
-  timelogEntries: 'Timelog Entries',
+  timelogEntries: 'Entradas',
+  minutes: 'Minutos',
+  hours: 'Horas',
+  newTimelogEntry: 'Nueva entrada',
 };

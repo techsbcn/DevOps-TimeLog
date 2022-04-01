@@ -52,4 +52,7 @@ export const _VALUES: ObjectKey = {
   ACTIVITY: Translate.t('activity'),
   NOTES: Translate.t('notes'),
   TIMELOG_ENTRIES: Translate.t('timelogEntries'),
+  MINUTES: Translate.t('minutes'),
+  HOURS: Translate.t('hours'),
+  NEW_TIMELOG_ENTRY: Translate.t('newTimelogEntry'),
 };

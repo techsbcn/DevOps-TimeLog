@@ -28,7 +28,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
   return (
     <MainWrapperComponent
       headerProps={{
-        title: `New Time Log`,
+        title: _VALUES.NEW_TIMELOG_ENTRY,
       }}
     >
       <Grid container spacing={3}>
@@ -60,8 +60,8 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
             defaultValue={0}
             render={({ field: { onChange, value, name, ref } }) => (
               <TextFieldComponent
-                label="Hours"
-                placeholder="Hours"
+                label={_VALUES.HOURS}
+                placeholder={_VALUES.HOURS}
                 type="number"
                 minNumber={0}
                 error={!!errors.timeHours}
@@ -84,8 +84,8 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
             defaultValue={0}
             render={({ field: { onChange, value, name, ref } }) => (
               <TextFieldComponent
-                label="Minutes"
-                placeholder="Minutes"
+                label={_VALUES.MINUTES}
+                placeholder={_VALUES.MINUTES}
                 type="number"
                 minNumber={0}
                 step={15}
@@ -109,7 +109,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
             render={({ field: { onChange, value, name, ref } }) => {
               return (
                 <SelectAsyncField
-                  label={'Activity'}
+                  label={_VALUES.ACTIVITY}
                   name={name}
                   inputRef={ref}
                   searchPromise={getAllTimeTypesMock}
@@ -131,7 +131,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
             defaultValue={''}
             render={({ field: { onChange, value, name, ref } }) => (
               <TextFieldComponent
-                label={'Notes'}
+                label={_VALUES.NOTES}
                 name={name}
                 inputRef={ref}
                 onChange={(e) => {
