@@ -32,8 +32,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
   } = useForm({ resolver: yupResolver(EntrySchema) });
 
   const onSubmit = (data: any) => {
-    console.log(data);
-    //props.action(data);
+    props.action(data);
   };
 
   const [activities, setActivities] = useState<any[]>([]);
