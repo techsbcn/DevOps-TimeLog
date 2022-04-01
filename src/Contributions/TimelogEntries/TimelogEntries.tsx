@@ -64,8 +64,6 @@ export const TimelogEntries: React.FC = () => {
 
   const onSubmit = async (data: any) => {
     const workItemFormService = await WorkItemFormService;
-
-    if (data.timeHours == 0 && data.timeMinutes == 0) return;
     const newEntry = await createNewEntry(data);
     const hours = getHoursFromMinutes(newEntry.time);
 

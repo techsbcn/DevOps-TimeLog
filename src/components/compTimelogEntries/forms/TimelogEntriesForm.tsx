@@ -17,19 +17,33 @@ interface TimelogEntriesFormProps {
 }
 
 const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
-  const EntrySchema = yup.object().shape({
-    activity: yup.object().default(undefined).shape({
-      id: yup.number(),
-      name: yup.string(),
-    }),
-  });
+  const EntrySchema = yup.object().shape(
+    {
+      timeHours: yup.number().when('timeMinutes', {
+        is: 0,
+        then: yup.number().positive().min(1, _VALUES.NOT_ZERO_TIME),
+        otherwise: yup.number().min(0),
+      }),
+      timeMinutes: yup.number().when('timeHours', {
+        is: 0,
+        then: yup.number().positive().min(1, _VALUES.NOT_ZERO_TIME),
+        otherwise: yup.number().min(0),
+      }),
+      activity: yup.object().default(undefined).shape({
+        id: yup.number(),
+        name: yup.string(),
+      }),
+    },
+    [['timeHours', 'timeMinutes']]
+  );
 
   const {
     handleSubmit,
     setValue,
     control,
+    trigger,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(EntrySchema) });
+  } = useForm({ resolver: yupResolver(EntrySchema), reValidateMode: 'onChange' });
 
   const onSubmit = (data: any) => {
     props.action(data);
@@ -96,6 +110,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
                 onChange={(e) => {
                   onChange(e);
                   if (!e.target.value) setValue(name, 0);
+                  trigger('timeMinutes');
                 }}
                 value={!value ? 0 : value}
               />
@@ -121,6 +136,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
                 onChange={(e) => {
                   onChange(e);
                   if (!e.target.value) setValue(name, 0);
+                  trigger('timeHours');
                 }}
                 value={!value ? 0 : value}
               />
