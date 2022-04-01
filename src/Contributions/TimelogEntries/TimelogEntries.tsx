@@ -72,6 +72,7 @@ export const TimelogEntries: React.FC = () => {
     PatchWorkItem(['Completed Work', 'Remaining Work'], (item: any) => {
       item['Completed Work'] += hours;
       item['Remaining Work'] -= hours;
+      if (item['Remaining Work'] < 0) item['Remaining Work'] = 0;
       return item;
     }).then(() => {
       create({ collectionName: 'TimeLogData', doc: newEntry })
