@@ -5,7 +5,13 @@ import * as ReactDOM from 'react-dom';
 import './styles/Global.scss';
 import store from './redux/store';
 import { Provider } from 'react-redux';
+import { Box } from '@mui/material';
 
 export function showRootComponent(component: React.ReactElement<any>) {
-  ReactDOM.render(<Provider store={store}>{component}</Provider>, document.getElementById('root'));
+  ReactDOM.render(
+    <Provider store={store}>
+      <Box mt={2}>{component}</Box>
+    </Provider>,
+    document.getElementById('root')
+  );
 }

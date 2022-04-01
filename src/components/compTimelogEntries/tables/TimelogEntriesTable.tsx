@@ -44,7 +44,6 @@ const TimelogEntriesTable: React.FC<TimelogEntriesTableProps> = (props) => {
           { id: 'user', label: _VALUES.USER, minWidth: 100, noSort: true },
           { id: 'activity.name', label: _VALUES.ACTIVITY, minWidth: 100 },
           { id: 'notes', label: _VALUES.NOTES, minWidth: 100 },
-
           {
             id: 'actions',
             label: _VALUES.ACTIONS,
