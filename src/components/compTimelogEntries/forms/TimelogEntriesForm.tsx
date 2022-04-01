@@ -41,12 +41,14 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
     handleSubmit,
     setValue,
     control,
+    reset,
     trigger,
     formState: { errors },
   } = useForm({ resolver: yupResolver(EntrySchema), reValidateMode: 'onChange' });
 
   const onSubmit = (data: any) => {
     props.action(data);
+    reset();
   };
 
   const [activities, setActivities] = useState<any[]>([]);
