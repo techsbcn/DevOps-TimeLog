@@ -3,9 +3,11 @@ $main-dark-grey: #666666;
 $body-background-color: #f4f7fa;
 
 body{
+    font-family: "Open Sans", sans-serif !important;
     #root {
         height: 100%;
         width: 100%;
+        background-color: $body-background-color!important;
     }
     .main-color{
         color: $main-color !important;
@@ -50,5 +52,10 @@ body{
     .text-underline *{
         color: $main-dark-grey;
         text-decoration: underline;
+    }
+    .main-wrapper-component{
+        box-shadow: 0 1px 10px 0 RGB(69 90 100 / 50%)!important;
+        border: 1px solid $main-color!important;
+        border-radius: 5px!important;
     }
 }
