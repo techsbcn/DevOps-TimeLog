@@ -1,3 +1,5 @@
+import { TimeType } from './TimeType';
+
 export interface TimeLogEntry {
   id?: string;
   user: string;
@@ -5,5 +7,5 @@ export interface TimeLogEntry {
   date: Date;
   time: number;
   notes: string;
-  activity: string;
+  activity?: TimeType;
 }

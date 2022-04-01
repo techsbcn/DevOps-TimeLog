@@ -55,7 +55,7 @@ export const TimelogEntries: React.FC = () => {
       date: data.date,
       time: Number(getMinutesFromHours(data.timeHours)) + Number(data.timeMinutes),
       notes: data.notes,
-      activity: data.activity.label,
+      activity: data.activity,
     };
     return timeEntry;
   };

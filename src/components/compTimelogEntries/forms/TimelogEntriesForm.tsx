@@ -1,12 +1,15 @@
-import React from 'react';
-import { Grid } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Grid, CircularProgress } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
-import { MainWrapperComponent, TextFieldComponent, SelectAsyncField, ButtonComponent } from 'techsbcn-storybook';
+import { MainWrapperComponent, TextFieldComponent, ButtonComponent, SelectField } from 'techsbcn-storybook';
 // eslint-disable-next-line jest/no-mocks-import
 import { getAllTimeTypesMock } from '../../../__mocks__/Common';
 import { _VALUES } from '../../../resources/_constants/values';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { SelectAsyncHelper, SelectSimpleAsyncHelper } from '../../../helpers';
 
 interface TimelogEntriesFormProps {
   action: (data: any) => void;
@@ -14,16 +17,39 @@ interface TimelogEntriesFormProps {
 }
 
 const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
+  const EntrySchema = yup.object().shape({
+    activity: yup.object().default(undefined).shape({
+      id: yup.number(),
+      name: yup.string(),
+    }),
+  });
+
   const {
     handleSubmit,
     setValue,
     control,
     formState: { errors },
-  } = useForm();
+  } = useForm({ resolver: yupResolver(EntrySchema) });
 
   const onSubmit = (data: any) => {
-    props.action(data);
+    console.log(data);
+    //props.action(data);
   };
+
+  const [activities, setActivities] = useState<any[]>([]);
+  const [loadingActivities, setLoadingActivities] = React.useState<boolean>(false);
+
+  useEffect(() => {
+    setLoadingActivities(true);
+    getAllTimeTypesMock()
+      .then((result) => {
+        setActivities(result);
+        setLoadingActivities(false);
+      })
+      .catch(() => {
+        setLoadingActivities(false);
+      });
+  }, []);
 
   return (
     <MainWrapperComponent
@@ -103,28 +129,32 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
             name={'timeMinutes'}
           />
         </Grid>
-        <Grid item xs={12} md={2}>
-          <Controller
-            control={control}
-            render={({ field: { onChange, value, name, ref } }) => {
-              return (
-                <SelectAsyncField
-                  label={_VALUES.ACTIVITY}
-                  name={name}
-                  inputRef={ref}
-                  searchPromise={getAllTimeTypesMock}
-                  onChangeOption={(value, label) => {
-                    console.log('OnChangeOption', label);
-                    onChange(value ? { value: value, label: label } : []);
-                  }}
-                  isClearable={false}
-                  value={value ?? []}
-                />
-              );
-            }}
-            name={'activity'}
-          />
-        </Grid>
+        {activities && activities?.length > 0 && !loadingActivities ? (
+          <Grid item xs={12} md={2}>
+            <Controller
+              control={control}
+              defaultValue={SelectSimpleAsyncHelper(activities[0])}
+              render={({ field: { onChange, value, name, ref } }) => {
+                return (
+                  <SelectField
+                    label={_VALUES.ACTIVITY}
+                    name={name}
+                    inputRef={ref}
+                    options={activities && activities?.length > 0 ? SelectAsyncHelper(activities) : []}
+                    onChangeOption={(option) => {
+                      onChange(option ? { id: option.value, name: option.label } : []);
+                    }}
+                    isClearable={false}
+                    defaultOptions={value}
+                  />
+                );
+              }}
+              name={'activity'}
+            />
+          </Grid>
+        ) : (
+          loadingActivities && <CircularProgress />
+        )}
         <Grid item xs={12} md={6}>
           <Controller
             control={control}
