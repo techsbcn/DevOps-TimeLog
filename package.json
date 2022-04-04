@@ -15,11 +15,11 @@
   "scripts": {
     "start": "webpack serve --mode development",
     "clean": "rimraf ./dist",
-    "compile": "clean && test && webpack --mode production",
-    "compile:dev": "yclean && webpack --mode development",
-    "build": "compile",
-    "build:dev": "compile:dev && postbuild",
-    "postbuild": " package-extension -- --rev-version",
+    "compile": "yarn run clean && test && webpack --mode production",
+    "compile:dev": "yarn run clean && webpack --mode development",
+    "build": "yarn run compile",
+    "build:dev": "yarn run compile:dev && postbuild",
+    "postbuild": "yarn run package-extension -- --rev-version",
     "package-extension": "tfx extension create --manifest-globs azure-devops-extension.json src/Contributions/**/*.json",
     "publish-extension": "tfx extension publish --manifest-globs azure-devops-extension.json src/Contributions/**/*.json",
     "test": "set TEST_REPORT_FILENAME=test-results.xml jest --verbose",
@@ -59,7 +59,7 @@
     "react-hook-form": "^7.28.1",
     "react-i18next": "^11.16.2",
     "react-redux": "^7.2.6",
-    "techsbcn-storybook": "^0.18.0",
+    "techsbcn-storybook": "^0.18.1",
     "tslib": "^2.3.1",
     "yup": "^0.32.11"
   },
@@ -111,5 +111,6 @@
         "tsconfig": "tsconfig.test.json"
       }
     }
-  }
+  },
+  "packageManager": "yarn@3.2.0"
 }
