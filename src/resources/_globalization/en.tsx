@@ -56,4 +56,5 @@ export const GLOBAL_EN = {
   minutes: 'Minutes',
   hours: 'Hours',
   newTimelogEntry: 'New Timelog Entry',
+  notZeroTime: 'Entry needs some time',
 };

@@ -64,14 +64,13 @@ export const TimelogEntries: React.FC = () => {
 
   const onSubmit = async (data: any) => {
     const workItemFormService = await WorkItemFormService;
-
-    if (data.timeHours == 0 && data.timeMinutes == 0) return;
     const newEntry = await createNewEntry(data);
     const hours = getHoursFromMinutes(newEntry.time);
 
     PatchWorkItem(['Completed Work', 'Remaining Work'], (item: any) => {
       item['Completed Work'] += hours;
       item['Remaining Work'] -= hours;
+      if (item['Remaining Work'] < 0) item['Remaining Work'] = 0;
       return item;
     }).then(() => {
       create({ collectionName: 'TimeLogData', doc: newEntry })
