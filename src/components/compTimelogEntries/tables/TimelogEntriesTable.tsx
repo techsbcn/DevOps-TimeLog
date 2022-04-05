@@ -19,7 +19,7 @@ const TimelogEntriesTable: React.FC<TimelogEntriesTableProps> = (props) => {
   const [filters, setFilters] = useState(SearchBaseDefaults);
 
   const useFetchDocuments = useFetchGetDocumentsQuery({
-    collectionName: 'TimeLogData',
+    collectionName: process.env.ENTRIES_COLLECTION_NAME as string,
     filters: { ...filters, filter: { workItemId: props.workItemId } },
   });
 
@@ -58,7 +58,7 @@ const TimelogEntriesTable: React.FC<TimelogEntriesTableProps> = (props) => {
                     item['Remaining Work'] += hours;
                     return item;
                   }).then(() => {
-                    remove({ collectionName: 'TimeLogData', id: row.id })
+                    remove({ collectionName: process.env.ENTRIES_COLLECTION_NAME as string, id: row.id })
                       .then(() => {
                         workItemFormService.save();
                       })

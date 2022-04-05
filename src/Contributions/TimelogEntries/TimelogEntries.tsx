@@ -73,7 +73,7 @@ export const TimelogEntries: React.FC = () => {
       if (item['Remaining Work'] < 0) item['Remaining Work'] = 0;
       return item;
     }).then(() => {
-      create({ collectionName: 'TimeLogData', doc: newEntry })
+      create({ collectionName: process.env.ENTRIES_COLLECTION_NAME as string, doc: newEntry })
         .then(async () => {
           await workItemFormService.save();
         })
