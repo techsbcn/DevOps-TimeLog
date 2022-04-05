@@ -15,13 +15,9 @@
   "scripts": {
     "start": "webpack serve --mode development",
     "clean": "rimraf ./dist",
-    "compile": "clean && test && webpack --mode production",
-    "compile:dev": "yclean && webpack --mode development",
-    "build": "compile",
-    "build:dev": "compile:dev && postbuild",
-    "postbuild": " package-extension -- --rev-version",
-    "package-extension": "tfx extension create --manifest-globs azure-devops-extension.json src/Contributions/**/*.json",
-    "publish-extension": "tfx extension publish --manifest-globs azure-devops-extension.json src/Contributions/**/*.json",
+    "build:dev": "yarn run clean && webpack --mode development",
+    "build:staging": "clean && webpack --env staging --mode production",
+    "build": "clean && test && webpack --env production --mode production",
     "test": "set TEST_REPORT_FILENAME=test-results.xml jest --verbose",
     "lint": "eslint src/**/*.{ts,tsx} --fix"
   },
