@@ -29,10 +29,12 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
   const loadMembers = React.useCallback(() => {
     if (teamSelected) {
       GetTeamMembers(teamSelected.value).then((members) => {
-        setMembers(members);
-        props.user && members.some((member) => props.user && member.id === props.user.id)
-          ? setMemberSelected([{ value: props.user.id, label: props.user.displayName }])
-          : setMemberSelected([{ value: 'all', label: _VALUES.ALL }]);
+        if (props.user && members.some((member) => props.user && member.id === props.user.id)) {
+          setMembers(members);
+          setMemberSelected([{ value: props.user.id, label: props.user.displayName }]);
+        } else {
+          setMemberSelected(undefined);
+        }
       });
     }
   }, [props.user, teamSelected]);
@@ -69,7 +71,7 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
             name="userIds"
             label={_VALUES.USERS}
             options={members && members?.length > 0 ? SelectAsyncHelper(members) : []}
-            addExtraOption={allOption}
+            addExtraOption={members && members.length > 1 && allOption}
             value={memberSelected}
             isClearable={false}
             isMulti

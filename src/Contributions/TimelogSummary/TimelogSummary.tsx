@@ -56,7 +56,7 @@ export const TimelogSummary: React.FC = () => {
 
   const loadDocuments = React.useCallback(() => {
     if (filters && useFetchDocuments.data && useFetchDocuments.data.items.length > 0) {
-      let documents = JSON.parse(JSON.stringify(useFetchDocuments.data.items));
+      let documents = filters && filters.userIds ? JSON.parse(JSON.stringify(useFetchDocuments.data.items)) : [];
       documents = filterByDates(documents);
       documents = filterByUserIds(documents);
       setTimeLogEntries(documents);
