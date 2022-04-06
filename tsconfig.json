@@ -19,6 +19,11 @@
           "esnext",
           "es2015.promise"
         ],
+        "types": [
+          "react",
+          "jest",
+          "node"
+        ],
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         //"allowJs": true,

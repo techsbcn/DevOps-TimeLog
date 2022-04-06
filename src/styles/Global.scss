@@ -2,6 +2,10 @@ $main-color: #286FB7;
 $main-dark-grey: #666666;
 $body-background-color: #f4f7fa;
 
+::-webkit-scrollbar {
+    display: none;
+}
+
 body{
     font-family: "Open Sans", sans-serif !important;
     #root {
@@ -54,7 +58,7 @@ body{
         text-decoration: underline;
     }
     .main-wrapper-component{
-        box-shadow: 0 1px 10px 0 RGB(69 90 100 / 50%)!important;
+        box-shadow: 0 1px 10px 0 RGB(69 90 100 / 35%)!important;
         border: 1px solid #8080808c!important;
         border-radius: 5px!important;
     }

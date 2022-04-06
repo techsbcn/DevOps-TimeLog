@@ -57,4 +57,8 @@ export const GLOBAL_EN = {
   hours: 'Hours',
   newTimelogEntry: 'New Timelog Entry',
   notZeroTime: 'Entry needs some time',
+  filters: 'Filters',
+  all: 'All',
+  teams: 'Teams',
+  workItem: 'Work Item',
 };

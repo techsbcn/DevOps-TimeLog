@@ -56,4 +56,9 @@ export const _VALUES: ObjectKey = {
   HOURS: Translate.t('hours'),
   NEW_TIMELOG_ENTRY: Translate.t('newTimelogEntry'),
   NOT_ZERO_TIME: Translate.t('notZeroTime'),
+  FILTERS: Translate.t('filters'),
+  TEAMS: Translate.t('teams'),
+  ALL: Translate.t('all'),
+  DATE_RANGE: Translate.t('dateRange'),
+  WORK_ITEM: Translate.t('workItem'),
 };

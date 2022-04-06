@@ -39,6 +39,31 @@ const extensionDataEndpoints = apiSlice.injectEndpoints({
               ]
             : [{ type: 'extensionData', id: 'LIST', collectionName }],
       }),
+      fetchGetDocumentsWithoutFilters: builder.query<ListResultCollection<any>, string>({
+        keepUnusedDataFor: 60,
+        queryFn: async (request) => {
+          const documents = await GetDocuments(request);
+          const totalCount = documents.length;
+          return {
+            data: {
+              items: documents,
+              totalCount: totalCount,
+            },
+          };
+        },
+        async onQueryStarted(_request, { queryFulfilled }) {
+          await queryFulfilled.catch((err) => {
+            ErrorHandler(err);
+          });
+        },
+        providesTags: (result, _error, collectionName) =>
+          result
+            ? [
+                ...result.items.map(({ id }) => ({ type: 'extensionData' as const, id, collectionName })),
+                { type: 'extensionData', id: 'LIST', collectionName },
+              ]
+            : [{ type: 'extensionData', id: 'LIST', collectionName }],
+      }),
       fetchCreateDocument: builder.mutation<any, { collectionName: string; doc: any }>({
         queryFn: async (request) => {
           return { data: await CreateDocument(request.collectionName, request.doc) };
@@ -99,4 +124,5 @@ export const {
   useFetchRemoveDocumentMutation,
   useFetchSetDocumentMutation,
   useFetchUpdateDocumentMutation,
+  useFetchGetDocumentsWithoutFiltersQuery,
 } = extensionDataEndpoints;

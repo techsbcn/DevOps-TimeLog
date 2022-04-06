@@ -29,7 +29,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
         then: yup.number().positive().min(1, _VALUES.NOT_ZERO_TIME),
         otherwise: yup.number().min(0),
       }),
-      activity: yup.object().default(undefined).shape({
+      type: yup.object().default(undefined).shape({
         id: yup.number(),
         name: yup.string(),
       }),
@@ -51,18 +51,18 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
     reset();
   };
 
-  const [activities, setActivities] = useState<any[]>([]);
-  const [loadingActivities, setLoadingActivities] = React.useState<boolean>(false);
+  const [types, setTypes] = useState<any[]>([]);
+  const [loadingTypes, setLoadingTypes] = React.useState<boolean>(false);
 
   useEffect(() => {
-    setLoadingActivities(true);
+    setLoadingTypes(true);
     getAllTimeTypesMock()
       .then((result) => {
-        setActivities(result);
-        setLoadingActivities(false);
+        setTypes(result);
+        setLoadingTypes(false);
       })
       .catch(() => {
-        setLoadingActivities(false);
+        setLoadingTypes(false);
       });
   }, []);
 
@@ -146,11 +146,11 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
             name={'timeMinutes'}
           />
         </Grid>
-        {activities && activities?.length > 0 && !loadingActivities ? (
+        {types && types?.length > 0 && !loadingTypes ? (
           <Grid item xs={12} md={2}>
             <Controller
               control={control}
-              defaultValue={SelectSimpleAsyncHelper(activities[0])}
+              defaultValue={SelectSimpleAsyncHelper(types[0])}
               render={({ field: { onChange, value, name, ref } }) => {
                 value?.value && setValue(name, { id: value.value, name: value.label });
                 return (
@@ -158,7 +158,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
                     label={_VALUES.ACTIVITY}
                     name={name}
                     inputRef={ref}
-                    options={activities && activities?.length > 0 ? SelectAsyncHelper(activities) : []}
+                    options={types && types?.length > 0 ? SelectAsyncHelper(types) : []}
                     onChangeOption={(option) => {
                       onChange(option ? { id: option.value, name: option.label } : []);
                     }}
@@ -167,11 +167,11 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
                   />
                 );
               }}
-              name={'activity'}
+              name={'type'}
             />
           </Grid>
         ) : (
-          loadingActivities && <CircularProgress />
+          loadingTypes && <CircularProgress />
         )}
         <Grid item xs={12} md={6}>
           <Controller
