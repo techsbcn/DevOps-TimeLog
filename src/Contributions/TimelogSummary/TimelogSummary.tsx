@@ -26,7 +26,7 @@ export const TimelogSummary: React.FC = () => {
     });
   }, []);
 
-  const useFetchDocuments = useFetchGetDocumentsWithoutFiltersQuery('TimeLogData_Dev');
+  const useFetchDocuments = useFetchGetDocumentsWithoutFiltersQuery(process.env.ENTRIES_COLLECTION_NAME as string);
 
   const filterByDates = React.useCallback(
     (array: any[]) => {
