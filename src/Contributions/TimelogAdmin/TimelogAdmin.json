@@ -2,9 +2,9 @@
     "contributions": [
         {
             "id": "timelog-admin",
-            "type": "ms.vss-work-web.work-item-form-page",
+            "type": "ms.vss-web.hub",
             "targets": [
-                "ms.vss-admin-web.project-overview-toolbar-menu"
+                "ms.vss-web.project-admin-hub-group"
             ],
             "properties": {
                 "name": "Timelog Admin",
