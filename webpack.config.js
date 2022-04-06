@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 // Webpack entry points. Mapping from resulting bundle name to the source file entry.
 const entries = {};
@@ -62,6 +63,7 @@ module.exports = {
     port: 3000,
   },
   plugins: [
+    new Dotenv(),
     new CopyWebpackPlugin({
       patterns: [{ from: '**/*.html', context: 'src/Contributions' }],
     }),
