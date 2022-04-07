@@ -55,7 +55,7 @@ module.exports = (env) => {
         type: 'ms.vss-web.hub',
         targets: ['ms.vss-web.project-admin-hub-group'],
         properties: {
-          name: 'Timelog Admin',
+          name: `Time log Admin${namePostfix}`,
           uri: 'dist/TimelogAdmin/TimelogAdmin.html',
         },
       },
@@ -64,7 +64,7 @@ module.exports = (env) => {
         type: 'ms.vss-work-web.work-item-form-page',
         targets: ['ms.vss-work-web.work-item-form'],
         properties: {
-          name: 'Timelog Entries',
+          name: `Time log Entries${namePostfix}`,
           uri: 'dist/TimelogEntries/TimelogEntries.html',
         },
       },
@@ -73,7 +73,7 @@ module.exports = (env) => {
         type: 'ms.vss-web.hub',
         targets: ['ms.vss-work-web.work-hub-group'],
         properties: {
-          name: 'Timelog Summary',
+          name: `Time log Summary${namePostfix}`,
           uri: 'dist/TimelogSummary/TimelogSummary.html',
           icon: {
             light: 'static/TimeLog-Black-128x128.png',
