@@ -14,7 +14,7 @@ fs.readdirSync(contributionsDir).filter((dir) => {
   }
 });
 
-module.exports = {
+module.exports = (env) => ({
   entry: entries,
   output: {
     filename: '[name]/[name].js',
@@ -63,9 +63,9 @@ module.exports = {
     port: 3000,
   },
   plugins: [
-    new Dotenv(),
+    new Dotenv({  path: env.mode == 'development' ? './.env' :  `./.env.${env.mode}`}),
     new CopyWebpackPlugin({
       patterns: [{ from: '**/*.html', context: 'src/Contributions' }],
     }),
   ],
-};
+});
