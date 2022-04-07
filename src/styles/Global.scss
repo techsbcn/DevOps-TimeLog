@@ -2,12 +2,19 @@ $main-color: #286FB7;
 $main-dark-grey: #666666;
 $body-background-color: #f4f7fa;
 
+::-webkit-scrollbar {
+    display: none;
+}
+
 body{
     font-family: "Open Sans", sans-serif !important;
     #root {
         height: 100%;
         width: 100%;
         background-color: $body-background-color!important;
+    }
+    .cursor-pointer {
+        cursor: pointer;
     }
     .main-color{
         color: $main-color !important;
@@ -53,9 +60,23 @@ body{
         color: $main-dark-grey;
         text-decoration: underline;
     }
+    .text-main-underline{
+        text-decoration: underline;
+    }
+    .hover-underline{
+        cursor: pointer;
+        &:hover{
+            text-decoration: underline;
+        }
+    }
     .main-wrapper-component{
-        box-shadow: 0 1px 10px 0 RGB(69 90 100 / 50%)!important;
+        box-shadow: 0 1px 10px 0 RGB(69 90 100 / 35%)!important;
         border: 1px solid #8080808c!important;
         border-radius: 5px!important;
+    }
+    .techsbcn-powered-component{
+        .techs-bcn-logo{
+                width: 170px;
+        }
     }
 }

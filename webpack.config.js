@@ -55,6 +55,35 @@ module.exports = (env) => ({
         test: /\.html$/,
         loader: 'file-loader',
       },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              query: {
+                name: 'static/[name].[ext]',
+              },
+            },
+          },
+          {
+            loader: 'image-webpack-loader',
+            options: {
+              query: {
+                mozjpeg: {
+                  progressive: true,
+                },
+                gifsicle: {
+                  interlaced: true,
+                },
+                optipng: {
+                  optimizationLevel: 7,
+                },
+              },
+            },
+          },
+        ],
+      },
     ],
   },
   devtool: 'inline-source-map',
@@ -63,7 +92,7 @@ module.exports = (env) => ({
     port: 3000,
   },
   plugins: [
-    new Dotenv({  path: env.mode == 'development' ? './.env' :  `./.env.${env.mode}`}),
+    new Dotenv({ path: env.mode == 'development' ? './.env' : `./.env.${env.mode}` }),
     new CopyWebpackPlugin({
       patterns: [{ from: '**/*.html', context: 'src/Contributions' }],
     }),

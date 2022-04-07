@@ -8,8 +8,8 @@ import {
   IWorkItemLoadedArgs,
 } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTrackingServices';
 import { TimeLogEntry } from '../../Interfaces/extensionDataManager/TimeLogEntry';
-import TimelogEntriesForm from '../../components/compTimelogEntries/forms/TimelogEntriesForm';
-import TimelogEntriesTable from '../../components/compTimelogEntries/tables/TimelogEntriesTable';
+import TimelogEntriesForm from '../../components/timeLogEntries/forms/TimelogEntriesForm';
+import TimelogEntriesTable from '../../components/timeLogEntries/tables/TimelogEntriesTable';
 import { useFetchCreateDocumentMutation } from '../../redux/extensionDataManager/extensionDataManagerSlice';
 import { _VALUES } from '../../resources';
 import { getHoursFromMinutes, getMinutesFromHours } from '../../helpers/TimeHelper';
@@ -48,14 +48,15 @@ export const TimelogEntries: React.FC = () => {
   }, []);
 
   const createNewEntry = async (data: any): Promise<TimeLogEntry> => {
-    const userName = SDK.getUser().displayName;
+    const user = SDK.getUser();
     const timeEntry: TimeLogEntry = {
-      user: userName,
+      user: user.displayName,
+      userId: user.id,
       workItemId: workItemId ?? 0,
       date: data.date,
       time: Number(getMinutesFromHours(data.timeHours)) + Number(data.timeMinutes),
       notes: data.notes,
-      activity: data.activity,
+      type: data.type.name,
     };
     return timeEntry;
   };
