@@ -8,11 +8,13 @@ import { TimeLogEntry, TimeLogEntryFilters } from '../../interfaces';
 import { MainWrapperComponent, SimpleTableComponent } from 'techsbcn-storybook';
 import { getHoursAndMinutes } from '../../helpers';
 import TimeLogFilters from '../../components/timeLogSummary/TimeLogFilters';
+import * as _ from 'lodash';
 
 export const TimelogSummary: React.FC = () => {
   const [user, setUser] = useState<SDK.IUserContext>();
   const [loading, setLoading] = useState<boolean>(true);
   const [filters, setFilters] = useState<TimeLogEntryFilters>();
+  const [loadingFilters, setLoadingFilters] = useState<boolean>(false);
 
   useEffect(() => {
     setLoading(true);
@@ -21,7 +23,17 @@ export const TimelogSummary: React.FC = () => {
       await SDK.ready();
       const user = SDK.getUser();
       setUser(user);
-      user && setFilters({ userIds: [user.id] });
+      const curr = new Date();
+      user &&
+        setFilters({
+          userIds: [user.id],
+          timeFrom: new Date(
+            new Date(curr.setDate(curr.getDate() - curr.getDay() + 1)).setHours(0, 0, 0)
+          ).toLocaleDateString('sv-SE'),
+          timeTo: new Date(
+            new Date(curr.setDate(curr.getDate() - curr.getDay() + 7)).setHours(23, 59, 59)
+          ).toLocaleDateString('sv-SE'),
+        });
       setLoading(false);
     });
   }, []);
@@ -59,7 +71,8 @@ export const TimelogSummary: React.FC = () => {
       let documents = filters && filters.userIds ? JSON.parse(JSON.stringify(useFetchDocuments.data.items)) : [];
       documents = filterByDates(documents);
       documents = filterByUserIds(documents);
-      setTimeLogEntries(documents);
+      setTimeLogEntries(_.orderBy(documents, 'date', 'asc'));
+      setLoadingFilters(false);
     }
   }, [filterByDates, filterByUserIds, filters, useFetchDocuments.data]);
 
@@ -68,7 +81,8 @@ export const TimelogSummary: React.FC = () => {
   }, [loadDocuments]);
 
   const setNewFilters = (value: any, name: string) => {
-    const newFilters = JSON.parse(JSON.stringify(filters));
+    setLoadingFilters(true);
+    const newFilters: any = { ...filters };
     newFilters[name] = value;
     setFilters(newFilters);
   };
@@ -77,6 +91,7 @@ export const TimelogSummary: React.FC = () => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TimeLogFilters onFiltersChange={setNewFilters} user={user} loading={loading} />
+          <TimeLogFilters onFiltersChange={setNewFilters} filters={filters} user={user} loading={loading} />
         </Grid>
         <Grid item xs={12}>
           <MainWrapperComponent
@@ -87,7 +102,7 @@ export const TimelogSummary: React.FC = () => {
             <SimpleTableComponent
               rows={timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
               values={_VALUES}
-              loading={useFetchDocuments.isFetching}
+              loading={useFetchDocuments.isFetching || loadingFilters}
               columns={[
                 { id: 'date', label: _VALUES.DATE, minWidth: 100, isDate: true },
                 { id: 'workItemId', label: _VALUES.WORK_ITEM, minWidth: 100 },

@@ -4,12 +4,11 @@ import { useForm, Controller } from 'react-hook-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
 import { MainWrapperComponent, TextFieldComponent, ButtonComponent, SelectField } from 'techsbcn-storybook';
-// eslint-disable-next-line jest/no-mocks-import
-import { getAllTimeTypesMock } from '../../../__mocks__/Common';
 import { _VALUES } from '../../../resources/_constants/values';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SelectAsyncHelper, SelectSimpleAsyncHelper } from '../../../helpers';
+import { GetDocuments } from '../../../redux/extensionDataManager/extensionDataManagerAPI';
 
 interface TimelogEntriesFormProps {
   action: (data: any) => void;
@@ -30,7 +29,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
         otherwise: yup.number().min(0),
       }),
       type: yup.object().default(undefined).shape({
-        id: yup.number(),
+        id: yup.string(),
         name: yup.string(),
       }),
     },
@@ -56,9 +55,9 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
 
   useEffect(() => {
     setLoadingTypes(true);
-    getAllTimeTypesMock()
-      .then((result) => {
-        setTypes(result);
+    GetDocuments(process.env.ACTIVITIES_COLLECTION_NAME as string)
+      .then((result: any[]) => {
+        setTypes(SelectAsyncHelper(result));
         setLoadingTypes(false);
       })
       .catch(() => {
@@ -150,7 +149,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
           <Grid item xs={12} md={2}>
             <Controller
               control={control}
-              defaultValue={SelectSimpleAsyncHelper(types[0])}
+              defaultValue={types[0]}
               render={({ field: { onChange, value, name, ref } }) => {
                 value?.value && setValue(name, { id: value.value, name: value.label });
                 return (
@@ -158,7 +157,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
                     label={_VALUES.ACTIVITY}
                     name={name}
                     inputRef={ref}
-                    options={types && types?.length > 0 ? SelectAsyncHelper(types) : []}
+                    options={types && types?.length > 0 ? types : []}
                     onChangeOption={(option) => {
                       onChange(option ? { id: option.value, name: option.label } : []);
                     }}
@@ -193,7 +192,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
         </Grid>
         <Grid item xs={12} md={6}>
           <ButtonComponent
-            label={'Add Time Log'}
+            label={_VALUES.ADD_TIMELOG}
             startIcon={<FontAwesomeIcon icon={faFloppyDisk} />}
             onClick={handleSubmit(onSubmit)}
             loading={props.loading}

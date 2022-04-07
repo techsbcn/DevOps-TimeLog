@@ -1,4 +1,7 @@
 export interface TimeType {
   id?: string;
-  name: string;
+  name?: string;
+  user?: string;
+  userId?: string;
+  date?: string;
 }

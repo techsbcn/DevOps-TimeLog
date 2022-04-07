@@ -1,5 +1,5 @@
 export interface TimeLogEntryFilters {
   userIds?: string[];
-  timeFrom?: Date;
-  timeTo?: Date;
+  timeFrom?: string;
+  timeTo?: string;
 }

@@ -5,11 +5,13 @@ import { GetTeams, GetTeamMembers } from '../../redux/core/coreAPI';
 import { SelectAsyncHelper } from '../../helpers';
 import * as SDK from 'azure-devops-extension-sdk';
 import * as _ from 'lodash';
+import { TimeLogEntryFilters } from '../../interfaces';
 
 interface TimeLogFiltersProps {
   onFiltersChange: (value: any, name: string) => void;
   user?: SDK.IUserContext;
   loading: boolean;
+  filters?: TimeLogEntryFilters;
 }
 
 const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
@@ -104,13 +106,14 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
           />
         ),
       });
-
+    const curr = new Date();
     filterList.push({
       doubleFilter: {
         firstFilter: (
           <TextFieldComponent
             label={_VALUES.FROM}
             name="timeFrom"
+            defaultValue={props.filters?.timeFrom && new Date(props.filters.timeFrom).toLocaleDateString('sv-SE')}
             type="date"
             onChange={_.debounce(async (e) => props.onFiltersChange(e.target.value, e.target.name), 1000)}
           />
@@ -120,10 +123,11 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
             label={_VALUES.TO}
             name="timeTo"
             type="date"
+            defaultValue={props.filters?.timeTo && new Date(props.filters.timeTo).toLocaleDateString('sv-SE')}
             onChange={_.debounce(async (e) => {
               const date = new Date(new Date(e.target.value).setHours(23, 59, 59));
               props.onFiltersChange(
-                !isNaN(date.valueOf()) ? date.toLocaleString('sv-SE') : e.target.value,
+                !isNaN(date.valueOf()) ? date.toLocaleDateString('sv-SE') : e.target.value,
                 e.target.name
               );
             }, 1000)}
