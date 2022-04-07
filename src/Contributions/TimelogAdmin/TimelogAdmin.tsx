@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import * as SDK from 'azure-devops-extension-sdk';
 import { showRootComponent } from '../..';
-import { Grid, Container } from '@mui/material';
+import { Grid, Container, Box } from '@mui/material';
 import TimeTypeForm from '../../components/timeLogAdmin/forms/TimeTypeForm';
 import TimeTypesTable from '../../components/timeLogAdmin/tables/TimeTypesTable';
 import { useFetchCreateDocumentMutation } from '../../redux/extensionDataManager/extensionDataManagerSlice';
 import { TimeType } from '../../interfaces';
+import About from '../../components/timeLogAdmin/forms/About';
+import { _VALUES } from '../../resources/_constants/values';
 
 export const TimelogAdmin: React.FC = () => {
   const [timeLogType, setTimeLogType] = useState<TimeType>();
+  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     SDK.init().then(async () => {
@@ -28,18 +31,48 @@ export const TimelogAdmin: React.FC = () => {
       doc: { ...doc, date: new Date().toLocaleString('sv-SE') },
     });
   };
+  const tabs = [
+    <Grid key={0} container spacing={2}>
+      <Grid item xs={12}>
+        <TimeTypeForm action={onSubmit} loading={isCreating} />
+      </Grid>
+      <Grid item xs={12}>
+        <TimeTypesTable />
+      </Grid>
+      <Grid item xs={12}></Grid>
+    </Grid>,
+    <About key={1} />,
+  ];
+
+  const renderTabContent = (tab: number) => {
+    return tabs[tab];
+  };
 
   return (
     <Container maxWidth={false}>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TimeTypeForm action={onSubmit} loading={isCreating} />
+      <Grid container>
+        <Grid item xs={6}>
+          <Box
+            fontWeight={'bold'}
+            fontSize={'1rem'}
+            className={` main-color hover-underline ${activeTab === 0 && 'text-main-underline'}`}
+            onClick={() => setActiveTab(0)}
+          >
+            {_VALUES.ACTIVITY_MANAGEMENT}
+          </Box>
         </Grid>
-        <Grid item xs={12}>
-          <TimeTypesTable />
+        <Grid item xs={6}>
+          <Box
+            fontWeight={'bold'}
+            fontSize={'1rem'}
+            className={`main-color hover-underline ${activeTab === 1 && 'text-main-underline'}`}
+            onClick={() => setActiveTab(1)}
+          >
+            {_VALUES.ABOUT}
+          </Box>
         </Grid>
-        <Grid item xs={12}></Grid>
       </Grid>
+      <Box mt={2}>{renderTabContent(activeTab)}</Box>
     </Container>
   );
 };

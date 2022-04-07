@@ -55,6 +55,35 @@ module.exports = {
         test: /\.html$/,
         loader: 'file-loader',
       },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              query: {
+                name: 'static/[name].[ext]',
+              },
+            },
+          },
+          {
+            loader: 'image-webpack-loader',
+            options: {
+              query: {
+                mozjpeg: {
+                  progressive: true,
+                },
+                gifsicle: {
+                  interlaced: true,
+                },
+                optipng: {
+                  optimizationLevel: 7,
+                },
+              },
+            },
+          },
+        ],
+      },
     ],
   },
   devtool: 'inline-source-map',
