@@ -9,6 +9,7 @@ import { MainWrapperComponent, SimpleTableComponent } from 'techsbcn-storybook';
 import { getHoursAndMinutes } from '../../helpers';
 import TimeLogFilters from '../../components/timeLogSummary/TimeLogFilters';
 import * as _ from 'lodash';
+import TimeLogDetails from '../../components/timeLogSummary/TimeLogDetails';
 
 export const TimelogSummary: React.FC = () => {
   const [user, setUser] = useState<SDK.IUserContext>();
@@ -90,8 +91,13 @@ export const TimelogSummary: React.FC = () => {
     <Container maxWidth={false}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <TimeLogFilters onFiltersChange={setNewFilters} user={user} loading={loading} />
           <TimeLogFilters onFiltersChange={setNewFilters} filters={filters} user={user} loading={loading} />
+        </Grid>
+        <Grid item xs={12}>
+          <TimeLogDetails
+            timeLogEntries={timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
+            loading={useFetchDocuments.isFetching || loadingFilters}
+          />
         </Grid>
         <Grid item xs={12}>
           <MainWrapperComponent
