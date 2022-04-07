@@ -69,6 +69,7 @@ export const TimelogSummary: React.FC = () => {
 
   const loadDocuments = React.useCallback(() => {
     if (filters && useFetchDocuments.data && useFetchDocuments.data.items.length > 0) {
+      setLoadingFilters(true);
       let documents = filters && filters.userIds ? JSON.parse(JSON.stringify(useFetchDocuments.data.items)) : [];
       documents = filterByDates(documents);
       documents = filterByUserIds(documents);
@@ -82,7 +83,6 @@ export const TimelogSummary: React.FC = () => {
   }, [loadDocuments]);
 
   const setNewFilters = (value: any, name: string) => {
-    setLoadingFilters(true);
     const newFilters: any = { ...filters };
     newFilters[name] = value;
     setFilters(newFilters);
