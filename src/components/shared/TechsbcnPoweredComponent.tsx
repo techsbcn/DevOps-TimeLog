@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import React from 'react';
 import { _VALUES } from '../../resources/_constants/values';
-import techsBCNLogo from '../../../static/techsBCN.svg';
+import techsBCNLogo from '../../../static/techsBCN.png';
 import { TextSimpleComponent } from 'techsbcn-storybook';
 
 const TechsbcnPoweredComponent: React.FC = () => {
