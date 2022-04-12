@@ -13,9 +13,9 @@
     "url": "https://github.com/techsbcn/DevOps-TimeLog"
   },
   "scripts": {
-    "start": "webpack serve --mode development",
+    "start": "webpack serve --env mode=development --mode development",
     "clean": "rimraf ./dist",
-    "build:dev": "yarn run clean && webpack --mode development",
+    "build:dev": "yarn run clean && webpack --env mode=development --mode development",
     "build:staging": "yarn run  clean && webpack --env staging --mode production",
     "build": "yarn run  clean && test && webpack --env production --mode production",
     "test": "set TEST_REPORT_FILENAME=test-results.xml jest --verbose",
