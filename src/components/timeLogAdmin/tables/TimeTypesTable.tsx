@@ -36,7 +36,7 @@ const TimeTypesTable: React.FC = () => {
             label: _VALUES.CREATED_BY,
             minWidth: 100,
           },
-          { id: 'name', label: _VALUES.NAME, minWidth: 100, noSort: true },
+          { id: 'name', label: _VALUES.NAME, minWidth: 100 },
           {
             id: 'actions',
             label: _VALUES.ACTIONS,

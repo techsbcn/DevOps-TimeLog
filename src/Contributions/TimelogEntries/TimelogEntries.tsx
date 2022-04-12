@@ -49,6 +49,7 @@ export const TimelogEntries: React.FC = () => {
 
   const createNewEntry = async (data: any): Promise<TimeLogEntry> => {
     const user = SDK.getUser();
+    console.log(data);
     const timeEntry: TimeLogEntry = {
       user: user.displayName,
       userId: user.id,
@@ -56,7 +57,7 @@ export const TimelogEntries: React.FC = () => {
       date: data.date,
       time: Number(getMinutesFromHours(data.timeHours)) + Number(data.timeMinutes),
       notes: data.notes,
-      type: data.type.name,
+      type: data.type ? data.type.name : undefined,
     };
     return timeEntry;
   };
