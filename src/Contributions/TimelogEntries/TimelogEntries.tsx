@@ -14,11 +14,15 @@ import { useFetchCreateDocumentMutation } from '../../redux/extensionDataManager
 import { _VALUES } from '../../resources';
 import { getHoursFromMinutes, getMinutesFromHours } from '../../helpers/TimeHelper';
 import { PatchWorkItem, WorkItemFormService } from '../../redux/workItem/workItemAPI';
+import { initBackend } from 'absurd-sql/dist/indexeddb-main-thread';
+
+const worker = new Worker(new URL('../../index.worker.js', import.meta.url));
 
 export const TimelogEntries: React.FC = () => {
   const [workItemId, setWorkItemId] = useState<number>();
 
   useEffect(() => {
+    initBackend(worker);
     SDK.init().then(async () => {
       SDK.register(SDK.getContributionId(), () => {
         return {
@@ -89,6 +93,13 @@ export const TimelogEntries: React.FC = () => {
     <Container maxWidth={false}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
+          <button
+            onClick={() => {
+              worker.postMessage(5);
+            }}
+          >
+            Send Message
+          </button>
           <TimelogEntriesForm action={onSubmit} loading={isCreating} />
         </Grid>
         <Grid item xs={12}>

@@ -21,9 +21,14 @@ module.exports = (env) => ({
     publicPath: '/dist/',
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
+    extensions: ['.ts', '.tsx', '.js', '.dev.js', '.json', '.wasm'],
     alias: {
       'azure-devops-extension-sdk': path.resolve('node_modules/azure-devops-extension-sdk'),
+    },
+    fallback: {
+      crypto: false,
+      path: false,
+      fs: false,
     },
   },
   stats: {
@@ -90,11 +95,19 @@ module.exports = (env) => ({
   devServer: {
     https: true,
     port: 3000,
+    hot: true,
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
   },
   plugins: [
     new Dotenv({ path: env.mode == 'development' ? './.env' : `./.env.${env.mode}` }),
     new CopyWebpackPlugin({
-      patterns: [{ from: '**/*.html', context: 'src/Contributions' }],
+      patterns: [
+        { from: '**/*.html', context: 'src/Contributions' },
+        { from: 'sql-wasm.wasm', to: './' },
+      ],
     }),
   ],
 });

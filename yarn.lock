@@ -1022,6 +1022,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jlongster/sql.js@npm:^1.6.7":
+  version: 1.6.7
+  resolution: "@jlongster/sql.js@npm:1.6.7"
+  checksum: ca1234bc2cac465dbcaa56c57cba5b3aa9af37a5e3ebf1fcb33e61251c1b052a9a99b5eb5b7949107b31792d3109ccc301d71a295c6a0c2eaa75b2067d9da2d8
+  languageName: node
+  linkType: hard
+
 "@jridgewell/resolve-uri@npm:^3.0.3":
   version: 3.0.5
   resolution: "@jridgewell/resolve-uri@npm:3.0.5"
@@ -2382,6 +2389,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"absurd-sql@npm:^0.0.53":
+  version: 0.0.53
+  resolution: "absurd-sql@npm:0.0.53"
+  checksum: f038657bf553422146825a7d234103abfd300792f009b94292d6cd8c0e7571967b54fd07f7d8910bbc18ca83fbc080624bc5dea33e142c8021785cdf5faf90fe
+  languageName: node
+  linkType: hard
+
 "accepts@npm:~1.3.4, accepts@npm:~1.3.5, accepts@npm:~1.3.8":
   version: 1.3.8
   resolution: "accepts@npm:1.3.8"
@@ -2944,6 +2958,7 @@ __metadata:
     "@fortawesome/free-solid-svg-icons": ^6.1.1
     "@fortawesome/react-fontawesome": ^0.1.18
     "@hookform/resolvers": ^2.8.8
+    "@jlongster/sql.js": ^1.6.7
     "@mui/icons-material": ^5.5.1
     "@mui/material": ^5.5.3
     "@reduxjs/toolkit": ^1.8.0
@@ -2955,6 +2970,7 @@ __metadata:
     "@types/yup": ^0.29.13
     "@typescript-eslint/eslint-plugin": ^5.17.0
     "@typescript-eslint/parser": ^5.17.0
+    absurd-sql: ^0.0.53
     azure-devops-extension-api: ^1.158.0
     azure-devops-extension-sdk: ^2.0.11
     azure-devops-ui: ^2.167.31
