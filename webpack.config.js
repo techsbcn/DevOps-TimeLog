@@ -18,7 +18,7 @@ module.exports = (env) => ({
   entry: entries,
   output: {
     filename: '[name]/[name].js',
-    publicPath: './dist/',
+    publicPath: '/',
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.dev.js', '.json', '.wasm'],
