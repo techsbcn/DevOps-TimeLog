@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Container } from '@mui/material';
 import * as SDK from 'azure-devops-extension-sdk';
-import { showRootComponent } from '../..';
+import { initSQL, initSQL2, showRootComponent } from '../..';
 import {
   IWorkItemChangedArgs,
   IWorkItemFieldChangedArgs,
@@ -44,7 +44,10 @@ export const TimelogEntries: React.FC = () => {
           onRefreshed: (args: IWorkItemChangedArgs) => {},
         };
       });
-
+      const worker2 = initSQL();
+      const worker3 = initSQL2();
+      worker2.postMessage('worker2');
+      worker3.postMessage('worker3');
       const workItemFormService = await WorkItemFormService;
       const workItemId = await workItemFormService.getId();
       setWorkItemId(workItemId);

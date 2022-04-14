@@ -18,12 +18,13 @@ module.exports = (env) => ({
   entry: entries,
   output: {
     filename: '[name]/[name].js',
-    publicPath: '/',
+    publicPath: '/dist/',
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.dev.js', '.json', '.wasm'],
     alias: {
       'azure-devops-extension-sdk': path.resolve('node_modules/azure-devops-extension-sdk'),
+      wokerFile$: path.resolve(__dirname, 'src/index.worker.js'),
     },
     fallback: {
       crypto: false,
