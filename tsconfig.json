@@ -10,7 +10,7 @@
         "strict": true,
         "target": "es6",
         "rootDir": "src/",
-        "outDir": "./dist/",
+        "outDir": "../dist/",
         "jsx": "react",
         "lib": [
           "es5",
