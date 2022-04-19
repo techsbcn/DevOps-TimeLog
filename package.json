@@ -16,7 +16,7 @@
     "start": "webpack serve --env mode=development --mode development",
     "clean": "rimraf ./dist",
     "build:dev": "yarn run clean && webpack --env mode=development --mode development",
-    "build:staging": "yarn run  clean && webpack --env staging --mode production",
+    "build:staging": "yarn run clean && webpack --env mode=staging --mode production",
     "build": "yarn run  clean && test && webpack --env production --mode production",
     "test": "set TEST_REPORT_FILENAME=test-results.xml jest --verbose",
     "lint": "eslint src/**/*.{ts,tsx} --fix"

@@ -18,10 +18,9 @@ module.exports = (env) => ({
   entry: entries,
   output: {
     filename: '[name]/[name].js',
-    publicPath: './dist/',
+    publicPath: '/dist/',
   },
   resolve: {
-    preferRelative: true,
     extensions: ['.ts', '.tsx', '.js', '.dev.js', '.json', '.wasm'],
     alias: {
       'azure-devops-extension-sdk': path.resolve('node_modules/azure-devops-extension-sdk'),
@@ -108,6 +107,7 @@ module.exports = (env) => ({
       patterns: [
         { from: '**/*.html', context: 'src/Contributions' },
         { from: 'sql-wasm.wasm', to: './' },
+        { from: 'src/index.worker.js', to: './' },
       ],
     }),
   ],
