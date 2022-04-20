@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Container } from '@mui/material';
 import * as SDK from 'azure-devops-extension-sdk';
-import { initSQL, initSQL2, showRootComponent } from '../..';
+import { initSQL, showRootComponent } from '../..';
 import {
   IWorkItemChangedArgs,
   IWorkItemFieldChangedArgs,
@@ -14,15 +14,13 @@ import { useFetchCreateDocumentMutation } from '../../redux/extensionDataManager
 import { _VALUES } from '../../resources';
 import { getHoursFromMinutes, getMinutesFromHours } from '../../helpers/TimeHelper';
 import { PatchWorkItem, WorkItemFormService } from '../../redux/workItem/workItemAPI';
-import { initBackend } from 'absurd-sql/dist/indexeddb-main-thread';
 
-const worker = new Worker(new URL('../../index.worker.js', import.meta.url));
+const worker = initSQL();
 
 export const TimelogEntries: React.FC = () => {
   const [workItemId, setWorkItemId] = useState<number>();
 
   useEffect(() => {
-    initBackend(worker);
     SDK.init().then(async () => {
       SDK.register(SDK.getContributionId(), () => {
         return {
@@ -44,10 +42,7 @@ export const TimelogEntries: React.FC = () => {
           onRefreshed: (args: IWorkItemChangedArgs) => {},
         };
       });
-      const worker2 = initSQL();
-      const worker3 = initSQL2();
-      worker2.postMessage('worker2');
-      worker3.postMessage('worker3');
+
       const workItemFormService = await WorkItemFormService;
       const workItemId = await workItemFormService.getId();
       setWorkItemId(workItemId);
@@ -98,7 +93,7 @@ export const TimelogEntries: React.FC = () => {
         <Grid item xs={12}>
           <button
             onClick={() => {
-              worker.postMessage(5);
+              worker.postMessage({ type: 'search', name: 'Hello World!' });
             }}
           >
             Send Message

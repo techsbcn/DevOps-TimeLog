@@ -9,17 +9,7 @@ import { Box } from '@mui/material';
 import { initBackend } from 'absurd-sql/dist/indexeddb-main-thread';
 
 export function initSQL() {
-  // eslint-disable-next-line no-debugger
-  debugger;
-  const fool = import.meta.url;
-  console.log(fool, new URL('./index.worker.js', import.meta.url));
   const worker = new Worker(new URL('./index.worker.js', import.meta.url));
-  initBackend(worker);
-  return worker;
-}
-
-export function initSQL2() {
-  const worker = new Worker(new URL('index.worker.js', import.meta.url));
   initBackend(worker);
   return worker;
 }

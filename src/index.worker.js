@@ -5,7 +5,10 @@ import IndexedDBBackend from 'absurd-sql/dist/indexeddb-backend';
 let SQL = null;
 
 async function init() {
-  SQL = await initSqlJs({ locateFile: (file) => new URL(file, import.meta.url) });
+  SQL = await initSqlJs({
+    locateFile: (file) => `../${file}`,
+  });
+
   let sqlFS = new SQLiteFS(SQL.FS, new IndexedDBBackend());
 
   SQL.register_for_idb(sqlFS);
@@ -72,10 +75,12 @@ function uid(i) {
 // eslint-disable-next-line no-undef
 self.onmessage = async (message) => {
   if (message) {
-    console.log('Message from worker', message);
-    if (message.data == 5) {
-      await init();
-      await populateAction(message.data);
+    console.log('Message from worker', message.data);
+    switch (message.data.type) {
+      case 'search':
+        await init();
+        //await populateAction(message.data);
+        break;
     }
   }
 };

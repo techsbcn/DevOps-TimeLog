@@ -18,7 +18,7 @@ module.exports = (env) => ({
   entry: entries,
   output: {
     filename: '[name]/[name].js',
-    publicPath: env.mode == 'development' ? './dist/' : '../',
+    publicPath: env.mode == 'development' ? '/dist/' : '../',
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.dev.js', '.json', '.wasm'],
@@ -88,6 +88,10 @@ module.exports = (env) => ({
             },
           },
         ],
+      },
+      {
+        test: /\/worker\.js$/,
+        use: { loader: 'worker-loader' },
       },
     ],
   },
