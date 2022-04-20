@@ -79,7 +79,7 @@ self.onmessage = async (message) => {
     switch (message.data.type) {
       case 'search':
         await init();
-        //await populateAction(message.data);
+        await populateAction(message.data);
         break;
     }
   }
