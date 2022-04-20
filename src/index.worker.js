@@ -5,7 +5,7 @@ import IndexedDBBackend from 'absurd-sql/dist/indexeddb-backend';
 let SQL = null;
 
 async function init() {
-  SQL = await initSqlJs({ locateFile: (file) => `/dist/${file}` });
+  SQL = await initSqlJs({ locateFile: (file) => new URL(file, import.meta.url) });
   let sqlFS = new SQLiteFS(SQL.FS, new IndexedDBBackend());
 
   SQL.register_for_idb(sqlFS);
