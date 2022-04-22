@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import * as SDK from 'azure-devops-extension-sdk';
 import { showRootComponent } from '../..';
-import { _VALUES } from '../../resources/_constants/values';
 import { useFetchGetDocumentsWithoutFiltersQuery } from '../../redux/extensionDataManager/extensionDataManagerSlice';
 import { Container, Grid } from '@mui/material';
 import { TimeLogEntry, TimeLogEntryFilters } from '../../interfaces';
-import { MainWrapperComponent, SimpleTableComponent } from 'techsbcn-storybook';
-import { getHoursAndMinutes } from '../../helpers';
 import TimeLogFilters from '../../components/timeLogSummary/TimeLogFilters';
 import * as _ from 'lodash';
 import TimeLogDetails from '../../components/timeLogSummary/TimeLogDetails';
+import TimeLogTable from '../../components/timeLogSummary/TimeLogTable';
 
-export const TimelogSummary: React.FC = () => {
+export const TimeLogOldSummary: React.FC = () => {
   const [user, setUser] = useState<SDK.IUserContext>();
   const [loading, setLoading] = useState<boolean>(true);
   const [filters, setFilters] = useState<TimeLogEntryFilters>();
@@ -100,33 +98,13 @@ export const TimelogSummary: React.FC = () => {
           />
         </Grid>
         <Grid item xs={12}>
-          <MainWrapperComponent
-            headerProps={{
-              title: _VALUES.TIMELOG_ENTRIES,
-            }}
-          >
-            <SimpleTableComponent
-              rows={timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
-              values={_VALUES}
-              loading={useFetchDocuments.isFetching || loadingFilters}
-              columns={[
-                { id: 'date', label: _VALUES.DATE, minWidth: 100, isDate: true },
-                { id: 'workItemId', label: _VALUES.WORK_ITEM, minWidth: 100 },
-                {
-                  id: 'time',
-                  label: _VALUES.TIME,
-                  minWidth: 100,
-                  rowViewFormat: (row) => getHoursAndMinutes(row.time),
-                },
-                { id: 'user', label: _VALUES.USER, minWidth: 100 },
-                { id: 'type', label: _VALUES.ACTIVITY, minWidth: 100 },
-                { id: 'notes', label: _VALUES.NOTES, minWidth: 100 },
-              ]}
-            />
-          </MainWrapperComponent>
+          <TimeLogTable
+            documents={timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
+            loading={useFetchDocuments.isFetching || loadingFilters}
+          />
         </Grid>
       </Grid>
     </Container>
   );
 };
-showRootComponent(<TimelogSummary />);
+showRootComponent(<TimeLogOldSummary />);

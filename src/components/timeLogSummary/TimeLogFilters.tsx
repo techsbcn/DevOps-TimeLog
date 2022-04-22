@@ -3,13 +3,12 @@ import { MainWrapperComponent, SelectField, TextFieldComponent } from 'techsbcn-
 import { _VALUES } from '../../resources/_constants/values';
 import { GetTeams, GetTeamMembers } from '../../redux/core/coreAPI';
 import { SelectAsyncHelper } from '../../helpers';
-import * as SDK from 'azure-devops-extension-sdk';
 import * as _ from 'lodash';
-import { TimeLogEntryFilters } from '../../interfaces';
+import { TimeLogEntryFilters, UserContext } from '../../interfaces';
 
 interface TimeLogFiltersProps {
   onFiltersChange: (value: any, name: string) => void;
-  user?: SDK.IUserContext;
+  user?: UserContext;
   loading: boolean;
   filters?: TimeLogEntryFilters;
 }
@@ -106,7 +105,6 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
           />
         ),
       });
-    const curr = new Date();
     filterList.push({
       doubleFilter: {
         firstFilter: (

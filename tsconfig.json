@@ -9,7 +9,7 @@
         "noImplicitThis": true,
         "strict": true,
         "target": "es6",
-        "rootDir": "src/",
+        "rootDir": "./src",
         "outDir": "./dist",
         "jsx": "react",
         "lib": [
@@ -19,16 +19,10 @@
           "esnext",
           "es2015.promise"
         ],
-        "types": [
-          "react",
-          "jest",
-          "node"
-        ],
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "allowJs": true,
         "skipLibCheck": true,
-        //"isolatedModules": true,
         "resolveJsonModule": true,
     }
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Container } from '@mui/material';
 import * as SDK from 'azure-devops-extension-sdk';
-import { initSQL, showRootComponent } from '../..';
+import { showRootComponent } from '../..';
 import {
   IWorkItemChangedArgs,
   IWorkItemFieldChangedArgs,
@@ -14,8 +14,6 @@ import { useFetchCreateDocumentMutation } from '../../redux/extensionDataManager
 import { _VALUES } from '../../resources';
 import { getHoursFromMinutes, getMinutesFromHours } from '../../helpers/TimeHelper';
 import { PatchWorkItem, WorkItemFormService } from '../../redux/workItem/workItemAPI';
-
-const worker = initSQL();
 
 export const TimelogEntries: React.FC = () => {
   const [workItemId, setWorkItemId] = useState<number>();
@@ -91,13 +89,6 @@ export const TimelogEntries: React.FC = () => {
     <Container maxWidth={false}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <button
-            onClick={() => {
-              worker.postMessage({ type: 'search', name: 'Hello World!' });
-            }}
-          >
-            Send Message
-          </button>
           <TimelogEntriesForm action={onSubmit} loading={isCreating} />
         </Grid>
         <Grid item xs={12}>

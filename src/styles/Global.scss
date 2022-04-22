@@ -2,16 +2,25 @@ $main-color: #286FB7;
 $main-dark-grey: #666666;
 $body-background-color: #f4f7fa;
 
+$size-form: (calc(100vw - 300px) / (1600 - 300));
+$body-size: calc(12pt + (14 - 12) * #{$size-form});
+
 ::-webkit-scrollbar {
     display: none;
 }
 
+*{
+    font-family: sans-serif !important;
+    font-weight: 400;
+}
+
 body{
-    font-family: "Open Sans", sans-serif !important;
+    margin: 0;
+    height: 100vh;
+    background-color: $body-background-color!important;
+    font-size: $body-size;
     #root {
         height: 100%;
-        width: 100%;
-        background-color: $body-background-color!important;
     }
     .cursor-pointer {
         cursor: pointer;
@@ -78,5 +87,8 @@ body{
         .techs-bcn-logo{
                 width: 170px;
         }
+    }
+    .circular-progress-main-color{
+        color: $main-color!important;
     }
 }
