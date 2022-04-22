@@ -10,7 +10,7 @@ interface TimeLogDetailsProps {
   loading: boolean;
 }
 
-const TimeLogDetails: React.FC<TimeLogDetailsProps> = (props) => {
+export const TimeLogDetails: React.FC<TimeLogDetailsProps> = (props) => {
   const [total, setTotal] = useState('');
   const [avarage, setAvarage] = useState('');
 
@@ -110,5 +110,3 @@ const TimeLogDetails: React.FC<TimeLogDetailsProps> = (props) => {
     </MainWrapperComponent>
   );
 };
-
-export default TimeLogDetails;

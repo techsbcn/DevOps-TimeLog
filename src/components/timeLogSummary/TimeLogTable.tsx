@@ -9,7 +9,7 @@ interface TimeLogTableProps {
   loading: boolean;
 }
 
-const TimeLogTable: React.FC<TimeLogTableProps> = (props) => {
+export const TimeLogTable: React.FC<TimeLogTableProps> = (props) => {
   return (
     <MainWrapperComponent
       headerProps={{
@@ -37,5 +37,3 @@ const TimeLogTable: React.FC<TimeLogTableProps> = (props) => {
     </MainWrapperComponent>
   );
 };
-
-export default TimeLogTable;

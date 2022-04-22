@@ -81,6 +81,19 @@ module.exports = (env) => {
           },
         },
       },
+      {
+        id: 'time-log-old-summary',
+        type: 'ms.vss-web.hub',
+        targets: ['ms.vss-work-web.work-hub-group'],
+        properties: {
+          name: `Time Log Old Summary${namePostfix}`,
+          uri: 'dist/TimeLogOldSummary/TimeLogOldSummary.html',
+          icon: {
+            light: 'static/TimeLog-Black-128x128.png',
+            dark: 'static/TimeLog-White-128x128.png',
+          },
+        },
+      },
     ],
     scopes: ['vso.work', 'vso.project'],
   };

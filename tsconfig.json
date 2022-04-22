@@ -17,12 +17,13 @@
           "es6",
           "dom",
           "esnext",
-          "es2015.promise"
         ],
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "allowJs": true,
         "skipLibCheck": true,
         "resolveJsonModule": true,
+        "importHelpers": true,
+        "declaration": true,
     }
 }

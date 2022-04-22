@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Grid } from '@mui/material';
 import { TimeLogEntry, TimeLogEntryFilters, UserContext } from '../../interfaces';
-import TimeLogFilters from './TimeLogFilters';
 import * as _ from 'lodash';
-import TimeLogDetails from './TimeLogDetails';
-import TimeLogTable from './TimeLogTable';
+import { TimeLogDetails } from '../../components/timeLogSummary/TimeLogDetails';
+import { TimeLogTable } from '../../components/timeLogSummary/TimeLogTable';
+import { TimeLogFilters } from '../../components/timeLogSummary/TimeLogFilters';
 
 interface TimeLogSummaryProps {
   documents: TimeLogEntry[];
@@ -12,7 +12,7 @@ interface TimeLogSummaryProps {
   user?: UserContext;
 }
 
-const TimeLogSummary: React.FC<TimeLogSummaryProps> = (props) => {
+export const TimeLogSummary: React.FC<TimeLogSummaryProps> = (props) => {
   const [filters, setFilters] = useState<TimeLogEntryFilters>(() => {
     const curr = new Date();
     return {
@@ -95,5 +95,3 @@ const TimeLogSummary: React.FC<TimeLogSummaryProps> = (props) => {
     </Container>
   );
 };
-
-export default TimeLogSummary;

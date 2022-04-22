@@ -13,7 +13,7 @@ interface TimeLogFiltersProps {
   filters?: TimeLogEntryFilters;
 }
 
-const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
+export const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
   const [teams, setTeams] = useState<any[]>([]);
   const [members, setMembers] = useState<any[]>([]);
   const [teamSelected, setTeamSelected] = useState<any>();
@@ -147,5 +147,3 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
     />
   );
 };
-
-export default TimeLogFilters;
