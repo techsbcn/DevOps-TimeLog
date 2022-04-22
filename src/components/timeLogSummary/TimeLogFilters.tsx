@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { MainWrapperComponent, SelectField, TextFieldComponent } from 'techsbcn-storybook';
 import { _VALUES } from '../../resources/_constants/values';
 import { GetTeams, GetTeamMembers } from '../../redux/core/coreAPI';
-import { SelectAsyncHelper } from '../../helpers';
 import * as _ from 'lodash';
 import { TimeLogEntryFilters, UserContext } from '../../interfaces';
+import { SelectAsyncHelper } from '../../helpers/SelectHelper';
 
 interface TimeLogFiltersProps {
   onFiltersChange: (value: any, name: string) => void;
@@ -13,7 +13,7 @@ interface TimeLogFiltersProps {
   filters?: TimeLogEntryFilters;
 }
 
-export const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
+const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
   const [teams, setTeams] = useState<any[]>([]);
   const [members, setMembers] = useState<any[]>([]);
   const [teamSelected, setTeamSelected] = useState<any>();
@@ -147,3 +147,5 @@ export const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
     />
   );
 };
+
+export default TimeLogFilters;

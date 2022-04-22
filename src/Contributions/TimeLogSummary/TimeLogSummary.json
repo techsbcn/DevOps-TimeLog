@@ -1,14 +1,14 @@
 {
     "contributions": [
         {
-            "id": "time-log-old-summary",
+            "id": "time-log-summary",
             "type": "ms.vss-web.hub",
             "targets": [
                 "ms.vss-work-web.work-hub-group"
             ],
             "properties": {
                 "name": "Time Log Summary",
-                "uri": "dist/TimeLogOldSummary/TimeLogOldSummary.html",
+                "uri": "dist/TimeLogSummary/TimeLogSummary.html",
                 "icon": {
                     "light": "static/TimeLog-Black-128x128.png",
                     "dark": "static/TimeLog-White-128x128.png"

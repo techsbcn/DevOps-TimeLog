@@ -1,7 +1,7 @@
 {
     "contributions": [
         {
-            "id": "time-log-summary",
+            "id": "time-log-new-summary",
             "type": "ms.vss-web.hub",
             "targets": [
                 "ms.vss-work-web.work-hub-group"

@@ -18,12 +18,15 @@
           "dom",
           "esnext",
         ],
+        "types": [
+          "react",
+          "jest",
+          "node"
+        ],
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "allowJs": true,
         "skipLibCheck": true,
         "resolveJsonModule": true,
-        "importHelpers": true,
-        "declaration": true,
     }
 }

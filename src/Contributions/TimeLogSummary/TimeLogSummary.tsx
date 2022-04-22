@@ -5,10 +5,11 @@ import { useFetchGetDocumentsWithoutFiltersQuery } from '../../redux/extensionDa
 import { Container, Grid } from '@mui/material';
 import { TimeLogEntry, TimeLogEntryFilters } from '../../interfaces';
 import * as _ from 'lodash';
-import { TimeLogDetails } from '../../components/timeLogSummary/TimeLogDetails';
-import { TimeLogTable } from '../../components/timeLogSummary/TimeLogTable';
-import { TimeLogFilters } from '../../components/timeLogSummary/TimeLogFilters';
-export const TimeLogOldSummary: React.FC = () => {
+import TimeLogDetails from '../../components/timeLogSummary/TimeLogDetails';
+import TimeLogTable from '../../components/timeLogSummary/TimeLogTable';
+import TimeLogFilters from '../../components/timeLogSummary/TimeLogFilters';
+
+export const TimeLogSummary: React.FC = () => {
   const [user, setUser] = useState<SDK.IUserContext>();
   const [loading, setLoading] = useState<boolean>(true);
   const [filters, setFilters] = useState<TimeLogEntryFilters>();
@@ -106,4 +107,4 @@ export const TimeLogOldSummary: React.FC = () => {
     </Container>
   );
 };
-showRootComponent(<TimeLogOldSummary />);
+showRootComponent(<TimeLogSummary />);

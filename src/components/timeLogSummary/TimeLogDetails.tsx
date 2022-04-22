@@ -3,14 +3,14 @@ import { TimeLogEntry } from '../../interfaces';
 import { MainWrapperComponent, TextSimpleComponent } from 'techsbcn-storybook';
 import { _VALUES } from '../../resources/_constants/values';
 import { Grid, Box } from '@mui/material';
-import { GroupBy } from '../../helpers';
+import { GroupBy } from '../../helpers/GroupBy';
 
 interface TimeLogDetailsProps {
   timeLogEntries: TimeLogEntry[];
   loading: boolean;
 }
 
-export const TimeLogDetails: React.FC<TimeLogDetailsProps> = (props) => {
+const TimeLogDetails: React.FC<TimeLogDetailsProps> = (props) => {
   const [total, setTotal] = useState('');
   const [avarage, setAvarage] = useState('');
 
@@ -110,3 +110,5 @@ export const TimeLogDetails: React.FC<TimeLogDetailsProps> = (props) => {
     </MainWrapperComponent>
   );
 };
+
+export default TimeLogDetails;

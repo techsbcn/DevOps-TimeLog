@@ -21,6 +21,7 @@ module.exports = (env) => ({
     publicPath: env.mode == 'development' ? '/dist/' : '../',
   },
   resolve: {
+    modules: ['node_modules'],
     extensions: ['.ts', '.tsx', '.js', '.dev.js', '.json', '.wasm'],
     alias: {
       'azure-devops-extension-sdk': path.resolve('node_modules/azure-devops-extension-sdk'),

@@ -2,14 +2,14 @@ import React from 'react';
 import { _VALUES } from '../../resources/_constants/values';
 import { MainWrapperComponent, SimpleTableComponent } from 'techsbcn-storybook';
 import { TimeLogEntry } from '../../interfaces';
-import { getHoursAndMinutes } from '../../helpers';
+import { getHoursAndMinutes } from '../../helpers/TimeHelper';
 
 interface TimeLogTableProps {
   documents: TimeLogEntry[];
   loading: boolean;
 }
 
-export const TimeLogTable: React.FC<TimeLogTableProps> = (props) => {
+const TimeLogTable: React.FC<TimeLogTableProps> = (props) => {
   return (
     <MainWrapperComponent
       headerProps={{
@@ -37,3 +37,5 @@ export const TimeLogTable: React.FC<TimeLogTableProps> = (props) => {
     </MainWrapperComponent>
   );
 };
+
+export default TimeLogTable;
