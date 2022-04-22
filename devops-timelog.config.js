@@ -73,7 +73,7 @@ module.exports = (env) => {
         type: 'ms.vss-web.hub',
         targets: ['ms.vss-work-web.work-hub-group'],
         properties: {
-          name: `Time Log New Summary${namePostfix}`,
+          name: `Time Log Summary${namePostfix}`,
           uri: 'dist/TimeLogDevOpsSummary/TimeLogDevOpsSummary.html',
           icon: {
             light: 'static/TimeLog-Black-128x128.png',
