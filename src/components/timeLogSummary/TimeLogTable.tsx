@@ -2,7 +2,7 @@ import React from 'react';
 import { _VALUES } from '../../resources/_constants/values';
 import { MainWrapperComponent, SimpleTableComponent } from 'techsbcn-storybook';
 import { TimeLogEntry } from '../../interfaces';
-import { getHoursAndMinutes } from '../../helpers/TimeHelper';
+import { getHoursAndMinutes } from '../../helpers';
 
 interface TimeLogTableProps {
   documents: TimeLogEntry[];

@@ -77,4 +77,5 @@ export const _VALUES: ObjectKey = {
   POWERED_BY: Translate.t('poweredBy'),
   VERSION: Translate.t('version'),
   ABOUT_TIMELOG_FOR_AZURE_DEVOPS: Translate.t('aboutTimeLogForAzureDevOps'),
+  LOADING: Translate.t('loading'),
 };

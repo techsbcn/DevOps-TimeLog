@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import * as SDK from 'azure-devops-extension-sdk';
 import { showRootComponent } from '../..';
-import { useFetchGetDocumentsWithoutFiltersQuery } from '../../redux/extensionDataManager/extensionDataManagerSlice';
-import TimeLogMainSummary from '../../components/timeLogSummary/TimeLogMainSummary';
-import { CircularProgress, Box } from '@mui/material';
 import { _VALUES } from '../../resources/_constants/values';
+import { useFetchGetDocumentsWithoutFiltersQuery } from '../../redux/extensionDataManager/extensionDataManagerSlice';
+import { CircularProgress, Box } from '@mui/material';
+import TimeLogMainSummary from '../../components/timeLogSummary/TimeLogMainSummary';
 
-export const TimeLogDevOpsSummary: React.FC = () => {
+export const TimeLogTeamsSummary: React.FC = () => {
   const [user, setUser] = useState<SDK.IUserContext>();
   const [loading, setLoading] = useState<boolean>(true);
-
   useEffect(() => {
     setLoading(true);
     SDK.init().then(async () => {
@@ -36,4 +35,4 @@ export const TimeLogDevOpsSummary: React.FC = () => {
     </Box>
   );
 };
-showRootComponent(<TimeLogDevOpsSummary />);
+showRootComponent(<TimeLogTeamsSummary />);

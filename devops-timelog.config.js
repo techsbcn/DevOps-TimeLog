@@ -69,7 +69,7 @@ module.exports = (env) => {
         },
       },
       {
-        id: 'time-log-new-summary',
+        id: 'time-log-summary',
         type: 'ms.vss-web.hub',
         targets: ['ms.vss-work-web.work-hub-group'],
         properties: {
@@ -82,12 +82,12 @@ module.exports = (env) => {
         },
       },
       {
-        id: 'time-log-summary',
+        id: 'time-log-teams-summary',
         type: 'ms.vss-web.hub',
         targets: ['ms.vss-work-web.work-hub-group'],
         properties: {
-          name: `Time Log Summary${namePostfix}`,
-          uri: 'dist/TimeLogSummary/TimeLogSummary.html',
+          name: `Time Log Teams Summary${namePostfix}`,
+          uri: 'dist/TimeLogTeamsSummary/TimeLogTeamsSummary.html',
           icon: {
             light: 'static/TimeLog-Black-128x128.png',
             dark: 'static/TimeLog-White-128x128.png',

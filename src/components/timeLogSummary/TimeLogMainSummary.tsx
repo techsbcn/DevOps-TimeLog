@@ -1,43 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import * as SDK from 'azure-devops-extension-sdk';
-import { showRootComponent } from '../..';
-import { useFetchGetDocumentsWithoutFiltersQuery } from '../../redux/extensionDataManager/extensionDataManagerSlice';
 import { Container, Grid } from '@mui/material';
-import { TimeLogEntry, TimeLogEntryFilters } from '../../interfaces';
+import { TimeLogEntry, TimeLogEntryFilters, UserContext } from '../../interfaces';
 import * as _ from 'lodash';
 import TimeLogDetails from '../../components/timeLogSummary/TimeLogDetails';
 import TimeLogTable from '../../components/timeLogSummary/TimeLogTable';
 import TimeLogFilters from '../../components/timeLogSummary/TimeLogFilters';
 
-export const TimeLogSummary: React.FC = () => {
-  const [user, setUser] = useState<SDK.IUserContext>();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [filters, setFilters] = useState<TimeLogEntryFilters>();
+interface TimeLogMainSummaryProps {
+  documents: TimeLogEntry[];
+  loadingDocuments: boolean;
+  user?: UserContext;
+}
+
+const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
+  const [filters, setFilters] = useState<TimeLogEntryFilters>(() => {
+    const curr = new Date();
+    return {
+      userIds: props.user ? [props.user.id] : [],
+      timeFrom: new Date(
+        new Date(curr.setDate(curr.getDate() - curr.getDay() + 1)).setHours(0, 0, 0)
+      ).toLocaleDateString('sv-SE'),
+      timeTo: new Date(
+        new Date(curr.setDate(curr.getDate() - curr.getDay() + 7)).setHours(23, 59, 59)
+      ).toLocaleDateString('sv-SE'),
+    };
+  });
+  const [timeLogEntries, setTimeLogEntries] = useState<TimeLogEntry[]>(props.documents);
   const [loadingFilters, setLoadingFilters] = useState<boolean>(false);
-
-  useEffect(() => {
-    setLoading(true);
-    SDK.init().then(async () => {
-      SDK.register(SDK.getContributionId(), () => {});
-      await SDK.ready();
-      const user = SDK.getUser();
-      setUser(user);
-      const curr = new Date();
-      user &&
-        setFilters({
-          userIds: [user.id],
-          timeFrom: new Date(
-            new Date(curr.setDate(curr.getDate() - curr.getDay() + 1)).setHours(0, 0, 0)
-          ).toLocaleDateString('sv-SE'),
-          timeTo: new Date(
-            new Date(curr.setDate(curr.getDate() - curr.getDay() + 7)).setHours(23, 59, 59)
-          ).toLocaleDateString('sv-SE'),
-        });
-      setLoading(false);
-    });
-  }, []);
-
-  const useFetchDocuments = useFetchGetDocumentsWithoutFiltersQuery(process.env.ENTRIES_COLLECTION_NAME as string);
 
   const filterByDates = React.useCallback(
     (array: any[]) => {
@@ -63,18 +52,16 @@ export const TimeLogSummary: React.FC = () => {
     },
     [filters]
   );
-  const [timeLogEntries, setTimeLogEntries] = useState<TimeLogEntry[]>([]);
-
   const loadDocuments = React.useCallback(() => {
-    if (filters && useFetchDocuments.data && useFetchDocuments.data.items.length > 0) {
+    if (filters && props.documents.length > 0) {
       setLoadingFilters(true);
-      let documents = filters && filters.userIds ? JSON.parse(JSON.stringify(useFetchDocuments.data.items)) : [];
+      let documents = filters && filters.userIds ? JSON.parse(JSON.stringify(props.documents)) : [];
       documents = filterByDates(documents);
       documents = filterByUserIds(documents);
       setTimeLogEntries(_.orderBy(documents, 'date', 'asc'));
       setLoadingFilters(false);
     }
-  }, [filterByDates, filterByUserIds, filters, useFetchDocuments.data]);
+  }, [filterByDates, filterByUserIds, filters, props.documents]);
 
   useEffect(() => {
     loadDocuments();
@@ -85,26 +72,28 @@ export const TimeLogSummary: React.FC = () => {
     newFilters[name] = value;
     setFilters(newFilters);
   };
+
   return (
     <Container maxWidth={false}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <TimeLogFilters onFiltersChange={setNewFilters} filters={filters} user={user} loading={loading} />
+          <TimeLogFilters onFiltersChange={setNewFilters} filters={filters} user={props.user} loading={false} />
         </Grid>
         <Grid item xs={12}>
           <TimeLogDetails
             timeLogEntries={timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
-            loading={useFetchDocuments.isFetching || loadingFilters}
+            loading={props.loadingDocuments || loadingFilters}
           />
         </Grid>
         <Grid item xs={12}>
           <TimeLogTable
             documents={timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
-            loading={useFetchDocuments.isFetching || loadingFilters}
+            loading={props.loadingDocuments || loadingFilters}
           />
         </Grid>
       </Grid>
     </Container>
   );
 };
-showRootComponent(<TimeLogSummary />);
+
+export default TimeLogMainSummary;

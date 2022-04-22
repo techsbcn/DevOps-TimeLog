@@ -2038,11 +2038,11 @@ __metadata:
   linkType: hard
 
 "@types/react-dom@npm:^18.0.0, @types/react-dom@npm:^18.0.1":
-  version: 18.0.1
-  resolution: "@types/react-dom@npm:18.0.1"
+  version: 18.0.2
+  resolution: "@types/react-dom@npm:18.0.2"
   dependencies:
     "@types/react": "*"
-  checksum: 6c183e2e50240b77ed767cd968fe061ef4f2b47f84da5ec9e412a767d68c9a004d1f6ccca4295a5aa2c3ee723377e59006a2031f3767c00d8ac9e240a51bb142
+  checksum: 2b0b138d8634ccfd8a86b17cb5414b122ee0cb6f650377d772f6008761a27e4c2531c08e3cab71aaa19b6893af6a508c664aa314db3ebcff5b8179173c9c9307
   languageName: node
   linkType: hard
 
@@ -2095,13 +2095,13 @@ __metadata:
   linkType: hard
 
 "@types/react@npm:*, @types/react@npm:^18.0.5":
-  version: 18.0.5
-  resolution: "@types/react@npm:18.0.5"
+  version: 18.0.6
+  resolution: "@types/react@npm:18.0.6"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: 70d3336d43ef25509fa89ef3278f57fdf1945fc921e69b7890a78ab9a52a55ee38e2f13aa71eb4f6032b7311e7557860ce8836c1acf3028304989571c9736a96
+  checksum: 368b40176f0dab30a611c3263bf1d9878cebede9ce8015bc5661a396787dbe41f0b667b8d6d448dea7bc8c0557bf3cb329ab2b16ad2dacb18eaa764358bd16d4
   languageName: node
   linkType: hard
 
@@ -3565,14 +3565,14 @@ __metadata:
   linkType: hard
 
 "bonjour-service@npm:^1.0.11":
-  version: 1.0.11
-  resolution: "bonjour-service@npm:1.0.11"
+  version: 1.0.12
+  resolution: "bonjour-service@npm:1.0.12"
   dependencies:
     array-flatten: ^2.1.2
     dns-equal: ^1.0.0
     fast-deep-equal: ^3.1.3
     multicast-dns: ^7.2.4
-  checksum: b6093a856de9bc303551f1639945318e93782d3c40f03e38def3e2f079f478afd5385cf46538ade86f07205ac4b5f059105832b01eb9ce142fc69d27c006982f
+  checksum: 0dde8504351dcf7b7c354c73cd34625aa0aa3a1c325e054242d8a20aaba3fe11e109b0588f13620643ceedbda9b00c5e0b0e0f8e3d19f0033dc70bf96bdd39a5
   languageName: node
   linkType: hard
 
@@ -3740,8 +3740,8 @@ __metadata:
   linkType: hard
 
 "cacache@npm:^16.0.2":
-  version: 16.0.5
-  resolution: "cacache@npm:16.0.5"
+  version: 16.0.6
+  resolution: "cacache@npm:16.0.6"
   dependencies:
     "@npmcli/fs": ^2.1.0
     "@npmcli/move-file": ^2.0.0
@@ -3761,7 +3761,7 @@ __metadata:
     ssri: ^9.0.0
     tar: ^6.1.11
     unique-filename: ^1.1.1
-  checksum: 636a375d6cc23422d3b8c2c34f1281101c8ad84256a1c6f3232f9709838e6ba22ec160a7073f6c4721ebf64070f70f754216cda9ff934b7e738b3889c2cc96c7
+  checksum: c9813d4aa0452ecfdb7f796d931d0b8068fc921a3575fb858c26ab12ed41634a995135dbd56afd64ec4de141bd78c7021ce5aeabce83453c7342d3ed126815df
   languageName: node
   linkType: hard
 
@@ -4263,9 +4263,9 @@ __metadata:
   linkType: hard
 
 "core-js-pure@npm:^3.20.2":
-  version: 3.22.1
-  resolution: "core-js-pure@npm:3.22.1"
-  checksum: 404690f35703fb2db4c3e55030af9e2c0214b76f5bf975f69a632ca8103176862435a2b6b8dd2d3f60d8702131a4d762a8bdaa609331700a1bb894a94c84d6ab
+  version: 3.22.2
+  resolution: "core-js-pure@npm:3.22.2"
+  checksum: d0618aa2f45182fbce5feb6b436c72a71e1d2a739ec7546be453460fc9938d30235da4506ea128a22780ca00b84f4f5528da8019719a2fba16da6f44999d3bff
   languageName: node
   linkType: hard
 
@@ -4993,9 +4993,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.84":
-  version: 1.4.117
-  resolution: "electron-to-chromium@npm:1.4.117"
-  checksum: 9a0147824b52b25bdac9e6c70f35810f007bf9c55d72e1b646417a7797cf51e6120c585f220728f8de16ad2b033adfd8d92dbb11f43af1ebdcc085427ae57064
+  version: 1.4.118
+  resolution: "electron-to-chromium@npm:1.4.118"
+  checksum: b1941bdff3ff8cb10a6f75f60527bff37fc43878b2ff4e0c1b5d6aa5062ea97df4e8c75e6d4c6eb97f0bab1cac6f8f1d799b7316e69f66b6a4b9b6773af97de2
   languageName: node
   linkType: hard
 
@@ -12566,9 +12566,9 @@ __metadata:
   linkType: hard
 
 "tslib@npm:^2.3.1":
-  version: 2.3.1
-  resolution: "tslib@npm:2.3.1"
-  checksum: de17a98d4614481f7fcb5cd53ffc1aaf8654313be0291e1bfaee4b4bb31a20494b7d218ff2e15017883e8ea9626599b3b0e0229c18383ba9dce89da2adf15cb9
+  version: 2.4.0
+  resolution: "tslib@npm:2.4.0"
+  checksum: 8c4aa6a3c5a754bf76aefc38026134180c053b7bd2f81338cb5e5ebf96fefa0f417bff221592bf801077f5bf990562f6264fecbc42cd3309b33872cb6fc3b113
   languageName: node
   linkType: hard
 
