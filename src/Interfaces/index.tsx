@@ -5,3 +5,4 @@ export * from './extensionDataManager/TimeLogEntry';
 export * from './extensionDataManager/TimeType';
 export * from './extensionDataManager/TimeLogEntryFilters';
 export * from './core/Member';
+export * from './profile/UserContext';

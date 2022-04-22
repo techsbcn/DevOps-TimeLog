@@ -77,4 +77,5 @@ export const GLOBAL_ES = {
   poweredBy: 'Power By',
   version: 'Versión',
   aboutTimeLogForAzureDevOps: 'Acerca de Time Log para Azure DevOps',
+  loading: 'Cargando',
 };
