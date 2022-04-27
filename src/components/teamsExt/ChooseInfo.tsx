@@ -3,11 +3,13 @@ import { _VALUES } from '../../resources/_constants/values';
 import { MainWrapperComponent, SelectField } from 'techsbcn-storybook';
 import { GetPublicAlias } from '../../redux/profile/profileAPI';
 import { GetOrganizations, GetProjects } from '../../redux/core/coreAPI';
-import { SelectAsyncHelper } from '../../helpers';
+import { GetOrganizationTL, GetProjectTL, SelectAsyncHelper } from '../../helpers';
 import { Grid } from '@mui/material';
 import { Button } from '@fluentui/react-northstar';
+import TimeLogTeamsExt from '../../components/teamsExt/TimeLogTeamsExt';
 
 const ChooseInfo: React.FC = () => {
+  const [activeTab, setActiveTab] = useState(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [organizations, setOrganizations] = useState<any[]>([]);
   const [organizationSelected, setOrganizationSelected] = useState<any>();
@@ -41,10 +43,12 @@ const ChooseInfo: React.FC = () => {
   const saveInfo = () => {
     localStorage.setItem('TL_ORG', JSON.stringify(organizationSelected.label));
     localStorage.setItem('TL_PROJECT', JSON.stringify(projectSelected.value));
+    setActiveTab(1);
   };
 
-  return (
+  const tabs = [
     <MainWrapperComponent
+      key={0}
       headerProps={{
         title: organizationSelected ? _VALUES.CHOOSE_PROJECTS : _VALUES.CHOOSE_ORGANIZATION,
       }}
@@ -87,8 +91,14 @@ const ChooseInfo: React.FC = () => {
           />
         </Grid>
       </Grid>
-    </MainWrapperComponent>
-  );
+    </MainWrapperComponent>,
+    <TimeLogTeamsExt key={1} projectId={GetProjectTL()} organization={GetOrganizationTL()} />,
+  ];
+  const renderTabContent = (tab: number) => {
+    return tabs[tab];
+  };
+
+  return renderTabContent(activeTab);
 };
 
 export default ChooseInfo;
