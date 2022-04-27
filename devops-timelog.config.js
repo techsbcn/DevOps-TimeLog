@@ -81,25 +81,12 @@ module.exports = (env) => {
           },
         },
       },
-      {
-        id: 'time-log-teams-summary',
-        type: 'ms.vss-web.hub',
-        targets: ['ms.vss-work-web.work-hub-group'],
-        properties: {
-          name: `Time Log Teams Summary${namePostfix}`,
-          uri: 'dist/TimeLogTeamsSummary/TimeLogTeamsSummary.html',
-          icon: {
-            light: 'static/TimeLog-Black-128x128.png',
-            dark: 'static/TimeLog-White-128x128.png',
-          },
-        },
-      },
     ],
     scopes: ['vso.work', 'vso.project'],
   };
 
   if (env.mode == 'development') {
-    manifest.baseUri = 'http://localhost:3000';
+    manifest.baseUri = 'https://localhost:3000';
   }
 
   if (env.mode == 'production') {
