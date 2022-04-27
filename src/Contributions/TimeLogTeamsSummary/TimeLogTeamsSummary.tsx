@@ -4,8 +4,7 @@ import { _VALUES } from '../../resources/_constants/values';
 import { CircularProgress, Box } from '@mui/material';
 import * as microsoftTeams from '@microsoft/teams-js';
 import { useTeamsFx } from '@microsoft/teamsfx-react';
-import { Provider, teamsTheme, Button, ThemePrepared } from '@fluentui/react-northstar';
-import { TeamsFx } from '@microsoft/teamsfx';
+import { Button } from '@fluentui/react-northstar';
 import { GetTokenTL, GetProjectTL, GetOrganizationTL } from '../../helpers';
 import ChooseInfo from '../../components/teamsExt/ChooseInfo';
 import TimeLogTeamsExt from '../../components/teamsExt/TimeLogTeamsExt';
@@ -53,40 +52,23 @@ export const TimeLogTeamsSummary: React.FC = () => {
     });
   };
 
-  const TeamsFxContext = createContext<{
-    theme?: ThemePrepared;
-    themeString: string;
-    teamsfx?: TeamsFx;
-  }>({
-    theme: undefined,
-    themeString: '',
-    teamsfx: undefined,
-  });
-  const { theme, themeString, teamsfx } = useTeamsFx();
-
-  return (
-    <TeamsFxContext.Provider value={{ theme, themeString, teamsfx }}>
-      <Provider theme={theme || teamsTheme}>
-        {!loading ? (
-          accessToken ? (
-            GetProjectTL() && GetOrganizationTL() ? (
-              <TimeLogTeamsExt projectId={GetProjectTL()} organization={GetOrganizationTL()} />
-            ) : (
-              <ChooseInfo />
-            )
-          ) : (
-            <Box textAlign="center">
-              <Button primary content="Sign in" onClick={handleLogin} />
-            </Box>
-          )
-        ) : (
-          <Box textAlign="center" display="flex" alignItems="center" justifyContent="center">
-            <CircularProgress className="circular-progress-main-color" />
-            <Box ml={2}>{_VALUES.LOADING}...</Box>
-          </Box>
-        )}
-      </Provider>
-    </TeamsFxContext.Provider>
+  return !loading ? (
+    accessToken ? (
+      GetProjectTL() && GetOrganizationTL() ? (
+        <TimeLogTeamsExt projectId={GetProjectTL()} organization={GetOrganizationTL()} />
+      ) : (
+        <ChooseInfo />
+      )
+    ) : (
+      <Box textAlign="center">
+        <Button primary content="Sign in" onClick={handleLogin} />
+      </Box>
+    )
+  ) : (
+    <Box textAlign="center" display="flex" alignItems="center" justifyContent="center">
+      <CircularProgress className="circular-progress-main-color" />
+      <Box ml={2}>{_VALUES.LOADING}...</Box>
+    </Box>
   );
 };
 

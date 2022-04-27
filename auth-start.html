@@ -9,29 +9,28 @@
   <body>
     <script src="https://statics.teams.cdn.office.net/sdk/v1.11.0/js/MicrosoftTeams.min.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
-        microsoftTeams.initialize(function(){
-            microsoftTeams.getContext(function (context) {
-                let state = _guid();
-                localStorage.setItem("simple.state", state);
-                localStorage.removeItem("simple.error");
+        microsoftTeams.initialize()
+        microsoftTeams.getContext(function (context) {
+            let state = _guid();
+            localStorage.setItem("simple.state", state);
+            localStorage.removeItem("simple.error");
 
-                // See https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-protocols-implicit
-                // for documentation on these query parameters
-                let queryParams = {
-                    client_id: "e584e52a-fbc8-4c5a-80d2-cfdbf9d113c4",
-                    response_type: "id_token token",
-                    response_mode: "fragment",
-                    scope: "openid 499b84ac-1321-427f-aa17-267ca6975798/user_impersonation",
-                    redirect_uri: "https://localhost:3000/dist/blank-auth-end.html",
-                    //redirect_uri: "https://localhost:44324/blank-auth-end.html",
-                    //redirect_uri: `${process.env.URL_ORIGIN}/blank-auth-end.html`,
-                    nonce: _guid(),
-                    state: state,
-                    login_hint: context.loginHint,
-                };
-                let authorizeEndpoint = `https://login.microsoftonline.com/${context.tid}/oauth2/v2.0/authorize?${toQueryString(queryParams)}`;
-                window.location.assign(authorizeEndpoint);
-            });
+            // See https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-protocols-implicit
+            // for documentation on these query parameters
+            let queryParams = {
+                client_id: "e584e52a-fbc8-4c5a-80d2-cfdbf9d113c4",
+                response_type: "id_token token",
+                response_mode: "fragment",
+                scope: "openid 499b84ac-1321-427f-aa17-267ca6975798/user_impersonation",
+                redirect_uri: "https://localhost:3000/dist/blank-auth-end.html",
+                //redirect_uri: "https://localhost:44324/blank-auth-end.html",
+                //redirect_uri: `${process.env.URL_ORIGIN}/blank-auth-end.html`,
+                nonce: _guid(),
+                state: state,
+                login_hint: context.loginHint,
+            };
+            let authorizeEndpoint = `https://login.microsoftonline.com/${context.tid}/oauth2/v2.0/authorize?${toQueryString(queryParams)}`;
+            window.location.assign(authorizeEndpoint);
         });
         function toQueryString(queryParams) {
             let encodedQueryParams = [];

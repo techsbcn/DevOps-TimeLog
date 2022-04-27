@@ -7,30 +7,29 @@
     <body>
         <script src="https://statics.teams.cdn.office.net/sdk/v1.11.0/js/MicrosoftTeams.min.js" crossorigin="anonymous"></script>
         <script type="text/javascript">
-            microsoftTeams.initialize(function(){
-                localStorage.removeItem("simple.error");
-                let hashParams = getHashParameters();
-                if (hashParams["error"]) {
-                    // Authentication/authorization failed
-                    localStorage.setItem("simple.error", JSON.stringify(hashParams));
-                    microsoftTeams.authentication.notifyFailure(hashParams["error"]);
-                } else if (hashParams["access_token"]) {
-                    // Get the stored state parameter and compare with incoming state
-                    localStorage.setItem("simple.error", JSON.stringify(hashParams));
-                    microsoftTeams.authentication.notifySuccess({
-                        idToken: hashParams["id_token"],
-                        accessToken: hashParams["access_token"],
-                        tokenType: hashParams["token_type"],
-                        expiresIn: hashParams["expires_in"]
-                    })
-                    
-                } else {
-                    // Unexpected condition: hash does not contain error or access_token parameter
-                    localStorage.setItem("simple.error", JSON.stringify(hashParams));
-                    microsoftTeams.authentication.notifyFailure("UnexpectedFailure");
-                }
-            });
-            
+            microsoftTeams.initialize()
+            localStorage.removeItem("simple.error");
+            let hashParams = getHashParameters();
+            if (hashParams["error"]) {
+                // Authentication/authorization failed
+                localStorage.setItem("simple.error", JSON.stringify(hashParams));
+                microsoftTeams.authentication.notifyFailure(hashParams["error"]);
+            } else if (hashParams["access_token"]) {
+                // Get the stored state parameter and compare with incoming state
+                localStorage.setItem("simple.error", JSON.stringify(hashParams));
+                microsoftTeams.authentication.notifySuccess({
+                    idToken: hashParams["id_token"],
+                    accessToken: hashParams["access_token"],
+                    tokenType: hashParams["token_type"],
+                    expiresIn: hashParams["expires_in"]
+                })
+                
+            } else {
+                // Unexpected condition: hash does not contain error or access_token parameter
+                localStorage.setItem("simple.error", JSON.stringify(hashParams));
+                microsoftTeams.authentication.notifyFailure("UnexpectedFailure");
+            }
+        
             // Parse hash parameters into key-value pairs
             function getHashParameters() {
                 let hashParams = {};
