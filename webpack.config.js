@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+const webpack = require('webpack');
 
 // Webpack entry points. Mapping from resulting bundle name to the source file entry.
 const entries = {};
@@ -26,9 +27,20 @@ module.exports = (env) => ({
       'azure-devops-extension-sdk': path.resolve('node_modules/azure-devops-extension-sdk'),
     },
     fallback: {
-      crypto: false,
-      path: false,
+      url: false,
       fs: false,
+      assert: require.resolve('assert'),
+      crypto: require.resolve('crypto-browserify'),
+      http: require.resolve('stream-http'),
+      https: require.resolve('https-browserify'),
+      os: require.resolve('os-browserify/browser'),
+      buffer: require.resolve('buffer'),
+      stream: require.resolve('stream-browserify'),
+      path: false,
+      util: false,
+      tls: false,
+      net: false,
+      zlib: require.resolve('browserify-zlib'),
     },
   },
   stats: {
@@ -116,6 +128,10 @@ module.exports = (env) => ({
         { from: 'auth-start.html', to: './' },
         //{ from: '**/*.html', context: 'src/authFiles' },
       ],
+    }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+      Buffer: ['buffer', 'Buffer'],
     }),
   ],
 });

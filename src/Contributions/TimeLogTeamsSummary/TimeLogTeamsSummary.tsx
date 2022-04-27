@@ -53,7 +53,7 @@ export const TimeLogTeamsSummary: React.FC = () => {
   return !loading ? (
     accessToken ? (
       GetProjectTL() && GetOrganizationTL() ? (
-        <TimeLogTeamsExt projectId={GetProjectTL()} organization={GetOrganizationTL()} />
+        <TimeLogTeamsExt projectId={GetProjectTL()} organization={GetOrganizationTL()} token={accessToken} />
       ) : (
         <ChooseInfo />
       )

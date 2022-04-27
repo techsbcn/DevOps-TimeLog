@@ -3,7 +3,7 @@ import { _VALUES } from '../../resources/_constants/values';
 import { MainWrapperComponent, SelectField } from 'techsbcn-storybook';
 import { GetPublicAlias } from '../../redux/profile/profileAPI';
 import { GetOrganizations, GetProjects } from '../../redux/core/coreAPI';
-import { GetOrganizationTL, GetProjectTL, SelectAsyncHelper } from '../../helpers';
+import { GetOrganizationTL, GetProjectTL, SelectAsyncHelper, GetTokenTL } from '../../helpers';
 import { Grid } from '@mui/material';
 import { Button } from '@fluentui/react-northstar';
 import TimeLogTeamsExt from '../../components/teamsExt/TimeLogTeamsExt';
@@ -92,7 +92,7 @@ const ChooseInfo: React.FC = () => {
         </Grid>
       </Grid>
     </MainWrapperComponent>,
-    <TimeLogTeamsExt key={1} projectId={GetProjectTL()} organization={GetOrganizationTL()} />,
+    <TimeLogTeamsExt key={1} projectId={GetProjectTL()} organization={GetOrganizationTL()} token={GetTokenTL()} />,
   ];
   const renderTabContent = (tab: number) => {
     return tabs[tab];

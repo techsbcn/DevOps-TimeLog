@@ -18,7 +18,7 @@ const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
   const [filters, setFilters] = useState<TimeLogEntryFilters>(() => {
     const curr = new Date();
     return {
-      userIds: props.user ? [props.user.id] : [],
+      userIds: props.user && props.user.id ? [props.user.id] : [],
       timeFrom: new Date(
         new Date(curr.setDate(curr.getDate() - curr.getDay() + 1)).setHours(0, 0, 0)
       ).toLocaleDateString('sv-SE'),
