@@ -30,9 +30,9 @@ export const TimeLogDevOpsSummary: React.FC = () => {
       user={user}
     />
   ) : (
-    <Box textAlign="center">
+    <Box textAlign="center" display="flex" alignItems="center" justifyContent="center">
       <CircularProgress className="circular-progress-main-color" />
-      {_VALUES.LOADING}
+      <Box ml={2}>{_VALUES.LOADING}...</Box>
     </Box>
   );
 };

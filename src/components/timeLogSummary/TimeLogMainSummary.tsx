@@ -10,6 +10,7 @@ interface TimeLogMainSummaryProps {
   documents: TimeLogEntry[];
   loadingDocuments: boolean;
   user?: UserContext;
+  projectId?: string;
 }
 
 const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
@@ -77,7 +78,13 @@ const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
     <Container maxWidth={false}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <TimeLogFilters onFiltersChange={setNewFilters} filters={filters} user={props.user} loading={false} />
+          <TimeLogFilters
+            onFiltersChange={setNewFilters}
+            filters={filters}
+            user={props.user}
+            loading={false}
+            projectId={props.projectId}
+          />
         </Grid>
         <Grid item xs={12}>
           <TimeLogDetails

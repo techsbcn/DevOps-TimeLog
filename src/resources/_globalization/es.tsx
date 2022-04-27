@@ -78,4 +78,9 @@ export const GLOBAL_ES = {
   version: 'Versión',
   aboutTimeLogForAzureDevOps: 'Acerca de Time Log para Azure DevOps',
   loading: 'Cargando',
+  chooseOrganization: 'Elija la organización que desea vincular a Azure DevOps:',
+  chooseProjects: 'Elija el proyecto que desea vincular a Azure DevOps:',
+  organization: 'Organización',
+  project: 'Proyecto',
+  continue: 'Continuar',
 };

@@ -2,7 +2,7 @@ import * as Core from 'azure-devops-extension-api/Core';
 import * as API from 'azure-devops-extension-api/';
 import * as SDK from 'azure-devops-extension-sdk';
 import { CommonServiceIds, IProjectPageService } from 'azure-devops-extension-api';
-import { ErrorHandler } from '../../helpers';
+import { AuthHeader, ErrorHandler, ResponseHandler } from '../../helpers';
 import { TeamMember } from 'azure-devops-extension-api/WebApi';
 import { Member } from '../../interfaces';
 
@@ -69,6 +69,42 @@ export const GetTeamMembers = async (teamId: string, projectId?: string) => {
       })
       .catch(() => {
         reject(ErrorHandler('GetTeamsMembersException'));
+      })
+  );
+};
+
+export const GetOrganizations = async (memberId: string, accessToken?: string) => {
+  const requestOptions: RequestInit = {
+    method: 'GET',
+    headers: AuthHeader(accessToken),
+  };
+
+  return new Promise<any[]>((resolve, reject) =>
+    fetch(`https://app.vssps.visualstudio.com/_apis/accounts?memberId=${memberId}&api-version=6.0`, requestOptions)
+      .then(ResponseHandler)
+      .then((result: any) => {
+        resolve(result.value);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  );
+};
+
+export const GetProjects = async (organization: string, accessToken?: string) => {
+  const requestOptions: RequestInit = {
+    method: 'GET',
+    headers: AuthHeader(accessToken),
+  };
+
+  return new Promise<any[]>((resolve, reject) =>
+    fetch(`https://dev.azure.com/${organization}/_apis/projects?api-version=6.0`, requestOptions)
+      .then(ResponseHandler)
+      .then((result: any) => {
+        resolve(result.value);
+      })
+      .catch((error) => {
+        reject(error);
       })
   );
 };

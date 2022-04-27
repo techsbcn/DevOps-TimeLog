@@ -1,7 +1,10 @@
 export const SelectAsyncHelper = (strEnum: any[]) => {
   const options: any[] = [];
   strEnum.forEach((value) => {
-    options.push({ value: value.id, label: value.name || value.description || value.displayName });
+    options.push({
+      value: value.id || value.accountId,
+      label: value.name || value.description || value.displayName || value.accountName,
+    });
   });
   return options;
 };

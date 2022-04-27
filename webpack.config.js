@@ -101,8 +101,9 @@ module.exports = (env) => ({
     port: 3000,
     hot: true,
     headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': '*',
+      'Access-Control-Allow-Headers': '*',
     },
   },
   plugins: [
@@ -111,6 +112,9 @@ module.exports = (env) => ({
       patterns: [
         { from: '**/*.html', context: 'src/Contributions' },
         { from: 'sql-wasm.wasm', to: './' },
+        { from: 'blank-auth-end.html', to: './' },
+        { from: 'auth-start.html', to: './' },
+        //{ from: '**/*.html', context: 'src/authFiles' },
       ],
     }),
   ],

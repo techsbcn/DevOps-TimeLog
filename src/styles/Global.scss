@@ -19,6 +19,9 @@ body{
     height: 100vh;
     background-color: $body-background-color!important;
     font-size: $body-size;
+    .css-0 {
+        overflow: inherit!important;
+    }
     #root {
         height: 100%;
     }
@@ -29,15 +32,15 @@ body{
         color: $main-color !important;
     }
     .main-background-color{
-        background-color: $main-color!important;
+        background-color: $main-color !important;
     }
     .main-background-color-after{
         &:after{
-            background-color: $main-color!important;
+            background-color: $main-color !important;
         }
     }
     .main-background-body{
-        background-color: $body-background-color!important;
+        background-color: $body-background-color;
     }
     .main-color-hover { 
         &:hover{

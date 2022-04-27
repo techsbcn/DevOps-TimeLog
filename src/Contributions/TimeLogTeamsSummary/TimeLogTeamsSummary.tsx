@@ -1,38 +1,93 @@
-import React, { useEffect, useState } from 'react';
-import * as SDK from 'azure-devops-extension-sdk';
+import React, { useEffect, useState, createContext } from 'react';
 import { showRootComponent } from '../..';
 import { _VALUES } from '../../resources/_constants/values';
-import { useFetchGetDocumentsWithoutFiltersQuery } from '../../redux/extensionDataManager/extensionDataManagerSlice';
 import { CircularProgress, Box } from '@mui/material';
-import TimeLogMainSummary from '../../components/timeLogSummary/TimeLogMainSummary';
+import * as microsoftTeams from '@microsoft/teams-js';
+import { useTeamsFx } from '@microsoft/teamsfx-react';
+import { Provider, teamsTheme, Button, ThemePrepared } from '@fluentui/react-northstar';
+import { TeamsFx } from '@microsoft/teamsfx';
+import { GetTokenTL, GetProjectTL, GetOrganizationTL } from '../../helpers';
+import ChooseInfo from '../../components/teamsExt/ChooseInfo';
+import TimeLogTeamsExt from '../../components/teamsExt/TimeLogTeamsExt';
 
 export const TimeLogTeamsSummary: React.FC = () => {
-  const [user, setUser] = useState<SDK.IUserContext>();
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [accessToken, setAccessToken] = useState<any>(GetTokenTL());
+
   useEffect(() => {
     setLoading(true);
-    SDK.init().then(async () => {
-      SDK.register(SDK.getContributionId(), () => {});
-      await SDK.ready();
-      const user = SDK.getUser();
-      setUser(user);
-      setLoading(false);
+    microsoftTeams.initialize(() => {
+      microsoftTeams.authentication.authenticate({
+        url: `${process.env.URL_ORIGIN as string}/auth-start.html`,
+        //url: 'https://localhost:44324/auth-start.html',
+        width: 600,
+        height: 535,
+        successCallback: (result: any) => {
+          setAccessToken(result.accessToken);
+          console.log('AT', result.accessToken);
+          localStorage.setItem('TL_TOKEN', JSON.stringify(result.accessToken));
+          setLoading(false);
+        },
+        failureCallback: (reason) => {
+          console.log('Error', reason);
+          setLoading(false);
+        },
+      });
     });
   }, []);
 
-  const useFetchDocuments = useFetchGetDocumentsWithoutFiltersQuery(process.env.ENTRIES_COLLECTION_NAME as string);
+  const handleLogin = () => {
+    microsoftTeams.authentication.authenticate({
+      url: `${process.env.URL_ORIGIN as string}/auth-start.html`,
+      //url: 'https://localhost:44324/auth-start.html',
+      width: 600,
+      height: 535,
+      successCallback: (result: any) => {
+        setAccessToken(result.accessToken);
+        console.log('AT', result.accessToken);
+        localStorage.setItem('TL_TOKEN', JSON.stringify(result.accessToken));
+      },
+      failureCallback: (reason) => {
+        console.log('Error', reason);
+      },
+    });
+  };
 
-  return !loading ? (
-    <TimeLogMainSummary
-      documents={useFetchDocuments.data && useFetchDocuments.data.items.length > 0 ? useFetchDocuments.data.items : []}
-      loadingDocuments={useFetchDocuments.isFetching}
-      user={user}
-    />
-  ) : (
-    <Box textAlign="center">
-      <CircularProgress className="circular-progress-main-color" />
-      {_VALUES.LOADING}
-    </Box>
+  const TeamsFxContext = createContext<{
+    theme?: ThemePrepared;
+    themeString: string;
+    teamsfx?: TeamsFx;
+  }>({
+    theme: undefined,
+    themeString: '',
+    teamsfx: undefined,
+  });
+  const { theme, themeString, teamsfx } = useTeamsFx();
+
+  return (
+    <TeamsFxContext.Provider value={{ theme, themeString, teamsfx }}>
+      <Provider theme={theme || teamsTheme}>
+        {!loading ? (
+          accessToken ? (
+            GetProjectTL() && GetOrganizationTL() ? (
+              <TimeLogTeamsExt projectId={GetProjectTL()} organization={GetOrganizationTL()} />
+            ) : (
+              <ChooseInfo />
+            )
+          ) : (
+            <Box textAlign="center">
+              <Button primary content="Sign in" onClick={handleLogin} />
+            </Box>
+          )
+        ) : (
+          <Box textAlign="center" display="flex" alignItems="center" justifyContent="center">
+            <CircularProgress className="circular-progress-main-color" />
+            <Box ml={2}>{_VALUES.LOADING}...</Box>
+          </Box>
+        )}
+      </Provider>
+    </TeamsFxContext.Provider>
   );
 };
+
 showRootComponent(<TimeLogTeamsSummary />);

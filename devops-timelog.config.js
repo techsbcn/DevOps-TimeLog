@@ -99,7 +99,7 @@ module.exports = (env) => {
   };
 
   if (env.mode == 'development') {
-    manifest.baseUri = 'https://localhost:3000';
+    manifest.baseUri = 'http://localhost:3000';
   }
 
   if (env.mode == 'production') {
