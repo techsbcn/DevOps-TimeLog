@@ -1,6 +1,6 @@
 import { ListResultCollection } from './../../Interfaces/search/ListResultCollection';
 import { SearchFilters } from './../../Interfaces/search/SearchFilters';
-import { ErrorHandler } from '../../helpers';
+//import { ErrorHandler } from '../../helpers';
 import { apiSlice } from '../apiSlice';
 import { GetDocuments, CreateDocument, RemoveDocument, UpdateDocument, SetDocument } from './extensionDataManagerAPI';
 import * as _ from 'lodash';
@@ -28,7 +28,7 @@ const extensionDataEndpoints = apiSlice.injectEndpoints({
         },
         async onQueryStarted(_request, { queryFulfilled }) {
           await queryFulfilled.catch((err) => {
-            ErrorHandler(err);
+            console.log(err);
           });
         },
         providesTags: (result, _error, { collectionName }) =>
@@ -53,7 +53,7 @@ const extensionDataEndpoints = apiSlice.injectEndpoints({
         },
         async onQueryStarted(_request, { queryFulfilled }) {
           await queryFulfilled.catch((err) => {
-            ErrorHandler(err);
+            console.log(err);
           });
         },
         providesTags: (result, _error, collectionName) =>
@@ -70,7 +70,7 @@ const extensionDataEndpoints = apiSlice.injectEndpoints({
         },
         async onQueryStarted(_request, { queryFulfilled }) {
           await queryFulfilled.catch((err) => {
-            ErrorHandler(err);
+            console.log(err);
           });
         },
         invalidatesTags: (_result, _error, { collectionName }) => [
@@ -83,7 +83,7 @@ const extensionDataEndpoints = apiSlice.injectEndpoints({
         },
         async onQueryStarted(_request, { queryFulfilled }) {
           await queryFulfilled.catch((err) => {
-            ErrorHandler(err);
+            console.log(err);
           });
         },
         invalidatesTags: (_result, _error, { id, collectionName }) => [{ type: 'extensionData', id, collectionName }],
@@ -94,7 +94,7 @@ const extensionDataEndpoints = apiSlice.injectEndpoints({
         },
         async onQueryStarted(_request, { queryFulfilled }) {
           await queryFulfilled.catch((err) => {
-            ErrorHandler(err);
+            console.log(err);
           });
         },
         invalidatesTags: (_result, _error, { doc, collectionName }) => [
@@ -107,7 +107,7 @@ const extensionDataEndpoints = apiSlice.injectEndpoints({
         },
         async onQueryStarted(_request, { queryFulfilled }) {
           await queryFulfilled.catch((err) => {
-            ErrorHandler(err);
+            console.log(err);
           });
         },
         invalidatesTags: (_result, _error, { doc, collectionName }) => [

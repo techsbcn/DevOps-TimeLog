@@ -225,7 +225,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@azure/msal-browser@npm:^2.16.0, @azure/msal-browser@npm:^2.21.0, @azure/msal-browser@npm:^2.23.0":
+"@azure/msal-browser@npm:^2.16.0, @azure/msal-browser@npm:^2.21.0":
   version: 2.23.0
   resolution: "@azure/msal-browser@npm:2.23.0"
   dependencies:
@@ -272,16 +272,6 @@ __metadata:
     jsonwebtoken: ^8.5.1
     uuid: ^8.3.0
   checksum: 68bc8c21b0a62c1e3c64f108e7f1cfd4060e1e41784cb770c4a710d7f3f469369ba62fa3e26a728f1388fa8e235cc362dd6e976dc495f4b38249fe7e34874b78
-  languageName: node
-  linkType: hard
-
-"@azure/msal-react@npm:^1.3.2":
-  version: 1.3.2
-  resolution: "@azure/msal-react@npm:1.3.2"
-  peerDependencies:
-    "@azure/msal-browser": ^2.23.0
-    react: ^16.8.0 || ^17 || ^18
-  checksum: a85454686f204070290b1fe384ae0b08fd8c1fb49beea1813a41fc27f0e848268bbe1f506e28b155b1265838d2bef6fe051fd752fab22bfc308033abf0ec35d0
   languageName: node
   linkType: hard
 
@@ -2533,7 +2523,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-router-dom@npm:^5.3.2, @types/react-router-dom@npm:^5.3.3":
+"@types/react-router-dom@npm:^5.3.2":
   version: 5.3.3
   resolution: "@types/react-router-dom@npm:5.3.3"
   dependencies:
@@ -3851,8 +3841,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "azure-devops-extension-sample@workspace:."
   dependencies:
-    "@azure/msal-browser": ^2.23.0
-    "@azure/msal-react": ^1.3.2
     "@fluentui/react-northstar": ^0.62.0
     "@fortawesome/fontawesome-svg-core": ^6.1.1
     "@fortawesome/free-solid-svg-icons": ^6.1.1
@@ -3870,7 +3858,6 @@ __metadata:
     "@types/jest": ^27.4.1
     "@types/react": ^18.0.5
     "@types/react-dom": ^18.0.1
-    "@types/react-router-dom": ^5.3.3
     "@types/yup": ^0.29.13
     "@typescript-eslint/eslint-plugin": ^5.20.0
     "@typescript-eslint/parser": ^5.20.0
@@ -3909,7 +3896,6 @@ __metadata:
     react-hook-form: ^7.30.0
     react-i18next: ^11.16.7
     react-redux: ^8.0.0
-    react-router-dom: ^6.3.0
     rimraf: ^3.0.2
     sass-loader: ^12.6.0
     style-loader: ^3.3.1
@@ -11920,7 +11906,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:^6.0.2, react-router-dom@npm:^6.3.0":
+"react-router-dom@npm:^6.0.2":
   version: 6.3.0
   resolution: "react-router-dom@npm:6.3.0"
   dependencies:

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Grid } from '@mui/material';
+import { Container, Grid, CircularProgress, Box } from '@mui/material';
 import { TimeLogEntry, TimeLogEntryFilters, UserContext } from '../../interfaces';
 import * as _ from 'lodash';
 import TimeLogDetails from '../../components/timeLogSummary/TimeLogDetails';
@@ -17,7 +17,6 @@ interface TimeLogMainSummaryProps {
 const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
   const [filters, setFilters] = useState<TimeLogEntryFilters>(() => {
     const curr = new Date();
-    const fool = _VALUES.LOADING;
     return {
       userIds: props.user ? [props.user.id] : [],
       timeFrom: new Date(
@@ -76,7 +75,7 @@ const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
     setFilters(newFilters);
   };
 
-  return (
+  return !props.loadingDocuments ? (
     <Container maxWidth={false}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
@@ -102,6 +101,11 @@ const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
         </Grid>
       </Grid>
     </Container>
+  ) : (
+    <Box textAlign="center" display="flex" alignItems="center" justifyContent="center">
+      <CircularProgress className="circular-progress-main-color" />
+      <Box ml={2}>{_VALUES.LOADING}...</Box>
+    </Box>
   );
 };
 

@@ -95,7 +95,7 @@ module.exports = (env) => ({
       },
     ],
   },
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   devServer: {
     https: true,
     port: 3000,
