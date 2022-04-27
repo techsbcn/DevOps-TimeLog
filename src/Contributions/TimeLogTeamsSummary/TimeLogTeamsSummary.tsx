@@ -12,28 +12,30 @@ import TimeLogTeamsExt from '../../components/teamsExt/TimeLogTeamsExt';
 export const TimeLogTeamsSummary: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [accessToken, setAccessToken] = useState<any>(GetTokenTL());
-
-  useEffect(() => {
-    setLoading(true);
-    microsoftTeams.initialize(() => {
-      microsoftTeams.authentication.authenticate({
-        url: `${process.env.URL_ORIGIN as string}/auth-start.html`,
-        //url: 'https://localhost:44324/auth-start.html',
-        width: 600,
-        height: 535,
-        successCallback: (result: any) => {
-          setAccessToken(result.accessToken);
-          console.log('AT', result.accessToken);
-          localStorage.setItem('TL_TOKEN', JSON.stringify(result.accessToken));
-          setLoading(false);
-        },
-        failureCallback: (reason) => {
-          console.log('Error', reason);
-          setLoading(false);
-        },
+  microsoftTeams.initialize();
+  /*useEffect(() => {
+    if (!GetTokenTL()) {
+      setLoading(true);
+      microsoftTeams.initialize(() => {
+        microsoftTeams.authentication.authenticate({
+          url: `${process.env.URL_ORIGIN as string}/auth-start.html`,
+          //url: 'https://localhost:44324/auth-start.html',
+          width: 600,
+          height: 535,
+          successCallback: (result: any) => {
+            setAccessToken(result.accessToken);
+            console.log('AT', result.accessToken);
+            localStorage.setItem('TL_TOKEN', JSON.stringify(result.accessToken));
+            setLoading(false);
+          },
+          failureCallback: (reason) => {
+            console.log('Error', reason);
+            setLoading(false);
+          },
+        });
       });
-    });
-  }, []);
+    }
+  }, []);*/
 
   const handleLogin = () => {
     microsoftTeams.authentication.authenticate({
