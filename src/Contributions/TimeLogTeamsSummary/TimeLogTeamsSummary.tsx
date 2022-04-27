@@ -39,8 +39,9 @@ export const TimeLogTeamsSummary: React.FC = () => {
 
   const handleLogin = () => {
     microsoftTeams.authentication.authenticate({
-      url: `${process.env.URL_ORIGIN as string}/auth-start.html`,
+      //url: `${process.env.URL_ORIGIN as string}/auth-start.html`,
       //url: 'https://localhost:44324/auth-start.html',
+      url: `${window.location.href.split('/dist')[0]}/dist/auth-start.html`,
       width: 600,
       height: 535,
       successCallback: (result: any) => {

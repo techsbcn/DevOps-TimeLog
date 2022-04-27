@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import TimeLogDetails from '../../components/timeLogSummary/TimeLogDetails';
 import TimeLogTable from '../../components/timeLogSummary/TimeLogTable';
 import TimeLogFilters from '../../components/timeLogSummary/TimeLogFilters';
+import { _VALUES } from '../../resources/_constants/values';
 
 interface TimeLogMainSummaryProps {
   documents: TimeLogEntry[];
@@ -16,6 +17,7 @@ interface TimeLogMainSummaryProps {
 const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
   const [filters, setFilters] = useState<TimeLogEntryFilters>(() => {
     const curr = new Date();
+    const fool = _VALUES.LOADING;
     return {
       userIds: props.user ? [props.user.id] : [],
       timeFrom: new Date(
