@@ -16,7 +16,6 @@
                 microsoftTeams.authentication.notifyFailure(hashParams["error"]);
             } else if (hashParams["access_token"]) {
                 // Get the stored state parameter and compare with incoming state
-                localStorage.setItem("simple.error", JSON.stringify(hashParams));
                 microsoftTeams.authentication.notifySuccess({
                     idToken: hashParams["id_token"],
                     accessToken: hashParams["access_token"],

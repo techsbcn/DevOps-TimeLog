@@ -7,7 +7,7 @@
     <body>
         <script src="https://statics.teams.cdn.office.net/sdk/v1.11.0/js/MicrosoftTeams.min.js" crossorigin="anonymous"></script>
         <script type="text/javascript">
-            microsoftTeams.initialize();
+            microsoftTeams.initialize()
             localStorage.removeItem("simple.error");
             let hashParams = getHashParameters();
             if (hashParams["error"]) {
@@ -29,6 +29,7 @@
                 localStorage.setItem("simple.error", JSON.stringify(hashParams));
                 microsoftTeams.authentication.notifyFailure("UnexpectedFailure");
             }
+        
             // Parse hash parameters into key-value pairs
             function getHashParameters() {
                 let hashParams = {};

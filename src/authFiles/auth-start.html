@@ -9,7 +9,7 @@
   <body>
     <script src="https://statics.teams.cdn.office.net/sdk/v1.11.0/js/MicrosoftTeams.min.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
-        microsoftTeams.initialize();
+        microsoftTeams.initialize()
         microsoftTeams.getContext(function (context) {
             let state = _guid();
             localStorage.setItem("simple.state", state);
@@ -22,9 +22,7 @@
                 response_type: "id_token token",
                 response_mode: "fragment",
                 scope: "openid 499b84ac-1321-427f-aa17-267ca6975798/user_impersonation",
-                redirect_uri: "https://localhost:3000/dist/blank-auth-end.html",
-                //redirect_uri: "https://localhost:44324/blank-auth-end.html",
-                //redirect_uri: `${process.env.URL_ORIGIN}/blank-auth-end.html`,
+                redirect_uri: `${window.location.href.split('/dist')[0]}/dist/blank-auth-end.html`,
                 nonce: _guid(),
                 state: state,
                 login_hint: context.loginHint,

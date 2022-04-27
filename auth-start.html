@@ -22,8 +22,6 @@
                 response_type: "id_token token",
                 response_mode: "fragment",
                 scope: "openid 499b84ac-1321-427f-aa17-267ca6975798/user_impersonation",
-                //redirect_uri: "https://localhost:3000/dist/blank-auth-end.html",
-                //redirect_uri: "https://localhost:44324/blank-auth-end.html",
                 redirect_uri: `${window.location.href.split('/dist')[0]}/dist/blank-auth-end.html`,
                 nonce: _guid(),
                 state: state,
