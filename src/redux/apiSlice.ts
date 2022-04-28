@@ -17,15 +17,11 @@ export const apiSlice = createApi({
 export const GetWebApi = async (token?: string, orgUri?: string) => {
   const tokenTL = token ?? localStorage.getItem('TL_TOKEN') ? JSON.parse(localStorage.getItem('TL_TOKEN') || '') : null;
   return new Promise<nodeApi.WebApi>((resolve, reject) => {
-    const orgTL =
-      orgUri ?? localStorage.getItem('TL_ORG')
-        ? `https://dev.azure.com/${JSON.parse(localStorage.getItem('TL_ORG') || '')}`
-        : null;
-
+    const orgTL = orgUri ?? localStorage.getItem('TL_ORG') ? JSON.parse(localStorage.getItem('TL_ORG') || '') : null;
     if (orgTL) {
       try {
         const authHandler = nodeApi.getPersonalAccessTokenHandler(tokenTL);
-        const vsts: nodeApi.WebApi = new nodeApi.WebApi(orgTL, authHandler);
+        const vsts: nodeApi.WebApi = new nodeApi.WebApi(`https://dev.azure.com/${orgTL}`, authHandler);
         resolve(vsts);
       } catch (err) {
         reject(err);

@@ -11,7 +11,7 @@ interface TimeLogMainSummaryProps {
   documents: TimeLogEntry[];
   loadingDocuments: boolean;
   user?: UserContext;
-  projectId: string;
+  projectId?: string;
 }
 
 const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {

@@ -11,7 +11,7 @@ interface TimeLogFiltersProps {
   user?: UserContext;
   loading: boolean;
   filters?: TimeLogEntryFilters;
-  projectId: string;
+  projectId?: string;
 }
 
 const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {

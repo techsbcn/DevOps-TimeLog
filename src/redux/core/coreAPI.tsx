@@ -3,9 +3,10 @@ import * as API from 'azure-devops-extension-api/';
 import * as SDK from 'azure-devops-extension-sdk';
 import { CommonServiceIds, IProjectPageService } from 'azure-devops-extension-api';
 import { AuthHeader, ErrorHandler, ResponseHandler } from '../../helpers';
-import { GetWebApi } from '../apiSlice';
+import { TeamMember } from 'azure-devops-extension-api/WebApi';
 import { Member } from '../../interfaces';
 import * as nodeApi from 'azure-devops-node-api';
+import { GetWebApi } from '../apiSlice';
 import { ICoreApi } from 'azure-devops-node-api/CoreApi';
 import * as CoreInterfaces from 'azure-devops-node-api/interfaces/CoreInterfaces';
 import * as VSSInterfaces from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
@@ -45,7 +46,19 @@ export const CoreNodeAPI = async (token?: string) => {
   );
 };
 
-export const GetAllTeams = async () => {
+export const GetAllTeamsSDK = async () => {
+  return new Promise<CoreSDK.WebApiTeam[]>((resolve, reject) =>
+    CoreSDKClient.getAllTeams()
+      .then((result: CoreSDK.WebApiTeam[]) => {
+        resolve(result);
+      })
+      .catch(() => {
+        reject(ErrorHandler('GetTeamsException'));
+      })
+  );
+};
+
+export const GetAllTeamsNodeAPI = async () => {
   const coreApiObject: ICoreApi = await CoreNodeAPI();
   return new Promise<CoreInterfaces.WebApiTeam[]>((resolve, reject) =>
     coreApiObject
@@ -59,7 +72,24 @@ export const GetAllTeams = async () => {
   );
 };
 
-export const GetTeams = async (projectId: string) => {
+export const GetTeams = async (projectId?: string) => {
+  return projectId ? await GetTeamsAPI(projectId) : await GetTeamsSDK();
+};
+
+const GetTeamsSDK = async () => {
+  const pId = (await GetProjectContext()).id;
+  return new Promise<CoreSDK.WebApiTeam[]>((resolve, reject) =>
+    CoreSDKClient.getTeams(pId)
+      .then((result: CoreSDK.WebApiTeam[]) => {
+        resolve(result);
+      })
+      .catch(() => {
+        reject(ErrorHandler('GetTeamsException'));
+      })
+  );
+};
+
+const GetTeamsAPI = async (projectId: string) => {
   const coreApiObject: ICoreApi = await CoreNodeAPI();
   return new Promise<CoreInterfaces.WebApiTeam[]>((resolve, reject) =>
     coreApiObject
@@ -73,7 +103,28 @@ export const GetTeams = async (projectId: string) => {
   );
 };
 
-export const GetTeamMembers = async (teamId: string, projectId: string) => {
+export const GetTeamMembersSDK = async (teamId: string, projectId?: string) => {
+  const pId = projectId ?? (await GetProjectContext()).id;
+  return new Promise<Member[]>((resolve, reject) =>
+    CoreSDKClient.getTeamMembersWithExtendedProperties(pId, teamId)
+      .then((result: TeamMember[]) => {
+        let members: Member[] = [];
+        members = result.map((item) => {
+          const member: Member = { ...item.identity, isTeamAdmin: item.isTeamAdmin };
+          return member;
+        });
+        resolve(members);
+      })
+      .catch(() => {
+        reject(ErrorHandler('GetTeamsMembersException'));
+      })
+  );
+};
+export const GetTeamMembers = async (teamId: string, projectId?: string) => {
+  return projectId ? await GetTeamMembersNodeAPI(teamId, projectId) : await GetTeamMembersSDK(teamId);
+};
+
+export const GetTeamMembersNodeAPI = async (teamId: string, projectId: string) => {
   const coreApiObject: ICoreApi = await CoreNodeAPI();
   return new Promise<Member[]>((resolve, reject) =>
     coreApiObject
