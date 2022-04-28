@@ -1,5 +1,5 @@
-import { IdentityRef } from 'azure-devops-extension-api/WebApi';
+import { IdentityRef } from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
 
 export interface Member extends IdentityRef {
-  isTeamAdmin: boolean;
+  isTeamAdmin?: boolean;
 }

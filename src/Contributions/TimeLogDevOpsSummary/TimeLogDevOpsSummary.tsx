@@ -5,9 +5,11 @@ import { useFetchGetDocumentsWithoutFiltersQuery } from '../../redux/extensionDa
 import TimeLogMainSummary from '../../components/timeLogSummary/TimeLogMainSummary';
 import { CircularProgress, Box } from '@mui/material';
 import { _VALUES } from '../../resources/_constants/values';
+import { GetProjectContext } from '../../redux/core/coreAPI';
 
 export const TimeLogDevOpsSummary: React.FC = () => {
   const [user, setUser] = useState<SDK.IUserContext>();
+  const [projectId, setProjectId] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -17,17 +19,21 @@ export const TimeLogDevOpsSummary: React.FC = () => {
       await SDK.ready();
       const user = SDK.getUser();
       setUser(user);
+      setProjectId((await GetProjectContext()).id);
       setLoading(false);
     });
   }, []);
 
-  const useFetchDocuments = useFetchGetDocumentsWithoutFiltersQuery(process.env.ENTRIES_COLLECTION_NAME as string);
+  const useFetchDocuments = useFetchGetDocumentsWithoutFiltersQuery({
+    collectionName: process.env.ENTRIES_COLLECTION_NAME as string,
+  });
 
   return !loading ? (
     <TimeLogMainSummary
       documents={useFetchDocuments.data && useFetchDocuments.data.items.length > 0 ? useFetchDocuments.data.items : []}
       loadingDocuments={useFetchDocuments.isFetching}
       user={user}
+      projectId={projectId}
     />
   ) : (
     <Box textAlign="center" display="flex" alignItems="center" justifyContent="center">

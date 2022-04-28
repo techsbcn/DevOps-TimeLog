@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Grid, CircularProgress, Box } from '@mui/material';
+import { Grid, CircularProgress, Box } from '@mui/material';
 import { TimeLogEntry, TimeLogEntryFilters, UserContext } from '../../interfaces';
 import * as _ from 'lodash';
 import TimeLogDetails from '../../components/timeLogSummary/TimeLogDetails';
@@ -11,7 +11,7 @@ interface TimeLogMainSummaryProps {
   documents: TimeLogEntry[];
   loadingDocuments: boolean;
   user?: UserContext;
-  projectId?: string;
+  projectId: string;
 }
 
 const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
@@ -76,31 +76,29 @@ const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
   };
 
   return !props.loadingDocuments ? (
-    <Container maxWidth={false}>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TimeLogFilters
-            onFiltersChange={setNewFilters}
-            filters={filters}
-            user={props.user}
-            loading={false}
-            projectId={props.projectId}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TimeLogDetails
-            timeLogEntries={timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
-            loading={props.loadingDocuments || loadingFilters}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TimeLogTable
-            documents={timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
-            loading={props.loadingDocuments || loadingFilters}
-          />
-        </Grid>
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <TimeLogFilters
+          onFiltersChange={setNewFilters}
+          filters={filters}
+          user={props.user}
+          loading={loadingFilters}
+          projectId={props.projectId}
+        />
       </Grid>
-    </Container>
+      <Grid item xs={12}>
+        <TimeLogDetails
+          timeLogEntries={timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
+          loading={props.loadingDocuments || loadingFilters}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TimeLogTable
+          documents={timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
+          loading={props.loadingDocuments || loadingFilters}
+        />
+      </Grid>
+    </Grid>
   ) : (
     <Box textAlign="center" display="flex" alignItems="center" justifyContent="center">
       <CircularProgress className="circular-progress-main-color" />

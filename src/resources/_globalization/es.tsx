@@ -83,4 +83,5 @@ export const GLOBAL_ES = {
   organization: 'Organización',
   project: 'Proyecto',
   continue: 'Continuar',
+  login: 'Iniciar sesión',
 };

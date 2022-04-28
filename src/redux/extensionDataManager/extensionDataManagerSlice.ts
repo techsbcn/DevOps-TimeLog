@@ -2,16 +2,28 @@ import { ListResultCollection } from './../../Interfaces/search/ListResultCollec
 import { SearchFilters } from './../../Interfaces/search/SearchFilters';
 //import { ErrorHandler } from '../../helpers';
 import { apiSlice } from '../apiSlice';
-import { GetDocuments, CreateDocument, RemoveDocument, UpdateDocument, SetDocument } from './extensionDataManagerAPI';
+import {
+  GetDocuments,
+  CreateDocument,
+  RemoveDocument,
+  UpdateDocument,
+  SetDocument,
+  GetDocumentsAPI,
+} from './extensionDataManagerAPI';
 import * as _ from 'lodash';
 
 const extensionDataEndpoints = apiSlice.injectEndpoints({
   endpoints(builder) {
     return {
-      fetchGetDocuments: builder.query<ListResultCollection<any>, { collectionName: string; filters: SearchFilters }>({
+      fetchGetDocuments: builder.query<
+        ListResultCollection<any>,
+        { collectionName: string; filters: SearchFilters; useAPIExtension?: boolean }
+      >({
         keepUnusedDataFor: 60,
         queryFn: async (request) => {
-          let documents = await GetDocuments(request.collectionName);
+          let documents = request.useAPIExtension
+            ? await GetDocumentsAPI(request.collectionName)
+            : await GetDocuments(request.collectionName);
           if (request.filters.filter) documents = _.filter(documents, request.filters.filter);
           const totalCount = documents.length;
           if (request.filters.limit && request.filters.page) {
@@ -39,10 +51,15 @@ const extensionDataEndpoints = apiSlice.injectEndpoints({
               ]
             : [{ type: 'extensionData', id: 'LIST', collectionName }],
       }),
-      fetchGetDocumentsWithoutFilters: builder.query<ListResultCollection<any>, string>({
+      fetchGetDocumentsWithoutFilters: builder.query<
+        ListResultCollection<any>,
+        { collectionName: string; useAPIExtension?: boolean }
+      >({
         keepUnusedDataFor: 60,
         queryFn: async (request) => {
-          const documents = await GetDocuments(request);
+          const documents = request.useAPIExtension
+            ? await GetDocumentsAPI(request.collectionName)
+            : await GetDocuments(request.collectionName);
           const totalCount = documents.length;
           return {
             data: {
@@ -56,7 +73,7 @@ const extensionDataEndpoints = apiSlice.injectEndpoints({
             console.log(err);
           });
         },
-        providesTags: (result, _error, collectionName) =>
+        providesTags: (result, _error, { collectionName }) =>
           result
             ? [
                 ...result.items.map(({ id }) => ({ type: 'extensionData' as const, id, collectionName })),

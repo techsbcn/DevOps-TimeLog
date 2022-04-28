@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import * as vm from 'azure-devops-node-api';
+import * as nodeApi from 'azure-devops-node-api';
 
 export const apiSlice = createApi({
   reducerPath: 'api',
@@ -14,16 +14,24 @@ export const apiSlice = createApi({
   endpoints: () => ({}),
 });
 
-export const GetWebApi = async (token: string, orgUri: string) => {
-  // eslint-disable-next-line no-async-promise-executor
-  return new Promise<vm.WebApi>(async (resolve, reject) => {
-    try {
-      const authHandler = vm.getPersonalAccessTokenHandler(token);
-      const vsts: vm.WebApi = new vm.WebApi(orgUri, authHandler);
+export const GetWebApi = async (token?: string, orgUri?: string) => {
+  const tokenTL = token ?? localStorage.getItem('TL_TOKEN') ? JSON.parse(localStorage.getItem('TL_TOKEN') || '') : null;
+  return new Promise<nodeApi.WebApi>((resolve, reject) => {
+    const orgTL =
+      orgUri ?? localStorage.getItem('TL_ORG')
+        ? `https://dev.azure.com/${JSON.parse(localStorage.getItem('TL_ORG') || '')}`
+        : null;
 
-      resolve(vsts);
-    } catch (err) {
-      reject(err);
+    if (orgTL) {
+      try {
+        const authHandler = nodeApi.getPersonalAccessTokenHandler(tokenTL);
+        const vsts: nodeApi.WebApi = new nodeApi.WebApi(orgTL, authHandler);
+        resolve(vsts);
+      } catch (err) {
+        reject(err);
+      }
+    } else {
+      reject('OrganizationNotValid');
     }
   });
 };

@@ -17,11 +17,11 @@ export const GetTokenTL = () => {
 };
 
 export const GetProjectTL = () => {
-  const tokenTL = localStorage.getItem('TL_PROJECT') ? JSON.parse(localStorage.getItem('TL_PROJECT') || '') : null;
-  return tokenTL;
+  const projectTL = localStorage.getItem('TL_PROJECT') ? JSON.parse(localStorage.getItem('TL_PROJECT') || '') : null;
+  return projectTL;
 };
 
 export const GetOrganizationTL = () => {
-  const tokenTL = localStorage.getItem('TL_ORG') ? JSON.parse(localStorage.getItem('TL_ORG') || '') : null;
-  return tokenTL;
+  const orgTL = localStorage.getItem('TL_ORG') ? JSON.parse(localStorage.getItem('TL_ORG') || '') : null;
+  return orgTL;
 };

@@ -1,10 +1,27 @@
 import * as SDK from 'azure-devops-extension-sdk';
 import { CommonServiceIds, IExtensionDataManager, IExtensionDataService } from 'azure-devops-extension-api';
+import { GetWebApi } from '../apiSlice';
 //import { ErrorHandler } from '../../helpers';
+import * as nodeApi from 'azure-devops-node-api';
+import * as ExtensionManagementApi from 'azure-devops-node-api/ExtensionManagementApi';
 
 export const ExtensionDataService = (async () => {
   return await SDK.getService<IExtensionDataService>(CommonServiceIds.ExtensionDataService);
 })();
+
+export const ExtensionDataManagerNodeAPI = async (token?: string) => {
+  const webApi: nodeApi.WebApi = await GetWebApi(token);
+  return new Promise<ExtensionManagementApi.IExtensionManagementApi>((resolve, reject) =>
+    webApi
+      .getExtensionManagementApi()
+      .then((result: ExtensionManagementApi.IExtensionManagementApi) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  );
+};
 
 export const ExtensionDataManager = async () => {
   const accessToken = await SDK.getAccessToken();
@@ -13,6 +30,20 @@ export const ExtensionDataManager = async () => {
     extDataService
       .getExtensionDataManager(SDK.getExtensionContext().id, accessToken)
       .then((result: IExtensionDataManager) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  );
+};
+
+export const GetDocumentsAPI = async (collectionName: string, token?: string) => {
+  const extensionDataManager = await ExtensionDataManagerNodeAPI(token);
+  return new Promise<any[]>((resolve, reject) =>
+    extensionDataManager
+      .getDocumentsByName('TechsBCN', process.env.EXTENSION_ID as string, 'Default', 'Current', collectionName)
+      .then((result: any) => {
         resolve(result);
       })
       .catch((error) => {

@@ -1,9 +1,8 @@
-import React, { useEffect, useState, createContext } from 'react';
-import { showRootComponent } from '../..';
+import React, { useEffect, useState } from 'react';
+import { showRootTeamsComponent } from '../..';
 import { _VALUES } from '../../resources/_constants/values';
 import { CircularProgress, Box } from '@mui/material';
 import * as microsoftTeams from '@microsoft/teams-js';
-import { useTeamsFx } from '@microsoft/teamsfx-react';
 import { Button } from '@fluentui/react-northstar';
 import { GetTokenTL, GetProjectTL, GetOrganizationTL } from '../../helpers';
 import ChooseInfo from '../../components/teamsExt/ChooseInfo';
@@ -59,7 +58,7 @@ export const TimeLogTeamsSummary: React.FC = () => {
       )
     ) : (
       <Box textAlign="center">
-        <Button primary content="Sign in" onClick={handleLogin} />
+        <Button primary content={_VALUES.LOG_IN} onClick={handleLogin} />
       </Box>
     )
   ) : (
@@ -70,4 +69,4 @@ export const TimeLogTeamsSummary: React.FC = () => {
   );
 };
 
-showRootComponent(<TimeLogTeamsSummary />);
+showRootTeamsComponent(<TimeLogTeamsSummary />);
