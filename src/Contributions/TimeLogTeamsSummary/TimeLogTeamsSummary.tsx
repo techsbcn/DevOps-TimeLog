@@ -58,7 +58,7 @@ export const TimeLogTeamsSummary: React.FC = () => {
       )
     ) : (
       <Box textAlign="center">
-        <Button primary content={_VALUES.LOG_IN} onClick={handleLogin} />
+        <Button primary content={_VALUES.LOGIN} onClick={handleLogin} />
       </Box>
     )
   ) : (
