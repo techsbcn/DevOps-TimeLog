@@ -5,7 +5,7 @@ export const GLOBAL_EN = {
   cancel: 'Cancel',
   list: 'List',
   EntityDoesNotExistException: 'Unable to access the requested resource',
-  NotAuthorizedException: 'wrong credentials',
+  NotAuthorizedException: 'Wrong credentials',
   FailedToFetchException: 'Server connection error',
   ForbiddenException: 'You do not have necessary permissions',
   BadRequestException: 'Error: Contact Administrator',

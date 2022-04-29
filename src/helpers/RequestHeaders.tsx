@@ -1,3 +1,5 @@
+import { GetPublicAlias } from '../redux/profile/profileAPI';
+
 export const BasicHeader = () => {
   return { 'Content-Type': 'application/json' };
 };
@@ -28,4 +30,15 @@ export const GetProjectTL = () => {
 export const GetOrganizationTL = () => {
   const orgTL = localStorage.getItem('TL_ORG') ? JSON.parse(localStorage.getItem('TL_ORG') || '') : null;
   return orgTL;
+};
+
+export const GetValidationTOKEN = () => {
+  if (!GetTokenTL) return Promise.reject(false);
+  return GetPublicAlias()
+    .then(() => {
+      return true;
+    })
+    .catch(() => {
+      return false;
+    });
 };

@@ -2,13 +2,16 @@ import Translate from '../i18n';
 //import { addNotification } from '../helpers';
 
 export const ResponseHandler = (response: any) => {
-  return response.text().then((text: any) => {
-    const data = text && JSON.parse(text);
+  if (response.status === 203)
+    return Promise.reject(ErrorHandler({ Id: 'NotAuthorizedException', Code: response.status }));
+  else {
+    return response.text().then((text: any) => {
+      const data = text && JSON.parse(text);
+      if (!response.ok || response.status === 203) return Promise.reject(data);
 
-    if (!response.ok) return Promise.reject(data);
-
-    return data;
-  });
+      return data;
+    });
+  }
 };
 
 export const ResponseBlobHandler = (response: any) => {
@@ -21,14 +24,14 @@ export const ResponseBlobHandler = (response: any) => {
 
 export const ErrorHandler = (error: any) => {
   console.log(error);
-  /*if (error.Id) {
+  if (error.Id) {
     const translate = Translate.t(`${error.Id}`);
     const message = translate.trim() !== '' ? translate : Translate.t('InternalServerErrorException');
-    addNotification(message, 'danger', error.Id);
+    //addNotification(message, 'danger', error.Id);
     /*if (error.Code === 401 || error.Code === 403) {
-    }
+    }*/
     return Object({ Code: error.Code, Exception: error.Id, Message: message });
-  }*/
+  }
 
   //addNotification(Translate.t('FailedToFetchException'), 'danger', 'FailedToFetchException');
   return Object({ Code: 500, Exception: 'FailedToFetchException', Message: Translate.t('FailedToFetchException') });

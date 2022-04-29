@@ -3,10 +3,10 @@ import { UserContext } from '../../interfaces';
 import { CircularProgress, Box } from '@mui/material';
 import TimeLogMainSummary from '../../components/timeLogSummary/TimeLogMainSummary';
 import { _VALUES } from '../../resources/_constants/values';
+import { useFetchGetDocumentsWithoutFiltersQuery } from '../../redux/extensionDataManager/extensionDataManagerSlice';
 import { GetWebApi } from '../../redux/apiSlice';
 import * as vm from 'azure-devops-node-api';
 import * as lim from 'azure-devops-node-api/interfaces/LocationsInterfaces';
-import { useFetchGetDocumentsWithoutFiltersQuery } from '../../redux/extensionDataManager/extensionDataManagerSlice';
 
 interface TimeLogTeamsExtProps {
   projectId: string;
@@ -23,8 +23,11 @@ const TimeLogTeamsExt: React.FC<TimeLogTeamsExtProps> = (props) => {
       const connData: lim.ConnectionData = await webApi.connect();
       connData &&
         connData.authenticatedUser &&
-        setUser({ id: connData.authenticatedUser.id, displayName: connData.authenticatedUser.customDisplayName });
-
+        connData.authenticatedUser.id &&
+        setUser({
+          id: connData.authenticatedUser.id,
+          displayName: connData.authenticatedUser.customDisplayName ?? connData.authenticatedUser.providerDisplayName,
+        });
       setLoading(false);
     });
   }, [props.organization, props.token]);

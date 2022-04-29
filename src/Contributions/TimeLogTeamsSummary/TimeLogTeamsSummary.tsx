@@ -4,34 +4,38 @@ import { _VALUES } from '../../resources/_constants/values';
 import { CircularProgress, Box } from '@mui/material';
 import * as microsoftTeams from '@microsoft/teams-js';
 import { Button } from '@fluentui/react-northstar';
-import { GetTokenTL, GetProjectTL, GetOrganizationTL } from '../../helpers';
+import { GetTokenTL, GetProjectTL, GetOrganizationTL, GetValidationTOKEN } from '../../helpers';
 import ChooseInfo from '../../components/teamsExt/ChooseInfo';
 import TimeLogTeamsExt from '../../components/teamsExt/TimeLogTeamsExt';
 
 export const TimeLogTeamsSummary: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [accessToken, setAccessToken] = useState<any>(GetTokenTL());
+  const [loading, setLoading] = useState<boolean>(true);
+  const [accessToken, setAccessToken] = useState<any>();
   microsoftTeams.initialize();
   useEffect(() => {
-    if (!GetTokenTL()) {
-      setLoading(true);
-      microsoftTeams.initialize(() => {
-        microsoftTeams.authentication.authenticate({
-          url: `${window.location.href.split('/dist')[0]}/dist/auth-start.html`,
-          width: 600,
-          height: 535,
-          successCallback: (result: any) => {
-            setAccessToken(result.accessToken);
-            localStorage.setItem('TL_TOKEN', JSON.stringify(result.accessToken));
-            setLoading(false);
-          },
-          failureCallback: (reason) => {
-            console.log('Error', reason);
-            setLoading(false);
-          },
+    GetValidationTOKEN().then((response) => {
+      if (response) {
+        setAccessToken(GetTokenTL());
+        setLoading(false);
+      } else {
+        microsoftTeams.initialize(() => {
+          microsoftTeams.authentication.authenticate({
+            url: `${window.location.href.split('/dist')[0]}/dist/auth-start.html`,
+            width: 600,
+            height: 535,
+            successCallback: (result: any) => {
+              setAccessToken(result.accessToken);
+              localStorage.setItem('TL_TOKEN', JSON.stringify(result.accessToken));
+              setLoading(false);
+            },
+            failureCallback: (reason) => {
+              console.log('Error', reason);
+              setLoading(false);
+            },
+          });
         });
-      });
-    }
+      }
+    });
   }, []);
 
   const handleLogin = () => {
