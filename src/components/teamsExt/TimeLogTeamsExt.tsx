@@ -7,11 +7,14 @@ import { useFetchGetDocumentsWithoutFiltersQuery } from '../../redux/extensionDa
 import { GetWebApi } from '../../redux/apiSlice';
 import * as vm from 'azure-devops-node-api';
 import * as lim from 'azure-devops-node-api/interfaces/LocationsInterfaces';
+import { TeamsExtensionType } from '../../enums/TeamsExtensionType';
+import TimeLogNewEntriesExternalForm from '../../components/timeLogEntries/forms/TimeLogNewEntriesExternalForm';
 
 interface TimeLogTeamsExtProps {
   projectId: string;
   organization: string;
   token: string;
+  extensionType: TeamsExtensionType;
 }
 
 const TimeLogTeamsExt: React.FC<TimeLogTeamsExtProps> = (props) => {
@@ -26,7 +29,8 @@ const TimeLogTeamsExt: React.FC<TimeLogTeamsExtProps> = (props) => {
         connData.authenticatedUser.id &&
         setUser({
           id: connData.authenticatedUser.id,
-          displayName: connData.authenticatedUser.customDisplayName ?? connData.authenticatedUser.providerDisplayName,
+          displayName:
+            connData.authenticatedUser.customDisplayName ?? connData.authenticatedUser.providerDisplayName ?? '',
         });
       setLoading(false);
     });
@@ -38,12 +42,22 @@ const TimeLogTeamsExt: React.FC<TimeLogTeamsExtProps> = (props) => {
   });
 
   return !loading ? (
-    <TimeLogMainSummary
-      documents={useFetchDocuments.data && useFetchDocuments.data.items.length > 0 ? useFetchDocuments.data.items : []}
-      loadingDocuments={useFetchDocuments.isFetching}
-      user={user}
-      projectId={props.projectId}
-    />
+    props.extensionType === TeamsExtensionType.summary ? (
+      <TimeLogMainSummary
+        documents={
+          useFetchDocuments.data && useFetchDocuments.data.items.length > 0 ? useFetchDocuments.data.items : []
+        }
+        loadingDocuments={useFetchDocuments.isFetching}
+        user={user}
+        projectId={props.projectId}
+      />
+    ) : props.extensionType === TeamsExtensionType.newTimeLog && user ? (
+      <TimeLogNewEntriesExternalForm user={user} />
+    ) : props.extensionType === TeamsExtensionType.dashboard ? (
+      <Box>Comming soon</Box>
+    ) : (
+      <></>
+    )
   ) : (
     <Box textAlign="center" display="flex" alignItems="center" justifyContent="center">
       <CircularProgress className="circular-progress-main-color" />

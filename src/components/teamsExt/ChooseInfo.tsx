@@ -7,8 +7,13 @@ import { GetOrganizationTL, GetProjectTL, SelectAsyncHelper, GetTokenTL } from '
 import { Grid } from '@mui/material';
 import { Button } from '@fluentui/react-northstar';
 import TimeLogTeamsExt from '../../components/teamsExt/TimeLogTeamsExt';
+import { TeamsExtensionType } from '../../enums/TeamsExtensionType';
 
-const ChooseInfo: React.FC = () => {
+interface ChooseInfoProps {
+  extensionType: TeamsExtensionType;
+}
+
+const ChooseInfo: React.FC<ChooseInfoProps> = (props) => {
   const [activeTab, setActiveTab] = useState(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [organizations, setOrganizations] = useState<any[]>([]);
@@ -92,7 +97,13 @@ const ChooseInfo: React.FC = () => {
         </Grid>
       </Grid>
     </MainWrapperComponent>,
-    <TimeLogTeamsExt key={1} projectId={GetProjectTL()} organization={GetOrganizationTL()} token={GetTokenTL()} />,
+    <TimeLogTeamsExt
+      key={1}
+      projectId={GetProjectTL()}
+      organization={GetOrganizationTL()}
+      token={GetTokenTL()}
+      extensionType={props.extensionType}
+    />,
   ];
   const renderTabContent = (tab: number) => {
     return tabs[tab];

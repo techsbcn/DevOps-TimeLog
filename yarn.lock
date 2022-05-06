@@ -3872,6 +3872,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "azure-devops-extension-sample@workspace:."
   dependencies:
+    "@fluentui/react-icons-northstar": ^0.62.0
     "@fluentui/react-northstar": ^0.62.0
     "@fortawesome/fontawesome-svg-core": ^6.1.1
     "@fortawesome/free-solid-svg-icons": ^6.1.1

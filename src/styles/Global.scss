@@ -17,7 +17,6 @@ $body-size: calc(12pt + (14 - 12) * #{$size-form});
 body{
     margin: 0;
     height: 100vh;
-    background-color: $body-background-color!important;
     font-size: $body-size;
     .css-0 {
         overflow: inherit!important;

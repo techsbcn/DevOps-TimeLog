@@ -2,7 +2,11 @@ import * as SDK from 'azure-devops-extension-sdk';
 import * as API from 'azure-devops-extension-api';
 import { IWorkItemFormService, WorkItemTrackingServiceIds } from 'azure-devops-extension-api/WorkItemTracking';
 import * as WorkItemTracking from 'azure-devops-extension-api/WorkItemTracking';
-import { ErrorHandler } from '../../helpers';
+import { ErrorHandler, GetProjectTL } from '../../helpers';
+import { GetWebApi } from '../apiSlice';
+import * as nodeApi from 'azure-devops-node-api';
+import { IWorkItemTrackingApi } from 'azure-devops-node-api/WorkItemTrackingApi';
+import * as WorkItemTrackingInterfaces from 'azure-devops-node-api/interfaces/WorkItemTrackingInterfaces';
 
 export const WorkItemFormService = (async () => {
   return await SDK.getService<IWorkItemFormService>(WorkItemTrackingServiceIds.WorkItemFormService);
@@ -11,6 +15,20 @@ export const WorkItemFormService = (async () => {
 export const WorkItemTrackingClient: WorkItemTracking.WorkItemTrackingRestClient = (() => {
   return API.getClient(WorkItemTracking.WorkItemTrackingRestClient, {});
 })();
+
+export const WorkItemNodeAPI = async (token?: string) => {
+  const webApi: nodeApi.WebApi = await GetWebApi(token);
+  return new Promise<IWorkItemTrackingApi>((resolve, reject) =>
+    webApi
+      .getWorkItemTrackingApi()
+      .then((result: IWorkItemTrackingApi) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  );
+};
 
 export const GetWorkItemId = async () => {
   const workItemFormService = await WorkItemFormService;
@@ -68,5 +86,38 @@ export const PatchWorkItem = async (fieldReferenceNames: string[], transformResu
           reject(ErrorHandler('FieldUpdateFailedException'));
         });
     })
+  );
+};
+
+export const GetWorkItems = async (id?: string) => {
+  const witApi: IWorkItemTrackingApi = await WorkItemNodeAPI();
+  const searchId = id ? `AND [System.Id] = ${Number(id)}` : 'AND [System.ChangedDate] >= @today - 7';
+  return new Promise<WorkItemTrackingInterfaces.WorkItem[]>((resolve, reject) =>
+    witApi
+      .queryByWiql(
+        {
+          query: `SELECT [System.Id] FROM workitems WHERE [System.TeamProject] = @project AND NOT [System.State] IN ('Completed', 'Closed', 'Cut', 'Resolved', 'Done') ${searchId}`,
+        },
+        { projectId: GetProjectTL() }
+      )
+      .then((result: WorkItemTrackingInterfaces.WorkItemQueryResult) => {
+        result.workItems &&
+          result.workItems.length > 0 &&
+          witApi
+            .getWorkItemsBatch({
+              fields: ['System.Id', 'System.Title', 'System.State', 'System.WorkItemType', 'System.AssignedTo'],
+              ids: result.workItems
+                .slice(0, 200)
+                .filter((x) => x.id !== undefined)
+                .map((x) => x.id ?? 0),
+            })
+            .then((result) => resolve(result))
+            .catch(() => {
+              reject(ErrorHandler('GetWorkItemsException'));
+            });
+      })
+      .catch(() => {
+        reject(ErrorHandler('GetWorkItemsException'));
+      })
   );
 };
