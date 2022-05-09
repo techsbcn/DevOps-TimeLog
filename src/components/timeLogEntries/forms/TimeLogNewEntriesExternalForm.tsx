@@ -6,9 +6,9 @@ import * as yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as microsoftTeams from '@microsoft/teams-js';
-import { getHoursFromMinutes, getMinutesFromHours, SelectAsyncHelper } from '../../../helpers';
+import { getHoursFromMinutes, getMinutesFromHours, SelectAsyncHelper, getHoursAndMinutes } from '../../../helpers';
 import { TimeLogEntry, UserContext } from '../../../interfaces';
-import { GetWorkItems } from '../../../redux/workItem/workItemAPI';
+import { GetWorkItemNodeAPI, GetWorkItems, UpdateWorkItemNodeAPI } from '../../../redux/workItem/workItemAPI';
 import bug from './../../../../static/bug.png';
 import epic from './../../../../static/epic.png';
 import feature from './../../../../static/feature.png';
@@ -16,7 +16,8 @@ import task from './../../../../static/task.png';
 import product from './../../../../static/backlogitem.png';
 import { WorkItemType } from '../../../enums/WorkItemType';
 import { TextSimpleComponent } from 'techsbcn-storybook';
-import { GetDocumentsAPI } from '../../../redux/extensionDataManager/extensionDataManagerAPI';
+import { CreateDocumentNodeAPi, GetDocumentsAPI } from '../../../redux/extensionDataManager/extensionDataManagerAPI';
+import * as VSSInterfaces from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
 
 interface TimeLogNewEntriesExternalFormProps {
   user: UserContext;
@@ -26,10 +27,12 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
   const [workItems, setWorkItems] = useState<any[]>();
   const [workItemsLoading, setWorkItemsLoading] = React.useState(false);
   const [id, setId] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
 
   const EntrySchema = yup.object().shape(
     {
       workItemId: yup.string().required(_VALUES.REQUIRED.REQUIRED_FIELD),
+      date: yup.string().required(_VALUES.REQUIRED.REQUIRED_FIELD),
       timeHours: yup
         .number()
         .transform((currentValue, originalValue) => {
@@ -93,34 +96,66 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
   }, []);
 
   const onSubmit = (data: any) => {
+    setLoading(true);
     microsoftTeams.initialize(() => {
       const timeEntry: TimeLogEntry = {
         user: props.user.displayName,
         userId: props.user.id,
-        workItemId: data.workItemId ?? 0,
+        workItemId: Number(data.workItemId) ?? 0,
         date: data.date,
         time: Number(getMinutesFromHours(data.timeHours)) + Number(data.timeMinutes),
         notes: data.notes,
         type: data.type ? data.type : undefined,
       };
       const hours = getHoursFromMinutes(timeEntry.time);
-
-      /*PatchWorkItem(['Completed Work', 'Remaining Work'], (item: any) => {
-        item['Completed Work'] += hours;
-        item['Remaining Work'] -= hours;
-        if (item['Remaining Work'] < 0) item['Remaining Work'] = 0;
-        return item;
-      }).then(() => {
-        create({ collectionName: process.env.ENTRIES_COLLECTION_NAME as string, doc: newEntry })
-          .then(async () => {
-            await workItemFormService.save();
-          })
-          .catch(async () => {
-            await workItemFormService.reset();
-          });
-      });*/
-
-      microsoftTeams.tasks.submitTask({ user: timeEntry.user, workItemId: timeEntry.workItemId, time: hours });
+      GetWorkItemNodeAPI(Number(data.workItemId), [
+        'Microsoft.VSTS.Scheduling.CompletedWork',
+        'Microsoft.VSTS.Scheduling.RemainingWork',
+      ])
+        .then((result) => {
+          let completedWork = (result.fields && result.fields['Microsoft.VSTS.Scheduling.CompletedWork']) ?? 0;
+          let remainingWork = (result.fields && result.fields['Microsoft.VSTS.Scheduling.RemainingWork']) ?? 0;
+          completedWork += hours;
+          remainingWork -= hours;
+          if (remainingWork < 0) remainingWork = 0;
+          const patch: VSSInterfaces.JsonPatchOperation[] = [
+            {
+              op: VSSInterfaces.Operation.Replace,
+              path: '/fields/Microsoft.VSTS.Scheduling.CompletedWork',
+              value: completedWork,
+            },
+            {
+              op: VSSInterfaces.Operation.Replace,
+              path: '/fields/Microsoft.VSTS.Scheduling.RemainingWork',
+              value: remainingWork,
+            },
+          ];
+          UpdateWorkItemNodeAPI(Number(data.workItemId), patch)
+            .then(() => {
+              CreateDocumentNodeAPi(process.env.ENTRIES_COLLECTION_NAME as string, timeEntry)
+                .then(() => {
+                  setLoading(false);
+                  microsoftTeams.tasks.submitTask({
+                    user: timeEntry.user,
+                    workItemId: timeEntry.workItemId,
+                    time: getHoursAndMinutes(timeEntry.time),
+                  });
+                })
+                .catch((error) => {
+                  console.log(error);
+                  setLoading(false);
+                });
+            })
+            .catch((error) => {
+              console.log(error);
+              setLoading(false);
+            });
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setLoading(false);
+        });
       return true;
     });
   };
@@ -220,7 +255,27 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
           </Flex>
           <Flex gap="gap.small" vAlign="center">
             <ShiftActivityIcon />
-            <Input inline type="date" icon={false} value={new Date().toLocaleDateString('sv-SE')} />
+            <Controller
+              control={control}
+              defaultValue={new Date().toLocaleDateString('sv-SE')}
+              render={({ field: { onChange, value, name, ref } }) => {
+                return (
+                  <Input
+                    icon={false}
+                    name={name}
+                    value={value}
+                    ref={ref}
+                    error={!!errors.date}
+                    type="date"
+                    inline
+                    onChange={(e, data) => {
+                      onChange(e);
+                    }}
+                  />
+                );
+              }}
+              name={'date'}
+            />
             <Controller
               control={control}
               defaultValue={'0'}
@@ -349,7 +404,14 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
           </Flex>
           <Divider />
           <Flex>
-            <Button primary content={_VALUES.CONTINUE} onClick={handleSubmit(onSubmit)} />
+            <Button
+              primary={!loading}
+              secondary={loading}
+              loading={loading}
+              disabled={loading}
+              content={_VALUES.CONTINUE}
+              onClick={handleSubmit(onSubmit)}
+            />
           </Flex>
         </Flex>
       </Flex.Item>

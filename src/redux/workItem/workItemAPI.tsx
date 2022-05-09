@@ -7,6 +7,7 @@ import { GetWebApi } from '../apiSlice';
 import * as nodeApi from 'azure-devops-node-api';
 import { IWorkItemTrackingApi } from 'azure-devops-node-api/WorkItemTrackingApi';
 import * as WorkItemTrackingInterfaces from 'azure-devops-node-api/interfaces/WorkItemTrackingInterfaces';
+import * as VSSInterfaces from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
 
 export const WorkItemFormService = (async () => {
   return await SDK.getService<IWorkItemFormService>(WorkItemTrackingServiceIds.WorkItemFormService);
@@ -26,6 +27,20 @@ export const WorkItemNodeAPI = async (token?: string) => {
       })
       .catch((error) => {
         reject(error);
+      })
+  );
+};
+
+export const GetWorkItemNodeAPI = async (workItemId: number, fields?: string[]) => {
+  const witApi: IWorkItemTrackingApi = await WorkItemNodeAPI();
+  return new Promise<WorkItemTrackingInterfaces.WorkItem>((resolve, reject) =>
+    witApi
+      .getWorkItem(workItemId, fields)
+      .then((result: WorkItemTrackingInterfaces.WorkItem) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(ErrorHandler(error));
       })
   );
 };
@@ -75,6 +90,24 @@ export const SetFields = async (fields: any) => {
   );
 };
 
+export const UpdateWorkItemNodeAPI = async (workItemId: number, fields?: VSSInterfaces.JsonPatchOperation[]) => {
+  const witApi: IWorkItemTrackingApi = await WorkItemNodeAPI();
+  const documents: any = fields;
+  const patch: VSSInterfaces.JsonPatchOperation[] = [
+    { op: VSSInterfaces.Operation.Replace, path: '/fields/Microsoft.VSTS.Scheduling.CompletedWork' },
+  ];
+  return new Promise<WorkItemTrackingInterfaces.WorkItem>((resolve, reject) =>
+    witApi
+      .updateWorkItem({}, documents, workItemId)
+      .then((result: WorkItemTrackingInterfaces.WorkItem) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  );
+};
+
 export const PatchWorkItem = async (fieldReferenceNames: string[], transformResult: (item: any) => any) => {
   return new Promise<boolean>((resolve, reject) =>
     GetFields(fieldReferenceNames).then((result: any) => {
@@ -86,6 +119,21 @@ export const PatchWorkItem = async (fieldReferenceNames: string[], transformResu
           reject(ErrorHandler('FieldUpdateFailedException'));
         });
     })
+  );
+};
+
+export const GetFieldsNodeAPI = async (project?: string) => {
+  const projectStr = project ?? GetProjectTL();
+  const witApi: IWorkItemTrackingApi = await WorkItemNodeAPI();
+  return new Promise<any>((resolve, reject) =>
+    witApi
+      .getFields(projectStr)
+      .then((result: any) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(ErrorHandler(error));
+      })
   );
 };
 

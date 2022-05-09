@@ -66,6 +66,20 @@ export const GetDocuments = async (collectionName: string) => {
   );
 };
 
+export const CreateDocumentNodeAPi = async (collectionName: string, doc: any, token?: string) => {
+  const extensionDataManager = await ExtensionDataManagerNodeAPI(token);
+  return new Promise<any>((resolve, reject) =>
+    extensionDataManager
+      .createDocumentByName(doc, 'TechsBCN', process.env.EXTENSION_ID as string, 'Default', 'Current', collectionName)
+      .then((result: any) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  );
+};
+
 export const CreateDocument = async (collectionName: string, doc: any) => {
   const extensionDataManager = await ExtensionDataManager();
   return new Promise<any>((resolve, reject) =>
