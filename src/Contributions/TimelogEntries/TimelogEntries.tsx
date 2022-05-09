@@ -49,7 +49,6 @@ export const TimelogEntries: React.FC = () => {
 
   const createNewEntry = async (data: any): Promise<TimeLogEntry> => {
     const user = SDK.getUser();
-    console.log(data);
     const timeEntry: TimeLogEntry = {
       user: user.displayName,
       userId: user.id,
