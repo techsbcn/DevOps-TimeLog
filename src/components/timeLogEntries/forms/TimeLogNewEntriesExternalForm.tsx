@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Flex, Dropdown, Input, TextArea, Button, Header, Divider, Loader } from '@fluentui/react-northstar';
-import { EditIcon, ShiftActivityIcon, OptionsIcon, CalendarAgendaIcon } from '@fluentui/react-icons-northstar';
+import {
+  EditIcon,
+  ShiftActivityIcon,
+  OptionsIcon,
+  CalendarAgendaIcon,
+  SaveIcon,
+} from '@fluentui/react-icons-northstar';
 import { _VALUES } from '../../../resources/_constants/values';
 import * as yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
@@ -18,6 +24,7 @@ import { WorkItemType } from '../../../enums/WorkItemType';
 import { TextSimpleComponent } from 'techsbcn-storybook';
 import { CreateDocumentNodeAPi, GetDocumentsAPI } from '../../../redux/extensionDataManager/extensionDataManagerAPI';
 import * as VSSInterfaces from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
+import { Box } from '@mui/material';
 
 interface TimeLogNewEntriesExternalFormProps {
   user: UserContext;
@@ -33,26 +40,16 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
     {
       workItemId: yup.string().required(_VALUES.REQUIRED.REQUIRED_FIELD),
       date: yup.string().required(_VALUES.REQUIRED.REQUIRED_FIELD),
-      timeHours: yup
-        .number()
-        .transform((currentValue, originalValue) => {
-          return originalValue === '' ? 0 : currentValue;
-        })
-        .when('timeMinutes', {
-          is: 0,
-          then: yup.number().positive().min(1, _VALUES.NOT_ZERO_TIME),
-          otherwise: yup.number().min(0),
-        }),
-      timeMinutes: yup
-        .number()
-        .transform((currentValue, originalValue) => {
-          return originalValue === '' ? 0 : currentValue;
-        })
-        .when('timeHours', {
-          is: 0,
-          then: yup.number().positive().min(1, _VALUES.NOT_ZERO_TIME),
-          otherwise: yup.number().min(0),
-        }),
+      timeHours: yup.number().when('timeMinutes', {
+        is: 0,
+        then: yup.number().positive().min(1, _VALUES.NOT_ZERO_TIME),
+        otherwise: yup.number().min(0),
+      }),
+      timeMinutes: yup.number().when('timeHours', {
+        is: 0,
+        then: yup.number().positive().min(1, _VALUES.NOT_ZERO_TIME),
+        otherwise: yup.number().min(0),
+      }),
     },
     [['timeHours', 'timeMinutes']]
   );
@@ -150,7 +147,6 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
               console.log(error);
               setLoading(false);
             });
-          setLoading(false);
         })
         .catch((error) => {
           console.log(error);
@@ -244,8 +240,8 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
                         return result;
                       }}
                       items={workItems && workItems.length > 0 ? workItems : []}
-                      placeholder="Select WorkItem..."
-                      noResultsMessage="We couldn't find any matches."
+                      placeholder={_VALUES.CHOOSE_WORKITEM}
+                      noResultsMessage={_VALUES.NO_RESULTS_MESSAGE}
                     />
                   }
                 />
@@ -297,6 +293,7 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
                       onChange(e);
                       if (!data || (data && data.value === '')) setValue(name, '0');
                       trigger('timeMinutes');
+                      trigger('timeHours');
                     }}
                   />
                 );
@@ -325,6 +322,7 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
                       onChange(e);
                       if (!data || (data && data.value === '')) setValue(name, '0');
                       trigger('timeHours');
+                      trigger('timeMinutes');
                     }}
                   />
                 );
@@ -371,8 +369,8 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
                         );
                       }}
                       items={types && types?.length > 0 ? types : []}
-                      placeholder="Select Activity..."
-                      noResultsMessage="We couldn't find any matches."
+                      placeholder={_VALUES.CHOOSE_ACTIVITY}
+                      noResultsMessage={_VALUES.NO_RESULTS_MESSAGE}
                     />
                   );
                 }}
@@ -403,14 +401,17 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
           </Flex>
           <Divider />
           <Flex>
-            <Button
-              primary={!loading}
-              secondary={loading}
-              loading={loading}
-              disabled={loading}
-              content={_VALUES.CONTINUE}
-              onClick={handleSubmit(onSubmit)}
-            />
+            <Box mt={2}>
+              <Button
+                icon={<SaveIcon size="large" />}
+                primary={!loading}
+                secondary={loading}
+                loading={loading}
+                disabled={loading}
+                content={_VALUES.ADD_TIMELOG}
+                onClick={handleSubmit(onSubmit)}
+              />
+            </Box>
           </Flex>
         </Flex>
       </Flex.Item>

@@ -3,7 +3,14 @@ import { _VALUES } from '../../resources/_constants/values';
 import { MainWrapperComponent, SelectField } from 'techsbcn-storybook';
 import { GetPublicAlias } from '../../redux/profile/profileAPI';
 import { GetOrganizations, GetProjects } from '../../redux/core/coreAPI';
-import { GetOrganizationTL, GetProjectTL, SelectAsyncHelper, GetTokenTL } from '../../helpers';
+import {
+  GetOrganizationTL,
+  GetProjectTL,
+  SelectAsyncHelper,
+  GetTokenTL,
+  GetProjectObjectTL,
+  GetOrganizationObjectTL,
+} from '../../helpers';
 import { Grid } from '@mui/material';
 import { Button } from '@fluentui/react-northstar';
 import TimeLogTeamsExt from '../../components/teamsExt/TimeLogTeamsExt';
@@ -17,9 +24,9 @@ const ChooseInfo: React.FC<ChooseInfoProps> = (props) => {
   const [activeTab, setActiveTab] = useState(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [organizations, setOrganizations] = useState<any[]>([]);
-  const [organizationSelected, setOrganizationSelected] = useState<any>();
+  const [organizationSelected, setOrganizationSelected] = useState<any>(GetOrganizationObjectTL());
   const [projects, setProjects] = useState<any[]>();
-  const [projectSelected, setProjectSelected] = useState<any>();
+  const [projectSelected, setProjectSelected] = useState<any>(GetProjectObjectTL());
 
   useEffect(() => {
     GetPublicAlias().then((alias) => {
@@ -90,7 +97,7 @@ const ChooseInfo: React.FC<ChooseInfoProps> = (props) => {
         <Grid item xs={12}>
           <Button
             primary
-            content={_VALUES.CONTINUE}
+            content={props.extensionType === TeamsExtensionType.config ? _VALUES.SAVE : _VALUES.CONTINUE}
             onClick={saveInfo}
             disabled={!organizationSelected || !projectSelected}
           />

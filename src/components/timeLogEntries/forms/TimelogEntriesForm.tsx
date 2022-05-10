@@ -18,6 +18,7 @@ interface TimelogEntriesFormProps {
 const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
   const EntrySchema = yup.object().shape(
     {
+      date: yup.string().required(_VALUES.REQUIRED.REQUIRED_FIELD),
       timeHours: yup.number().when('timeMinutes', {
         is: 0,
         then: yup.number().positive().min(1, _VALUES.NOT_ZERO_TIME),
@@ -112,6 +113,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
                   onChange(e);
                   if (!e.target.value) setValue(name, 0);
                   trigger('timeMinutes');
+                  trigger('timeHours');
                 }}
                 value={!value ? 0 : value}
               />
@@ -138,6 +140,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
                   onChange(e);
                   if (!e.target.value) setValue(name, 0);
                   trigger('timeHours');
+                  trigger('timeMinutes');
                 }}
                 value={!value ? 0 : value}
               />

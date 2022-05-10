@@ -4,7 +4,7 @@ import { TeamsExtensionType } from '../../enums/TeamsExtensionType';
 import TeamsInitializeAuth from '../../components/teamsExt/TeamsInitializeAuth';
 
 export const TimeLogTeamsSummary: React.FC = () => {
-  return <TeamsInitializeAuth extensionType={TeamsExtensionType.summary} />;
+  return <TeamsInitializeAuth extensionType={TeamsExtensionType.config} />;
 };
 
 showRootTeamsComponent(<TimeLogTeamsSummary />);

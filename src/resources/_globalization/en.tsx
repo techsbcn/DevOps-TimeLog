@@ -84,4 +84,7 @@ export const GLOBAL_EN = {
   project: 'Project',
   continue: 'Continue',
   login: 'Log in',
+  noResultsMessage: `We couldn't find any matches.`,
+  chooseWorkitem: 'Select WorkItem...',
+  chooseActivity: 'Select Activity...',
 };
