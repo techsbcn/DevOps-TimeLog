@@ -47,7 +47,9 @@ const TeamsInitializeAuth: React.FC<TeamsInitializeAuthProps> = (props) => {
 
   return !loading ? (
     accessToken ? (
-      GetProjectTL() && GetOrganizationTL() ? (
+      props.extensionType === TeamsExtensionType.config ? (
+        <ChooseInfo extensionType={props.extensionType} />
+      ) : GetProjectTL() && GetOrganizationTL() ? (
         <TimeLogTeamsExt
           projectId={GetProjectTL()}
           organization={GetOrganizationTL()}

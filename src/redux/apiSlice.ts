@@ -21,7 +21,10 @@ export const GetWebApi = async (token?: string, orgUri?: string) => {
     if (orgTL) {
       try {
         const authHandler = nodeApi.getPersonalAccessTokenHandler(tokenTL);
-        const vsts: nodeApi.WebApi = new nodeApi.WebApi(`https://dev.azure.com/${orgTL}`, authHandler);
+        const vsts: nodeApi.WebApi = new nodeApi.WebApi(
+          `https://dev.azure.com/${orgTL && orgTL.label ? orgTL.label : orgTL}`,
+          authHandler
+        );
         resolve(vsts);
       } catch (err) {
         reject(err);

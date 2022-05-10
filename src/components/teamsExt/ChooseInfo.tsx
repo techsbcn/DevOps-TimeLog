@@ -46,9 +46,9 @@ const ChooseInfo: React.FC<ChooseInfoProps> = (props) => {
   }, [loadProjects]);
 
   const saveInfo = () => {
-    localStorage.setItem('TL_ORG', JSON.stringify(organizationSelected.label));
-    localStorage.setItem('TL_PROJECT', JSON.stringify(projectSelected.value));
-    setActiveTab(1);
+    localStorage.setItem('TL_ORG', JSON.stringify(organizationSelected));
+    localStorage.setItem('TL_PROJECT', JSON.stringify(projectSelected));
+    props.extensionType !== TeamsExtensionType.config && setActiveTab(1);
   };
 
   const tabs = [

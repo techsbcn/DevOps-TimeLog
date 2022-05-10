@@ -22,14 +22,24 @@ export const GetTokenTL = () => {
   return tokenTL;
 };
 
-export const GetProjectTL = () => {
+export const GetProjectObjectTL = () => {
   const projectTL = localStorage.getItem('TL_PROJECT') ? JSON.parse(localStorage.getItem('TL_PROJECT') || '') : null;
   return projectTL;
 };
 
-export const GetOrganizationTL = () => {
+export const GetProjectTL = () => {
+  const projectTL = localStorage.getItem('TL_PROJECT') ? JSON.parse(localStorage.getItem('TL_PROJECT') || '') : null;
+  return projectTL && projectTL.value ? projectTL.value : projectTL;
+};
+
+export const GetOrganizationObjectTL = () => {
   const orgTL = localStorage.getItem('TL_ORG') ? JSON.parse(localStorage.getItem('TL_ORG') || '') : null;
   return orgTL;
+};
+
+export const GetOrganizationTL = () => {
+  const orgTL = localStorage.getItem('TL_ORG') ? JSON.parse(localStorage.getItem('TL_ORG') || '') : null;
+  return orgTL && orgTL.label ? orgTL.label : orgTL;
 };
 
 export const GetValidationTOKEN = () => {
