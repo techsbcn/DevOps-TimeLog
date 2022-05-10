@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { MainWrapperComponent, SelectField, TextFieldComponent } from 'techsbcn-storybook';
 import { _VALUES } from '../../resources/_constants/values';
 import { GetTeams, GetTeamMembers } from '../../redux/core/coreAPI';
-import { SelectAsyncHelper } from '../../helpers';
-import * as SDK from 'azure-devops-extension-sdk';
 import * as _ from 'lodash';
-import { TimeLogEntryFilters } from '../../interfaces';
+import { TimeLogEntryFilters, UserContext } from '../../interfaces';
+import { SelectAsyncHelper } from '../../helpers/SelectHelper';
 
 interface TimeLogFiltersProps {
   onFiltersChange: (value: any, name: string) => void;
-  user?: SDK.IUserContext;
+  user?: UserContext;
   loading: boolean;
   filters?: TimeLogEntryFilters;
+  projectId?: string;
 }
 
 const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
@@ -21,16 +21,16 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
   const [memberSelected, setMemberSelected] = useState<any[]>();
 
   useEffect(() => {
-    GetTeams().then((result) => {
+    GetTeams(props.projectId).then((result) => {
       const resultTransform = SelectAsyncHelper(result);
       setTeams(resultTransform);
       setTeamSelected(resultTransform[0]);
     });
-  }, []);
+  }, [props.projectId]);
 
   const loadMembers = React.useCallback(() => {
     if (teamSelected) {
-      GetTeamMembers(teamSelected.value).then((members) => {
+      GetTeamMembers(teamSelected.value, props.projectId).then((members) => {
         if (props.user && members.some((member) => props.user && member.id === props.user.id)) {
           setMembers(members);
           setMemberSelected([{ value: props.user.id, label: props.user.displayName }]);
@@ -39,7 +39,7 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
         }
       });
     }
-  }, [props.user, teamSelected]);
+  }, [props.user, teamSelected, props.projectId]);
 
   useEffect(() => {
     loadMembers();
@@ -106,7 +106,6 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
           />
         ),
       });
-    const curr = new Date();
     filterList.push({
       doubleFilter: {
         firstFilter: (

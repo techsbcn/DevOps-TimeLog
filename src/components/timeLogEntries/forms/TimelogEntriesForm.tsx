@@ -7,7 +7,7 @@ import { MainWrapperComponent, TextFieldComponent, ButtonComponent, SelectField 
 import { _VALUES } from '../../../resources/_constants/values';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { SelectAsyncHelper, SelectSimpleAsyncHelper } from '../../../helpers';
+import { SelectAsyncHelper } from '../../../helpers';
 import { GetDocuments } from '../../../redux/extensionDataManager/extensionDataManagerAPI';
 
 interface TimelogEntriesFormProps {
@@ -18,6 +18,7 @@ interface TimelogEntriesFormProps {
 const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
   const EntrySchema = yup.object().shape(
     {
+      date: yup.string().required(_VALUES.REQUIRED.REQUIRED_FIELD),
       timeHours: yup.number().when('timeMinutes', {
         is: 0,
         then: yup.number().positive().min(1, _VALUES.NOT_ZERO_TIME),
@@ -112,6 +113,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
                   onChange(e);
                   if (!e.target.value) setValue(name, 0);
                   trigger('timeMinutes');
+                  trigger('timeHours');
                 }}
                 value={!value ? 0 : value}
               />
@@ -138,6 +140,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
                   onChange(e);
                   if (!e.target.value) setValue(name, 0);
                   trigger('timeHours');
+                  trigger('timeMinutes');
                 }}
                 value={!value ? 0 : value}
               />

@@ -1,10 +1,15 @@
-import * as Core from 'azure-devops-extension-api/Core';
+import * as CoreSDK from 'azure-devops-extension-api/Core';
 import * as API from 'azure-devops-extension-api/';
 import * as SDK from 'azure-devops-extension-sdk';
 import { CommonServiceIds, IProjectPageService } from 'azure-devops-extension-api';
-import { ErrorHandler } from '../../helpers';
+import { AuthHeader, ErrorHandler, ResponseHandler } from '../../helpers';
 import { TeamMember } from 'azure-devops-extension-api/WebApi';
 import { Member } from '../../interfaces';
+import * as nodeApi from 'azure-devops-node-api';
+import { GetWebApi } from '../apiSlice';
+import { ICoreApi } from 'azure-devops-node-api/CoreApi';
+import * as CoreInterfaces from 'azure-devops-node-api/interfaces/CoreInterfaces';
+import * as VSSInterfaces from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
 
 export const GetProjectContext = async () => {
   return new Promise<API.IProjectInfo>((resolve, reject) =>
@@ -25,13 +30,40 @@ export const GetProjectContext = async () => {
   );
 };
 
-export const coreRestClient = API.getClient(Core.CoreRestClient);
+export const CoreSDKClient = API.getClient(CoreSDK.CoreRestClient);
 
-export const GetAllTeams = async () => {
-  return new Promise<Core.WebApiTeam[]>((resolve, reject) =>
-    coreRestClient
+export const CoreNodeAPI = async (token?: string) => {
+  const webApi: nodeApi.WebApi = await GetWebApi(token);
+  return new Promise<ICoreApi>((resolve, reject) =>
+    webApi
+      .getCoreApi()
+      .then((result: ICoreApi) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  );
+};
+
+export const GetAllTeamsSDK = async () => {
+  return new Promise<CoreSDK.WebApiTeam[]>((resolve, reject) =>
+    CoreSDKClient.getAllTeams()
+      .then((result: CoreSDK.WebApiTeam[]) => {
+        resolve(result);
+      })
+      .catch(() => {
+        reject(ErrorHandler('GetTeamsException'));
+      })
+  );
+};
+
+export const GetAllTeamsNodeAPI = async () => {
+  const coreApiObject: ICoreApi = await CoreNodeAPI();
+  return new Promise<CoreInterfaces.WebApiTeam[]>((resolve, reject) =>
+    coreApiObject
       .getAllTeams()
-      .then((result: Core.WebApiTeam[]) => {
+      .then((result: CoreInterfaces.WebApiTeam[]) => {
         resolve(result);
       })
       .catch(() => {
@@ -41,11 +73,14 @@ export const GetAllTeams = async () => {
 };
 
 export const GetTeams = async (projectId?: string) => {
-  const pId = projectId ?? (await GetProjectContext()).id;
-  return new Promise<Core.WebApiTeam[]>((resolve, reject) =>
-    coreRestClient
-      .getTeams(pId)
-      .then((result: Core.WebApiTeam[]) => {
+  return projectId ? await GetTeamsAPI(projectId) : await GetTeamsSDK();
+};
+
+const GetTeamsSDK = async () => {
+  const pId = (await GetProjectContext()).id;
+  return new Promise<CoreSDK.WebApiTeam[]>((resolve, reject) =>
+    CoreSDKClient.getTeams(pId)
+      .then((result: CoreSDK.WebApiTeam[]) => {
         resolve(result);
       })
       .catch(() => {
@@ -54,11 +89,24 @@ export const GetTeams = async (projectId?: string) => {
   );
 };
 
-export const GetTeamMembers = async (teamId: string, projectId?: string) => {
+const GetTeamsAPI = async (projectId: string) => {
+  const coreApiObject: ICoreApi = await CoreNodeAPI();
+  return new Promise<CoreInterfaces.WebApiTeam[]>((resolve, reject) =>
+    coreApiObject
+      .getTeams(projectId)
+      .then((result) => {
+        resolve(result);
+      })
+      .catch(() => {
+        reject(ErrorHandler('GetTeamsException'));
+      })
+  );
+};
+
+export const GetTeamMembersSDK = async (teamId: string, projectId?: string) => {
   const pId = projectId ?? (await GetProjectContext()).id;
   return new Promise<Member[]>((resolve, reject) =>
-    coreRestClient
-      .getTeamMembersWithExtendedProperties(pId, teamId)
+    CoreSDKClient.getTeamMembersWithExtendedProperties(pId, teamId)
       .then((result: TeamMember[]) => {
         let members: Member[] = [];
         members = result.map((item) => {
@@ -69,6 +117,64 @@ export const GetTeamMembers = async (teamId: string, projectId?: string) => {
       })
       .catch(() => {
         reject(ErrorHandler('GetTeamsMembersException'));
+      })
+  );
+};
+export const GetTeamMembers = async (teamId: string, projectId?: string) => {
+  return projectId ? await GetTeamMembersNodeAPI(teamId, projectId) : await GetTeamMembersSDK(teamId);
+};
+
+export const GetTeamMembersNodeAPI = async (teamId: string, projectId: string) => {
+  const coreApiObject: ICoreApi = await CoreNodeAPI();
+  return new Promise<Member[]>((resolve, reject) =>
+    coreApiObject
+      .getTeamMembersWithExtendedProperties(projectId, teamId)
+      .then((result: VSSInterfaces.TeamMember[]) => {
+        let members: Member[] = [];
+        members = result.map((item) => {
+          const member: Member = { ...item.identity, isTeamAdmin: item.isTeamAdmin };
+          return member;
+        });
+        resolve(members);
+      })
+      .catch(() => {
+        reject(ErrorHandler('GetTeamsMembersException'));
+      })
+  );
+};
+
+export const GetOrganizations = async (memberId: string, accessToken?: string) => {
+  const requestOptions: RequestInit = {
+    method: 'GET',
+    headers: AuthHeader(accessToken),
+  };
+
+  return new Promise<any[]>((resolve, reject) =>
+    fetch(`https://app.vssps.visualstudio.com/_apis/accounts?memberId=${memberId}&api-version=6.0`, requestOptions)
+      .then(ResponseHandler)
+      .then((result: any) => {
+        resolve(result.value);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  );
+};
+
+export const GetProjects = async (organization: string, accessToken?: string) => {
+  const requestOptions: RequestInit = {
+    method: 'GET',
+    headers: AuthHeader(accessToken),
+  };
+
+  return new Promise<any[]>((resolve, reject) =>
+    fetch(`https://dev.azure.com/${organization}/_apis/projects?api-version=6.0`, requestOptions)
+      .then(ResponseHandler)
+      .then((result: any) => {
+        resolve(result.value);
+      })
+      .catch((error) => {
+        reject(error);
       })
   );
 };

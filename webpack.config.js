@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+const webpack = require('webpack');
 
 // Webpack entry points. Mapping from resulting bundle name to the source file entry.
 const entries = {};
@@ -18,12 +19,28 @@ module.exports = (env) => ({
   entry: entries,
   output: {
     filename: '[name]/[name].js',
-    publicPath: '/dist/',
+    publicPath: env.mode == 'development' ? '/dist/' : '../',
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
+    extensions: ['.ts', '.tsx', '.js', '.dev.js', '.json', '.wasm'],
     alias: {
       'azure-devops-extension-sdk': path.resolve('node_modules/azure-devops-extension-sdk'),
+    },
+    fallback: {
+      url: false,
+      fs: false,
+      assert: require.resolve('assert'),
+      crypto: require.resolve('crypto-browserify'),
+      http: require.resolve('stream-http'),
+      https: require.resolve('https-browserify'),
+      os: require.resolve('os-browserify/browser'),
+      buffer: require.resolve('buffer'),
+      stream: require.resolve('stream-browserify'),
+      path: false,
+      util: false,
+      tls: false,
+      net: false,
+      zlib: require.resolve('browserify-zlib'),
     },
   },
   stats: {
@@ -84,17 +101,37 @@ module.exports = (env) => ({
           },
         ],
       },
+      {
+        test: /\/worker\.js$/,
+        use: { loader: 'worker-loader' },
+      },
     ],
   },
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   devServer: {
     https: true,
     port: 3000,
+    hot: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': '*',
+      'Access-Control-Allow-Headers': '*',
+    },
   },
   plugins: [
     new Dotenv({ path: env.mode == 'development' ? './.env' : `./.env.${env.mode}` }),
     new CopyWebpackPlugin({
-      patterns: [{ from: '**/*.html', context: 'src/Contributions' }],
+      patterns: [
+        { from: '**/*.html', context: 'src/Contributions' },
+        { from: 'sql-wasm.wasm', to: './' },
+        { from: 'blank-auth-end.html', to: './' },
+        { from: 'auth-start.html', to: './' },
+        //{ from: '**/*.html', context: 'src/authFiles' },
+      ],
+    }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+      Buffer: ['buffer', 'Buffer'],
     }),
   ],
 });
