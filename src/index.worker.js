@@ -75,7 +75,6 @@ function uid(i) {
 // eslint-disable-next-line no-undef
 self.onmessage = async (message) => {
   if (message) {
-    console.log('Message from worker', message.data);
     switch (message.data.type) {
       case 'search':
         await init();

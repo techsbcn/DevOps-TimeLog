@@ -61,7 +61,7 @@ export const GetDocuments = async (collectionName: string) => {
         resolve(result);
       })
       .catch((error) => {
-        reject(error);
+        resolve([]);
       })
   );
 };

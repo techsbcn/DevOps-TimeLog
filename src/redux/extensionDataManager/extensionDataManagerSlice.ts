@@ -11,6 +11,7 @@ import {
   GetDocumentsAPI,
 } from './extensionDataManagerAPI';
 import * as _ from 'lodash';
+import { reject } from 'lodash';
 
 const extensionDataEndpoints = apiSlice.injectEndpoints({
   endpoints(builder) {
@@ -40,7 +41,7 @@ const extensionDataEndpoints = apiSlice.injectEndpoints({
         },
         async onQueryStarted(_request, { queryFulfilled }) {
           await queryFulfilled.catch((err) => {
-            console.log(err);
+            reject(err);
           });
         },
         providesTags: (result, _error, { collectionName }) =>
@@ -49,7 +50,7 @@ const extensionDataEndpoints = apiSlice.injectEndpoints({
                 ...result.items.map(({ id }) => ({ type: 'extensionData' as const, id, collectionName })),
                 { type: 'extensionData', id: 'LIST', collectionName },
               ]
-            : [{ type: 'extensionData', id: 'LIST', collectionName }],
+            : [{ type: 'extensionData', id: 'LIST' }],
       }),
       fetchGetDocumentsWithoutFilters: builder.query<
         ListResultCollection<any>,

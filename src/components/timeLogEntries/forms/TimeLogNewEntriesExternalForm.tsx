@@ -322,7 +322,6 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
                     min={0}
                     step={15}
                     onChange={(e, data) => {
-                      console.log(e, data);
                       onChange(e);
                       if (!data || (data && data.value === '')) setValue(name, '0');
                       trigger('timeHours');

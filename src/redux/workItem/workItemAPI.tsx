@@ -81,7 +81,7 @@ export const SetFields = async (fields: any) => {
     workItemFormService
       .setFieldValues(fields)
       .then((result: { [fieldName: string]: boolean }) => {
-        Object.values(result).map((item) => !item && reject(ErrorHandler('FieldUpdateFailedException')));
+        //Object.values(result).map((item) => !item && reject(ErrorHandler('FieldUpdateFailedException')));
         resolve(true);
       })
       .catch(() => {
