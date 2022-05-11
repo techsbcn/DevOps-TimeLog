@@ -38,25 +38,25 @@ export const TeamsFxContext = createContext<{
   teamsfx: undefined,
 });
 
-export const showRootTeamsComponent = (component: React.ReactElement<any>) => {
+export const showRootTeamsComponent = (component: React.ReactElement<any>, noMargin?: boolean) => {
   const container = document.getElementById('root');
 
   container &&
     createRoot(container).render(
       <Provider store={store}>
-        <TeamsContext component={component} />
+        <TeamsContext component={component} noMargin={noMargin} />
       </Provider>
     );
 };
 
-function TeamsContext({ component }: { component: React.ReactElement<any> }) {
+function TeamsContext({ component, noMargin }: { component: React.ReactElement<any>; noMargin?: boolean }) {
   const { theme, themeString, teamsfx } = useTeamsFx();
   return (
     <TeamsFxContext.Provider value={{ theme, themeString, teamsfx }}>
       <ProviderFluent theme={theme || teamsTheme}>
         <MainLayoutSimple
           mainComponent={
-            <Box className={themeString === 'default' ? '' : 'dark'} mt={2}>
+            <Box className={themeString === 'default' ? '' : 'dark'} mt={!noMargin ? 2 : 0}>
               {component}
             </Box>
           }

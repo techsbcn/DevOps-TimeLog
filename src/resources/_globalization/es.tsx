@@ -87,4 +87,6 @@ export const GLOBAL_ES = {
   noResultsMessage: `We couldn't find any matches.`,
   chooseWorkitem: 'Selecciona un WorkItem...',
   chooseActivity: 'Selecciona una Actividad...',
+  successTimeLogTitle: '¡Tiempo registrado con éxito!',
+  successTimeLogInfo: 'Acabas de completar el nuevo registro de tiempo.',
 };

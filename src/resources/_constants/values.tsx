@@ -87,4 +87,6 @@ export const _VALUES: ObjectKey = {
   NO_RESULTS_MESSAGE: Translate.t('noResultsMessage'),
   CHOOSE_WORKITEM: Translate.t('chooseWorkitem'),
   CHOOSE_ACTIVITY: Translate.t('chooseActivity'),
+  SUCCESS_TIME_LOG_TITLE: Translate.t('successTimeLogTitle'),
+  SUCCESS_TIME_LOG_INFO: Translate.t('successTimeLogInfo'),
 };
