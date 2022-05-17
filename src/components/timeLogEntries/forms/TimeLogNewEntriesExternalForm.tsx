@@ -11,7 +11,7 @@ import { _VALUES } from '../../../resources/_constants/values';
 import * as yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { getHoursFromMinutes, getMinutesFromHours, SelectAsyncHelper } from '../../../helpers';
+import { getHoursAndMinutes, getHoursFromMinutes, getMinutesFromHours, SelectAsyncHelper } from '../../../helpers';
 import { TimeLogEntry, UserContext } from '../../../interfaces';
 import { GetWorkItemNodeAPI, GetWorkItems, UpdateWorkItemNodeAPI } from '../../../redux/workItem/workItemAPI';
 import bug from './../../../../static/bug.png';
@@ -93,7 +93,6 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
 
   const onSubmit = (data: any) => {
     setLoading(true);
-
     const timeEntry: TimeLogEntry = {
       user: props.user.displayName,
       userId: props.user.id,

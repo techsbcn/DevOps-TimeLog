@@ -78,8 +78,8 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
             isClearable={false}
             isMulti
             onChangeOption={(value) => {
+              const name = 'userIds';
               if (value.length > 0) {
-                const name = 'userIds';
                 if (
                   memberSelected &&
                   memberSelected.some((option: any) => option.value === 'all') &&
@@ -101,6 +101,9 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
                   );
                   setMemberSelected(value);
                 }
+              } else if (Array.isArray(value) && value.length === 0) {
+                props.onFiltersChange([], name);
+                setMemberSelected([allOption]);
               }
             }}
           />

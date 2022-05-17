@@ -124,9 +124,9 @@ module.exports = (env) => ({
       patterns: [
         { from: '**/*.html', context: 'src/Contributions' },
         { from: 'sql-wasm.wasm', to: './' },
-        { from: 'blank-auth-end.html', to: './' },
-        { from: 'auth-start.html', to: './' },
-        //{ from: '**/*.html', context: 'src/authFiles' },
+        //{ from: 'blank-auth-end.html', to: './' },
+        //{ from: 'auth-start.html', to: './' },
+        { from: '**/*.html', context: 'src/authFiles' },
       ],
     }),
     new webpack.ProvidePlugin({

@@ -34,5 +34,5 @@ export const ErrorHandler = (error: any) => {
   }
 
   //addNotification(Translate.t('FailedToFetchException'), 'danger', 'FailedToFetchException');
-  return Object({ Code: 500, Exception: 'FailedToFetchException', Message: Translate.t('FailedToFetchException') });
+  return Object({ Exception: 'FailedToFetchException', Message: Translate.t('FailedToFetchException') });
 };
