@@ -50,7 +50,10 @@ module.exports = (env) => {
       {
         path: 'images',
         addressable: true,
-        packagePath: '/',
+      },
+      {
+        path: 'images/time-log-new-entry.png',
+        addressable: true,
       },
       {
         path: 'dist',
