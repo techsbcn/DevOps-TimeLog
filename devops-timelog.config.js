@@ -23,7 +23,7 @@ module.exports = (env) => {
     publisher: 'TechsBCN',
     public: false,
     version: version,
-    name: `DevOps-TimeLog${namePostfix}`,
+    name: `TimeLog for Azure DevOps ${namePostfix}`,
     description: 'Azure DevOps extension for time logging',
     categories: ['Azure Boards'],
     targets: [
