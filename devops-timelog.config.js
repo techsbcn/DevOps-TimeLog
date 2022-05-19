@@ -32,17 +32,25 @@ module.exports = (env) => {
       },
     ],
     icons: {
-      default: 'logo.png',
+      default: 'images/logo.png',
     },
     content: {
       details: {
         path: 'overview.md',
+      },
+      license: {
+        path: 'LICENSE',
       },
     },
     files: [
       {
         path: 'static',
         addressable: true,
+      },
+      {
+        path: 'images',
+        addressable: true,
+        packagePath: '/',
       },
       {
         path: 'dist',
@@ -76,13 +84,18 @@ module.exports = (env) => {
           name: `Time Log Summary${namePostfix}`,
           uri: 'dist/TimeLogDevOpsSummary/TimeLogDevOpsSummary.html',
           icon: {
-            light: 'static/TimeLog-Black-128x128.png',
-            dark: 'static/TimeLog-White-128x128.png',
+            light: 'images/TimeLog-Black-128x128.png',
+            dark: 'images/TimeLog-White-128x128.png',
           },
         },
       },
     ],
     scopes: ['vso.work', 'vso.project'],
+    screenshots: [
+      {
+        path: 'images/time-log-new-entry.png',
+      },
+    ],
   };
 
   if (env.mode == 'development') {

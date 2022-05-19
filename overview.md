@@ -4,7 +4,7 @@ TimeLog for Azure DevOps is an **open source** tool created by [TechsBCN](https:
 
 # Keep it simple
 
-![New TimeLog Entry](./static/time-log-new-entry.png)
+![New TimeLog Entry](images/time-log-new-entry.png)
 
 Let your team mates to track time in a matter of seconds for each backlog item (user  story, task, etc.) they are working on. TimeLog for Azure DevOps keeps a history of each time log entry registered for users to let them take the control of time invested in a particular task.
 
