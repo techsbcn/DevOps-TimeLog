@@ -21,6 +21,16 @@ body{
     .css-0 {
         overflow: inherit!important;
     }
+    a.afn { 
+        color: rgb(91, 95, 199)!important;
+        font-weight: 700;
+    }
+    .object-contain{
+        object-fit: contain;
+        img{
+            object-fit: contain;
+        }
+    }
     #root {
         height: 100%;
     }

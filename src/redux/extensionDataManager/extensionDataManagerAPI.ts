@@ -38,6 +38,20 @@ export const ExtensionDataManager = async () => {
   );
 };
 
+export const CheckInstalledExtension = async (token?: string) => {
+  const extensionDataManager = await ExtensionDataManagerNodeAPI(token);
+  return new Promise<boolean>((resolve, reject) =>
+    extensionDataManager
+      .getInstalledExtensionByName('TechsBCN', process.env.EXTENSION_ID as string)
+      .then((response: any) => {
+        resolve(response ? true : false);
+      })
+      .catch(() => {
+        reject(false);
+      })
+  );
+};
+
 export const GetDocumentsAPI = async (collectionName: string, token?: string) => {
   const extensionDataManager = await ExtensionDataManagerNodeAPI(token);
   return new Promise<any[]>((resolve, reject) =>

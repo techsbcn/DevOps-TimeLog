@@ -89,4 +89,8 @@ export const GLOBAL_EN = {
   chooseActivity: 'Select Activity...',
   successTimeLogTitle: 'Time logged successfully!',
   successTimeLogInfo: 'You just completed the new time log.',
+  unableAccessToDevOps: 'Please make sure you are signing in with an account with access to ',
+  noExtensionMessage:
+    'You need to have TimeLog for Azure DevOps installed in your organization to use this extension (Make sure you are an Administrator or contact your Azure DevOps administrator)',
+  tryAgain: 'Try Again',
 };

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { _VALUES } from '../../resources/_constants/values';
-import { CircularProgress, Box } from '@mui/material';
+import { CircularProgress, Box, Avatar } from '@mui/material';
 import * as microsoftTeams from '@microsoft/teams-js';
 import { Button } from '@fluentui/react-northstar';
 import { GetTokenTL, GetProjectTL, GetOrganizationTL, GetValidationTOKEN } from '../../helpers';
 import ChooseInfo from './ChooseInfo';
-import TimeLogTeamsExt from './TimeLogTeamsExt';
 import { TeamsExtensionType } from '../../enums/TeamsExtensionType';
+import loginImg from './../../../static/loginImg.png';
+import CheckExtension from './CheckExtension';
 
 interface TeamsInitializeAuthProps {
   extensionType: TeamsExtensionType;
@@ -15,6 +16,8 @@ interface TeamsInitializeAuthProps {
 const TeamsInitializeAuth: React.FC<TeamsInitializeAuthProps> = (props) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [accessToken, setAccessToken] = useState<any>();
+  const [failureCallback, setFailureCallBack] = useState<boolean>(false);
+
   useEffect(() => {
     GetValidationTOKEN().then((response) => {
       if (response) {
@@ -35,10 +38,12 @@ const TeamsInitializeAuth: React.FC<TeamsInitializeAuthProps> = (props) => {
         successCallback: (result: any) => {
           setAccessToken(result.accessToken);
           localStorage.setItem('TL_TOKEN', JSON.stringify(result.accessToken));
+          setFailureCallBack(false);
           setLoading(false);
         },
         failureCallback: (reason) => {
           console.log('Error', reason);
+          setFailureCallBack(true);
           setLoading(false);
         },
       });
@@ -50,17 +55,29 @@ const TeamsInitializeAuth: React.FC<TeamsInitializeAuthProps> = (props) => {
       props.extensionType === TeamsExtensionType.config ? (
         <ChooseInfo extensionType={props.extensionType} />
       ) : GetProjectTL() && GetOrganizationTL() ? (
-        <TimeLogTeamsExt
-          projectId={GetProjectTL()}
-          organization={GetOrganizationTL()}
-          token={accessToken}
-          extensionType={props.extensionType}
-        />
+        <CheckExtension extensionType={props.extensionType} />
       ) : (
         <ChooseInfo extensionType={props.extensionType} />
       )
     ) : (
       <Box textAlign="center">
+        {failureCallback && (
+          <Box mb={2}>
+            <Avatar
+              src={loginImg}
+              className="object-contain"
+              alt="loginImg"
+              variant="square"
+              sx={{ height: '450px', width: '100%' }}
+            />
+            <Box mt={1} fontWeight="Bold" fontSize={20}>
+              {_VALUES.UNABLE_ACCESS_TO_DEVOPS}
+              <a className="afn" target="_blank" href={'https://dev.azure.com/'} rel="noreferrer">
+                Azure DevOps
+              </a>
+            </Box>
+          </Box>
+        )}
         <Button primary content={_VALUES.LOGIN} onClick={handleLogin} />
       </Box>
     )

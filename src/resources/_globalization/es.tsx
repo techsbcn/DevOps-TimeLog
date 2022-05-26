@@ -89,4 +89,8 @@ export const GLOBAL_ES = {
   chooseActivity: 'Selecciona una Actividad...',
   successTimeLogTitle: '¡Tiempo registrado con éxito!',
   successTimeLogInfo: 'Acabas de completar el nuevo registro de tiempo.',
+  unableAccessToDevOps: 'Asegúrese de iniciar sesión con una cuenta con acceso a ',
+  noExtensionMessage:
+    'Debe tener TimeLog para Azure DevOps instalado en su organización para usar esta extensión (Asegurese de ser Administrador o pongase en contacto con el administrador de su Azure DevOps)',
+  tryAgain: 'Intentar de nuevo',
 };

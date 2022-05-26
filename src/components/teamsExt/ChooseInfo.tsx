@@ -13,7 +13,7 @@ import {
 } from '../../helpers';
 import { Grid } from '@mui/material';
 import { Button } from '@fluentui/react-northstar';
-import TimeLogTeamsExt from '../../components/teamsExt/TimeLogTeamsExt';
+import CheckExtension from '../../components/teamsExt/CheckExtension';
 import { TeamsExtensionType } from '../../enums/TeamsExtensionType';
 
 interface ChooseInfoProps {
@@ -104,13 +104,7 @@ const ChooseInfo: React.FC<ChooseInfoProps> = (props) => {
         </Grid>
       </Grid>
     </MainWrapperComponent>,
-    <TimeLogTeamsExt
-      key={1}
-      projectId={GetProjectTL()}
-      organization={GetOrganizationTL()}
-      token={GetTokenTL()}
-      extensionType={props.extensionType}
-    />,
+    <CheckExtension key={1} extensionType={props.extensionType} />,
   ];
   const renderTabContent = (tab: number) => {
     return tabs[tab];
