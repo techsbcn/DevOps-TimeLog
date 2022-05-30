@@ -3,14 +3,7 @@ import { _VALUES } from '../../resources/_constants/values';
 import { MainWrapperComponent, SelectField } from 'techsbcn-storybook';
 import { GetPublicAlias } from '../../redux/profile/profileAPI';
 import { GetOrganizations, GetProjects } from '../../redux/core/coreAPI';
-import {
-  GetOrganizationTL,
-  GetProjectTL,
-  SelectAsyncHelper,
-  GetTokenTL,
-  GetProjectObjectTL,
-  GetOrganizationObjectTL,
-} from '../../helpers';
+import { SelectAsyncHelper, GetProjectObjectTL, GetOrganizationObjectTL } from '../../helpers';
 import { Grid } from '@mui/material';
 import { Button } from '@fluentui/react-northstar';
 import CheckExtension from '../../components/teamsExt/CheckExtension';

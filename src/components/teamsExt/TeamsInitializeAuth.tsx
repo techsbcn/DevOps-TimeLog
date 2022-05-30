@@ -8,7 +8,7 @@ import ChooseInfo from './ChooseInfo';
 import { TeamsExtensionType } from '../../enums/TeamsExtensionType';
 import loginImg from './../../../static/loginImg.png';
 import CheckExtension from './CheckExtension';
-
+import { ErrorIcon } from '@fluentui/react-icons-northstar';
 interface TeamsInitializeAuthProps {
   extensionType: TeamsExtensionType;
 }
@@ -43,7 +43,9 @@ const TeamsInitializeAuth: React.FC<TeamsInitializeAuthProps> = (props) => {
         },
         failureCallback: (reason) => {
           console.log('Error', reason);
-          setFailureCallBack(true);
+          if (reason === 'invalid_client') {
+            setFailureCallBack(true);
+          }
           setLoading(false);
         },
       });
@@ -75,10 +77,13 @@ const TeamsInitializeAuth: React.FC<TeamsInitializeAuthProps> = (props) => {
               <a className="afn" target="_blank" href={'https://dev.azure.com/'} rel="noreferrer">
                 Azure DevOps
               </a>
+              <Box>
+                <ErrorIcon size="largest" />
+              </Box>
             </Box>
           </Box>
         )}
-        <Button primary content={_VALUES.LOGIN} onClick={handleLogin} />
+        <Button primary content={failureCallback ? _VALUES.TRY_AGAIN : _VALUES.LOGIN} onClick={handleLogin} />
       </Box>
     )
   ) : (
