@@ -14,8 +14,8 @@ const TimeLogDetails: React.FC<TimeLogDetailsProps> = (props) => {
   const [total, setTotal] = useState('');
   const [avarage, setAvarage] = useState('');
 
-  const setTimeFormat = (totalTime: number) => {
-    const minutesPerDay = 60 * 8;
+  const setTimeFormat = (totalTime: number, complete?: boolean) => {
+    const minutesPerDay = 60 * (complete ? 24 : 8);
     const days = Math.floor(totalTime / minutesPerDay);
     totalTime -= minutesPerDay * days;
     const hours = Math.floor(totalTime / 60);
@@ -41,11 +41,10 @@ const TimeLogDetails: React.FC<TimeLogDetailsProps> = (props) => {
         props.timeLogEntries.length > 0 && GroupBy(JSON.parse(JSON.stringify(props.timeLogEntries)), (s) => s.date);
       Object.entries(timeLogEntriesGrouped).map((items: any) => {
         items[1].map((entry: any) => (totalTime += entry.time));
-        totalTime = totalTime / items[1].length;
       });
-      totalTime = totalTime / props.timeLogEntries.length;
+      totalTime = totalTime / Object.entries(timeLogEntriesGrouped).length;
     }
-    setAvarage(setTimeFormat(totalTime));
+    setAvarage(setTimeFormat(totalTime, true));
   }, [props.timeLogEntries]);
 
   return (
