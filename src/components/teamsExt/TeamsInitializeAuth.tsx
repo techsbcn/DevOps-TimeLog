@@ -19,6 +19,8 @@ const TeamsInitializeAuth: React.FC<TeamsInitializeAuthProps> = (props) => {
   const [failureCallback, setFailureCallBack] = useState<boolean>(false);
 
   useEffect(() => {
+    microsoftTeams.initialize();
+    microsoftTeams.appInitialization.notifySuccess();
     GetValidationTOKEN().then((response) => {
       if (response) {
         setAccessToken(GetTokenTL());
@@ -40,6 +42,7 @@ const TeamsInitializeAuth: React.FC<TeamsInitializeAuthProps> = (props) => {
           localStorage.setItem('TL_TOKEN', JSON.stringify(result.accessToken));
           setFailureCallBack(false);
           setLoading(false);
+          microsoftTeams.authentication.notifySuccess(result);
         },
         failureCallback: (reason) => {
           console.log('Error', reason);
