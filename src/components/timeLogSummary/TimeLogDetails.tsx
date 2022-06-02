@@ -15,7 +15,7 @@ const TimeLogDetails: React.FC<TimeLogDetailsProps> = (props) => {
   const [avarage, setAvarage] = useState('');
 
   const setTimeFormat = (totalTime: number) => {
-    const minutesPerDay = 60 * 24;
+    const minutesPerDay = 60 * 8;
     const days = Math.floor(totalTime / minutesPerDay);
     totalTime -= minutesPerDay * days;
     const hours = Math.floor(totalTime / 60);
