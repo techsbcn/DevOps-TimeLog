@@ -34,7 +34,7 @@ const TimeLogTeamsExt: React.FC<TimeLogTeamsExtProps> = (props) => {
         });
       setLoading(false);
     });
-  }, [props.organization, props.token]);
+  }, []);
 
   const useFetchDocuments = useFetchGetDocumentsWithoutFiltersQuery({
     collectionName: process.env.ENTRIES_COLLECTION_NAME as string,
@@ -50,6 +50,7 @@ const TimeLogTeamsExt: React.FC<TimeLogTeamsExtProps> = (props) => {
         loadingDocuments={useFetchDocuments.isFetching}
         user={user}
         projectId={props.projectId}
+        urlWorkItem={`https://dev.azure.com/${props.organization}/${props.projectId}/_workitems/edit`}
       />
     ) : props.extensionType === TeamsExtensionType.newTimeLog && user ? (
       <TimeLogNewEntriesExternalForm user={user} />

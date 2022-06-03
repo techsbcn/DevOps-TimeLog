@@ -12,6 +12,7 @@ interface TimeLogMainSummaryProps {
   loadingDocuments: boolean;
   user?: UserContext;
   projectId?: string;
+  urlWorkItem?: string;
 }
 
 const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
@@ -96,6 +97,7 @@ const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
         <TimeLogTable
           documents={timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
           loading={props.loadingDocuments || loadingFilters}
+          urlWorkItem={props.urlWorkItem}
         />
       </Grid>
     </Grid>

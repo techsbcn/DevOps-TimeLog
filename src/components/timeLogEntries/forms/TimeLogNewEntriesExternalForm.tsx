@@ -97,6 +97,10 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
       user: props.user.displayName,
       userId: props.user.id,
       workItemId: Number(data.workItemId) ?? 0,
+      workItemName:
+        workItems && Number(data.workItemId)
+          ? workItems.find((workitem) => workitem.id === Number(data.workItemId)).fields['System.Title']
+          : '',
       date: data.date,
       time: Number(getMinutesFromHours(data.timeHours)) + Number(data.timeMinutes),
       notes: data.notes,

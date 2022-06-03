@@ -17,6 +17,7 @@ import { PatchWorkItem, WorkItemFormService } from '../../redux/workItem/workIte
 
 export const TimelogEntries: React.FC = () => {
   const [workItemId, setWorkItemId] = useState<number>();
+  const [workItemName, setWorkItemName] = useState<string>();
 
   useEffect(() => {
     SDK.init().then(async () => {
@@ -44,6 +45,8 @@ export const TimelogEntries: React.FC = () => {
       const workItemFormService = await WorkItemFormService;
       const workItemId = await workItemFormService.getId();
       setWorkItemId(workItemId);
+      const workItemName = await workItemFormService.getFieldValue('System.Title', { returnOriginalValue: false });
+      setWorkItemName(String(workItemName));
     });
   }, []);
 
@@ -53,6 +56,7 @@ export const TimelogEntries: React.FC = () => {
       user: user.displayName,
       userId: user.id,
       workItemId: workItemId ?? 0,
+      workItemName: workItemName ?? '',
       date: data.date,
       time: Number(getMinutesFromHours(data.timeHours)) + Number(data.timeMinutes),
       notes: data.notes,

@@ -3,6 +3,7 @@ export interface TimeLogEntry {
   user: string;
   userId: string;
   workItemId: number;
+  workItemName: string;
   date: Date;
   time: number;
   notes: string;
