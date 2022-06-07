@@ -93,4 +93,6 @@ export const GLOBAL_EN = {
   noExtensionMessage:
     'You need to have TimeLog for Azure DevOps installed in your organization to use this extension (Make sure you are an Administrator or contact your Azure DevOps administrator)',
   tryAgain: 'Try Again',
+  unableOrganization: 'Please make sure you have an account with access to an organization in order to continue.',
+  unableProjects: 'Please Make sure you have an account with access to a project in order to continue.',
 };

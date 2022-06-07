@@ -92,4 +92,6 @@ export const _VALUES: ObjectKey = {
   UNABLE_ACCESS_TO_DEVOPS: Translate.t('unableAccessToDevOps'),
   NO_EXTENSION_MESSAGE: Translate.t('noExtensionMessage'),
   TRY_AGAIN: Translate.t('tryAgain'),
+  UNABLE_ORGANIZATION: Translate.t('unableOrganization'),
+  UNABLE_PROJECT: Translate.t('unableProjects'),
 };

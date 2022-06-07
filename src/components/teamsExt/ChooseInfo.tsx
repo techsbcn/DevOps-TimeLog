@@ -4,10 +4,11 @@ import { MainWrapperComponent, SelectField } from 'techsbcn-storybook';
 import { GetPublicAlias } from '../../redux/profile/profileAPI';
 import { GetOrganizations, GetProjects } from '../../redux/core/coreAPI';
 import { SelectAsyncHelper, GetProjectObjectTL, GetOrganizationObjectTL } from '../../helpers';
-import { Grid } from '@mui/material';
+import { Grid, Box, CircularProgress } from '@mui/material';
 import { Button } from '@fluentui/react-northstar';
 import CheckExtension from '../../components/teamsExt/CheckExtension';
 import { TeamsExtensionType } from '../../enums/TeamsExtensionType';
+import { ErrorIcon } from '@fluentui/react-icons-northstar';
 
 interface ChooseInfoProps {
   extensionType: TeamsExtensionType;
@@ -16,6 +17,7 @@ interface ChooseInfoProps {
 const ChooseInfo: React.FC<ChooseInfoProps> = (props) => {
   const [activeTab, setActiveTab] = useState(0);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingProjects, setLoadingProjects] = useState<boolean>(true);
   const [organizations, setOrganizations] = useState<any[]>([]);
   const [organizationSelected, setOrganizationSelected] = useState<any>(GetOrganizationObjectTL());
   const [projects, setProjects] = useState<any[]>();
@@ -23,21 +25,31 @@ const ChooseInfo: React.FC<ChooseInfoProps> = (props) => {
 
   useEffect(() => {
     GetPublicAlias().then((alias) => {
-      GetOrganizations(alias.publicAlias).then((organizations) => {
-        const resultTransform = SelectAsyncHelper(organizations);
-        setOrganizations(resultTransform);
-        resultTransform.length === 1 && setOrganizationSelected(resultTransform[0]);
-      });
-      setLoading(false);
+      GetOrganizations(alias.publicAlias)
+        .then((organizations) => {
+          const resultTransform = SelectAsyncHelper(organizations);
+          setOrganizations(resultTransform);
+          resultTransform.length === 1 && setOrganizationSelected(resultTransform[0]);
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+        });
     });
   }, []);
 
   const loadProjects = React.useCallback(() => {
     if (organizationSelected) {
-      GetProjects(organizationSelected.label).then((projects) => {
-        const resultTransform = SelectAsyncHelper(projects);
-        setProjects(resultTransform);
-      });
+      setLoadingProjects(true);
+      GetProjects(organizationSelected.label)
+        .then((projects) => {
+          const resultTransform = SelectAsyncHelper(projects);
+          setProjects(resultTransform);
+          setLoadingProjects(false);
+        })
+        .catch(() => {
+          setLoadingProjects(false);
+        });
     }
   }, [organizationSelected]);
 
@@ -57,10 +69,10 @@ const ChooseInfo: React.FC<ChooseInfoProps> = (props) => {
       headerProps={{
         title: organizationSelected ? _VALUES.CHOOSE_PROJECTS : _VALUES.CHOOSE_ORGANIZATION,
       }}
-      loading={loading}
+      //loading={loading}
     >
       <Grid container spacing={3}>
-        {organizations && organizations?.length > 0 && (
+        {organizations && organizations?.length > 0 ? (
           <Grid item xs={12}>
             <SelectField
               name="organization"
@@ -72,8 +84,27 @@ const ChooseInfo: React.FC<ChooseInfoProps> = (props) => {
               }}
             />
           </Grid>
+        ) : loading ? (
+          <Grid item xs={12}>
+            <Box display="flex" alignItems="center">
+              <CircularProgress className="circular-progress-main-color" />
+              <Box ml={2}>{_VALUES.LOADING}...</Box>
+            </Box>
+          </Grid>
+        ) : (
+          !loading &&
+          organizations.length === 0 && (
+            <Grid item xs={12}>
+              <Box mt={1} fontWeight="Bold" fontSize={20} display="flex" alignItems="center">
+                {_VALUES.UNABLE_ORGANIZATION}
+                <Box ml={2}>
+                  <ErrorIcon size="larger" />
+                </Box>
+              </Box>
+            </Grid>
+          )
         )}
-        {organizationSelected && projects && projects.length > 0 && (
+        {organizationSelected && projects && projects.length > 0 ? (
           <Grid item xs={12}>
             <SelectField
               name="project"
@@ -86,6 +117,26 @@ const ChooseInfo: React.FC<ChooseInfoProps> = (props) => {
               }}
             />
           </Grid>
+        ) : loadingProjects ? (
+          <Grid item xs={12}>
+            <Box display="flex" alignItems="center">
+              <CircularProgress className="circular-progress-main-color" />
+              <Box ml={2}>{_VALUES.LOADING}...</Box>
+            </Box>
+          </Grid>
+        ) : (
+          !loadingProjects &&
+          organizationSelected &&
+          !projects && (
+            <Grid item xs={12}>
+              <Box mt={1} fontWeight="Bold" fontSize={20} display="flex" alignItems="center">
+                {_VALUES.UNABLE_PROJECT}
+                <Box ml={2}>
+                  <ErrorIcon size="larger" />
+                </Box>
+              </Box>
+            </Grid>
+          )
         )}
         <Grid item xs={12}>
           <Button
