@@ -27,12 +27,13 @@ export const ErrorHandler = (error: any) => {
   if (error.Id) {
     const translate = Translate.t(`${error.Id}`);
     const message = translate.trim() !== '' ? translate : Translate.t('InternalServerErrorException');
+    //Here you can create a custom notification based on the handler error appeared to inform the user
     //addNotification(message, 'danger', error.Id);
     /*if (error.Code === 401 || error.Code === 403) {
     }*/
     return Object({ Code: error.Code, Exception: error.Id, Message: message });
   }
-
+  //Here you can create a generic notification based on an unhandled or generic error appeared to inform the user
   //addNotification(Translate.t('FailedToFetchException'), 'danger', 'FailedToFetchException');
   return Object({ Exception: 'FailedToFetchException', Message: Translate.t('FailedToFetchException') });
 };

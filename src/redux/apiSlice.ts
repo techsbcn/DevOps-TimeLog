@@ -30,7 +30,7 @@ export const GetWebApi = async (token?: string, orgUri?: string) => {
         reject(err);
       }
     } else {
-      reject('OrganizationNotValid');
+      reject({ Id: 'OrganizationNotValid' });
     }
   });
 };

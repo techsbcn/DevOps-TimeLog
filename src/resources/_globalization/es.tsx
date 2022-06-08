@@ -12,6 +12,11 @@ export const GLOBAL_ES = {
   InternalServerErrorException: 'Error: Ponte en contacto con el Administrador',
   InvalidArgumentException: 'Error: Ponte en contacto con el Administrador',
   InternalException: 'Error: Ponte en contacto con el Administrador',
+  GetWorkItemFieldsFailedException:
+    'No se han podido encontrar correctamente los campos solicitados del Work Item, intentalo de nuevo mas tarde.',
+  CreateDocumentFailedException: 'Error al añadir una entrada en el documento, intentelo de nuevo.',
+  FieldUpdateFailedException: 'Error al intentar actualizar los campos del work item, intentelo de nuevo.',
+  GetWorkItemsException: 'Error al intentar obtener los work items.',
   remove: 'Eliminar',
   tableLabelDisplay: '{{0}}-{{1}} de {{2}}',
   name: 'Nombre',
@@ -93,6 +98,9 @@ export const GLOBAL_ES = {
   noExtensionMessage:
     'Debe tener TimeLog para Azure DevOps instalado en su organización para usar esta extensión (Asegurese de ser Administrador o pongase en contacto con el administrador de su Azure DevOps)',
   tryAgain: 'Intentar de nuevo',
-  unableOrganization: 'Por favor, asegúrese de tener una cuenta con acceso a una organización para poder continuar.',
-  unableProjects: 'Por favor, asegúrese de tener una cuenta con acceso a un proyecto para poder continuar.',
+  unableOrganization:
+    'Por favor, asegúrese de tener una cuenta con acceso a una organización de Azure DevOps para poder continuar.',
+  unableProjects:
+    'Por favor, asegúrese de tener una cuenta con acceso a un proyecto de Azure DevOps para poder continuar.',
+  unableWorkItems: 'Dentro de la organización de Azure DevOps debe haber elementos de trabajo disponibles.',
 };

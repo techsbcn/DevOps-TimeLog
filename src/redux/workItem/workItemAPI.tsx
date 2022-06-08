@@ -40,7 +40,7 @@ export const GetWorkItemNodeAPI = async (workItemId: number, fields?: string[]) 
         resolve(result);
       })
       .catch((error) => {
-        reject(ErrorHandler(error));
+        reject(ErrorHandler({ Id: 'GetWorkItemFieldsFailedException' }));
       })
   );
 };
@@ -85,7 +85,7 @@ export const SetFields = async (fields: any) => {
         resolve(true);
       })
       .catch(() => {
-        reject(ErrorHandler('FieldUpdateFailedException'));
+        reject(ErrorHandler({ Id: 'FieldUpdateFailedException' }));
       })
   );
 };
@@ -103,7 +103,7 @@ export const UpdateWorkItemNodeAPI = async (workItemId: number, fields?: VSSInte
         resolve(result);
       })
       .catch((error) => {
-        reject(error);
+        reject(ErrorHandler({ Id: 'FieldUpdateFailedException' }));
       })
   );
 };
@@ -116,7 +116,7 @@ export const PatchWorkItem = async (fieldReferenceNames: string[], transformResu
           resolve(complete);
         })
         .catch(() => {
-          reject(ErrorHandler('FieldUpdateFailedException'));
+          reject(ErrorHandler({ Id: 'FieldUpdateFailedException' }));
         });
     })
   );
@@ -149,23 +149,23 @@ export const GetWorkItems = async (id?: string) => {
         { projectId: GetProjectTL() }
       )
       .then((result: WorkItemTrackingInterfaces.WorkItemQueryResult) => {
-        result.workItems &&
-          result.workItems.length > 0 &&
-          witApi
-            .getWorkItemsBatch({
-              fields: ['System.Id', 'System.Title', 'System.State', 'System.WorkItemType', 'System.AssignedTo'],
-              ids: result.workItems
-                .slice(0, 200)
-                .filter((x) => x.id !== undefined)
-                .map((x) => x.id ?? 0),
-            })
-            .then((result) => resolve(result))
-            .catch(() => {
-              reject(ErrorHandler('GetWorkItemsException'));
-            });
+        result.workItems && result.workItems.length > 0
+          ? witApi
+              .getWorkItemsBatch({
+                fields: ['System.Id', 'System.Title', 'System.State', 'System.WorkItemType', 'System.AssignedTo'],
+                ids: result.workItems
+                  .slice(0, 200)
+                  .filter((x) => x.id !== undefined)
+                  .map((x) => x.id ?? 0),
+              })
+              .then((result) => resolve(result))
+              .catch(() => {
+                reject(ErrorHandler({ Id: 'GetWorkItemsException' }));
+              })
+          : resolve([]);
       })
       .catch(() => {
-        reject(ErrorHandler('GetWorkItemsException'));
+        reject(ErrorHandler({ Id: 'GetWorkItemsException' }));
       })
   );
 };

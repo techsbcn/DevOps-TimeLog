@@ -94,4 +94,6 @@ export const _VALUES: ObjectKey = {
   TRY_AGAIN: Translate.t('tryAgain'),
   UNABLE_ORGANIZATION: Translate.t('unableOrganization'),
   UNABLE_PROJECT: Translate.t('unableProjects'),
+  UNABLE_WORKITEMS: Translate.t('unableWorkItems'),
+  CREATE_DOCUMENT_FAILED: Translate.t('CreateDocumentFailedException'),
 };

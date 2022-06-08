@@ -12,6 +12,11 @@ export const GLOBAL_EN = {
   InternalServerErrorException: 'Error: Contact Administrator',
   InvalidArgumentException: 'Error: Contact Administrator',
   InternalException: 'Error: Contact Administrator',
+  GetWorkItemFieldsFailedException:
+    'The requested fields of the Work Item could not be found correctly, try again later.',
+  CreateDocumentFailedException: 'Error adding an entry to the document, please try again',
+  FieldUpdateFailedException: 'Error when trying to update the fields of the work item, try again',
+  GetWorkItemsException: 'Error trying to get the work items.',
   remove: 'Remove',
   tableLabelDisplay: '{{0}}-{{1}} of {{2}}',
   name: 'Name',
@@ -93,6 +98,8 @@ export const GLOBAL_EN = {
   noExtensionMessage:
     'You need to have TimeLog for Azure DevOps installed in your organization to use this extension (Make sure you are an Administrator or contact your Azure DevOps administrator)',
   tryAgain: 'Try Again',
-  unableOrganization: 'Please make sure you have an account with access to an organization in order to continue.',
-  unableProjects: 'Please Make sure you have an account with access to a project in order to continue.',
+  unableOrganization:
+    'Please make sure you have an account with access to an Azure DevOps organization in order to continue.',
+  unableProjects: 'Please make sure you have an account with access to a Azure DevOps project in order to continue.',
+  unableWorkItems: 'Within the Azure DevOps organization there should be work Items available.',
 };

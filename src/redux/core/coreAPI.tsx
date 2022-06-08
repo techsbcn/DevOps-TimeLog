@@ -18,14 +18,14 @@ export const GetProjectContext = async () => {
         result
           .getProject()
           .then((project) => {
-            project ? resolve(project) : reject(ErrorHandler('GetProjectContextException'));
+            project ? resolve(project) : reject(ErrorHandler({ Id: 'GetProjectContextException' }));
           })
           .catch(() => {
-            reject(ErrorHandler('GetProjectContextException'));
+            reject(ErrorHandler({ Id: 'GetProjectContextException' }));
           });
       })
       .catch(() => {
-        reject(ErrorHandler('GetProjectContextException'));
+        reject(ErrorHandler({ Id: 'GetProjectContextException' }));
       })
   );
 };
@@ -53,7 +53,7 @@ export const GetAllTeamsSDK = async () => {
         resolve(result);
       })
       .catch(() => {
-        reject(ErrorHandler('GetTeamsException'));
+        reject(ErrorHandler({ Id: 'GetTeamsException' }));
       })
   );
 };
@@ -67,7 +67,7 @@ export const GetAllTeamsNodeAPI = async () => {
         resolve(result);
       })
       .catch(() => {
-        reject(ErrorHandler('GetTeamsException'));
+        reject(ErrorHandler({ Id: 'GetTeamsException' }));
       })
   );
 };
@@ -84,7 +84,7 @@ const GetTeamsSDK = async () => {
         resolve(result);
       })
       .catch(() => {
-        reject(ErrorHandler('GetTeamsException'));
+        reject(ErrorHandler({ Id: 'GetTeamsException' }));
       })
   );
 };
@@ -98,7 +98,7 @@ const GetTeamsAPI = async (projectId: string) => {
         resolve(result);
       })
       .catch(() => {
-        reject(ErrorHandler('GetTeamsException'));
+        reject(ErrorHandler({ Id: 'GetTeamsException' }));
       })
   );
 };
@@ -116,7 +116,7 @@ export const GetTeamMembersSDK = async (teamId: string, projectId?: string) => {
         resolve(members);
       })
       .catch(() => {
-        reject(ErrorHandler('GetTeamsMembersException'));
+        reject(ErrorHandler({ Id: 'GetTeamsMembersException' }));
       })
   );
 };
@@ -138,7 +138,7 @@ export const GetTeamMembersNodeAPI = async (teamId: string, projectId: string) =
         resolve(members);
       })
       .catch(() => {
-        reject(ErrorHandler('GetTeamsMembersException'));
+        reject(ErrorHandler({ Id: 'GetTeamsMembersException' }));
       })
   );
 };

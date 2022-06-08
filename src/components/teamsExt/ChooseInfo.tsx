@@ -23,7 +23,8 @@ const ChooseInfo: React.FC<ChooseInfoProps> = (props) => {
   const [projects, setProjects] = useState<any[]>();
   const [projectSelected, setProjectSelected] = useState<any>(GetProjectObjectTL());
 
-  useEffect(() => {
+  const loadOrganizations = React.useCallback(() => {
+    setLoading(true);
     GetPublicAlias().then((alias) => {
       GetOrganizations(alias.publicAlias)
         .then((organizations) => {
@@ -37,6 +38,10 @@ const ChooseInfo: React.FC<ChooseInfoProps> = (props) => {
         });
     });
   }, []);
+
+  useEffect(() => {
+    loadOrganizations();
+  }, [loadOrganizations]);
 
   const loadProjects = React.useCallback(() => {
     if (organizationSelected) {
@@ -69,7 +74,6 @@ const ChooseInfo: React.FC<ChooseInfoProps> = (props) => {
       headerProps={{
         title: organizationSelected ? _VALUES.CHOOSE_PROJECTS : _VALUES.CHOOSE_ORGANIZATION,
       }}
-      //loading={loading}
     >
       <Grid container spacing={3}>
         {organizations && organizations?.length > 0 ? (
@@ -94,14 +98,19 @@ const ChooseInfo: React.FC<ChooseInfoProps> = (props) => {
         ) : (
           !loading &&
           organizations.length === 0 && (
-            <Grid item xs={12}>
-              <Box mt={1} fontWeight="Bold" fontSize={20} display="flex" alignItems="center">
-                {_VALUES.UNABLE_ORGANIZATION}
-                <Box ml={2}>
-                  <ErrorIcon size="larger" />
+            <>
+              <Grid item xs={12}>
+                <Box mt={1} fontWeight="Bold" fontSize={20} display="flex" alignItems="center">
+                  {_VALUES.UNABLE_ORGANIZATION}
+                  <Box ml={2}>
+                    <ErrorIcon size="larger" />
+                  </Box>
                 </Box>
-              </Box>
-            </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                <Button primary content={_VALUES.TRY_AGAIN} onClick={loadOrganizations} />
+              </Grid>
+            </>
           )
         )}
         {organizationSelected && projects && projects.length > 0 ? (
@@ -117,7 +126,7 @@ const ChooseInfo: React.FC<ChooseInfoProps> = (props) => {
               }}
             />
           </Grid>
-        ) : loadingProjects ? (
+        ) : organizationSelected && loadingProjects ? (
           <Grid item xs={12}>
             <Box display="flex" alignItems="center">
               <CircularProgress className="circular-progress-main-color" />
@@ -128,24 +137,31 @@ const ChooseInfo: React.FC<ChooseInfoProps> = (props) => {
           !loadingProjects &&
           organizationSelected &&
           !projects && (
-            <Grid item xs={12}>
-              <Box mt={1} fontWeight="Bold" fontSize={20} display="flex" alignItems="center">
-                {_VALUES.UNABLE_PROJECT}
-                <Box ml={2}>
-                  <ErrorIcon size="larger" />
+            <>
+              <Grid item xs={12}>
+                <Box mt={1} fontWeight="Bold" fontSize={20} display="flex" alignItems="center">
+                  {_VALUES.UNABLE_PROJECT}
+                  <Box ml={2}>
+                    <ErrorIcon size="larger" />
+                  </Box>
                 </Box>
-              </Box>
-            </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                <Button primary content={_VALUES.TRY_AGAIN} onClick={loadProjects} />
+              </Grid>
+            </>
           )
         )}
-        <Grid item xs={12}>
-          <Button
-            primary
-            content={props.extensionType === TeamsExtensionType.config ? _VALUES.SAVE : _VALUES.CONTINUE}
-            onClick={saveInfo}
-            disabled={!organizationSelected || !projectSelected}
-          />
-        </Grid>
+        {organizations && organizations?.length > 0 && projects && projects.length > 0 && (
+          <Grid item xs={12}>
+            <Button
+              primary
+              content={props.extensionType === TeamsExtensionType.config ? _VALUES.SAVE : _VALUES.CONTINUE}
+              onClick={saveInfo}
+              disabled={!organizationSelected || !projectSelected}
+            />
+          </Grid>
+        )}
       </Grid>
     </MainWrapperComponent>,
     <CheckExtension key={1} extensionType={props.extensionType} />,

@@ -34,6 +34,7 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
   const [workItemsLoading, setWorkItemsLoading] = React.useState(false);
   const [id, setId] = React.useState('');
   const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState('');
 
   const EntrySchema = yup.object().shape(
     {
@@ -71,7 +72,8 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
         setWorkItems(result);
         setWorkItemsLoading(false);
       })
-      .catch(() => {
+      .catch((error) => {
+        setError(error.Message);
         setWorkItems([]);
         setWorkItemsLoading(false);
       });
@@ -139,17 +141,17 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
                 }/dist/TimeLogSuccess/TimeLogSuccess.html`;
               })
               .catch((error) => {
-                console.log(error);
+                setError(_VALUES.CREATE_DOCUMENT_FAILED);
                 setLoading(false);
               });
           })
           .catch((error) => {
-            console.log(error);
+            setError(error.Message);
             setLoading(false);
           });
       })
       .catch((error) => {
-        console.log(error);
+        setError(error.Message);
         setLoading(false);
       });
   };
@@ -165,7 +167,9 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
               control={control}
               render={({ field: { onChange, value, name, ref } }) => (
                 <TextSimpleComponent
-                  helperText={errors.workItemId?.message}
+                  helperText={
+                    errors.workItemId?.message ?? (workItems && workItems.length === 0 && _VALUES.UNABLE_WORKITEMS)
+                  }
                   error={!!errors.workItemId}
                   value={
                     <Dropdown
@@ -399,7 +403,7 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
           </Flex>
           <Divider />
           <Flex>
-            <Box mt={2}>
+            <Box mt={2} display="flex" alignItems="center">
               <Button
                 icon={<SaveIcon size="large" />}
                 primary={!loading}
@@ -409,6 +413,11 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
                 content={_VALUES.ADD_TIMELOG}
                 onClick={handleSubmit(onSubmit)}
               />
+              {error && (
+                <Box ml={2} color="red">
+                  {error}
+                </Box>
+              )}
             </Box>
           </Flex>
         </Flex>
