@@ -169,3 +169,37 @@ export const GetWorkItems = async (id?: string) => {
       })
   );
 };
+
+export const GetEpicsItems = async (id?: string) => {
+  const witApi: IWorkItemTrackingApi = await WorkItemNodeAPI();
+  const searchId = id ? `AND [System.Id] = ${Number(id)}` : 'AND [System.ChangedDate] >= @today - 7';
+  return new Promise<WorkItemTrackingInterfaces.WorkItem[]>((resolve, reject) =>
+    witApi
+      .queryByWiql(
+        {
+          query: `SELECT [System.Id] FROM workitems WHERE [System.TeamProject] = @project AND NOT [System.State] IN ('Completed', 'Closed', 'Cut', 'Resolved', 'Done') ${searchId}`,
+        },
+        { projectId: GetProjectTL() }
+      )
+      .then((result: WorkItemTrackingInterfaces.WorkItemQueryResult) => {
+        result.workItems && result.workItems.length > 0
+          ? witApi
+              .getWorkItemsBatch({
+                $expand: 4,
+                //fields: ['System.Id', 'System.Title', 'System.State', 'System.WorkItemType', 'System.AssignedTo'],
+                ids: result.workItems
+                  .slice(0, 200)
+                  .filter((x) => x.id !== undefined)
+                  .map((x) => x.id ?? 0),
+              })
+              .then((result) => resolve(result))
+              .catch(() => {
+                reject(ErrorHandler({ Id: 'GetWorkItemsException' }));
+              })
+          : resolve([]);
+      })
+      .catch(() => {
+        reject(ErrorHandler({ Id: 'GetWorkItemsException' }));
+      })
+  );
+};

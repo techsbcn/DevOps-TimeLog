@@ -56,7 +56,7 @@ function TeamsContext({ component, noMargin }: { component: React.ReactElement<a
       <ProviderFluent theme={theme || teamsTheme}>
         <MainLayoutSimple
           mainComponent={
-            <Box className={themeString === 'default' ? '' : 'dark'} mt={!noMargin ? 2 : 0}>
+            <Box className={themeString === 'default' ? '' : 'dark'} my={!noMargin ? 2 : 0}>
               {component}
             </Box>
           }
