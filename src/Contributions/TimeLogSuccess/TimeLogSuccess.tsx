@@ -16,7 +16,7 @@ export const TimeLogSuccess: React.FC = () => {
       spacing={2}
     >
       <Grid item xs={12}>
-        <img src={illustration} alt="empty" />
+        <img src={illustration} alt="empty" className="sucessImg" />
       </Grid>
       <Grid item xs={12}>
         <Box fontWeight="Bold" fontSize={20}>

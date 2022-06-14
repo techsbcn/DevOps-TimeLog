@@ -22,10 +22,10 @@ const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
       userIds: props.user && props.user.id ? [props.user.id] : [],
       timeFrom: new Date(
         new Date(curr.setDate(curr.getDate() - curr.getDay() + 1)).setHours(0, 0, 0)
-      ).toLocaleDateString(),
+      ).toLocaleDateString('sv-SE'),
       timeTo: new Date(
         new Date(curr.setDate(curr.getDate() - curr.getDay() + 7)).setHours(23, 59, 59)
-      ).toLocaleDateString(),
+      ).toLocaleDateString('sv-SE'),
     };
   });
   const [timeLogEntries, setTimeLogEntries] = useState<TimeLogEntry[]>(props.documents);

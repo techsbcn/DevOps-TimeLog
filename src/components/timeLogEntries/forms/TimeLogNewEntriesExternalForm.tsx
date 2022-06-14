@@ -113,12 +113,13 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
         workItems && Number(data.workItemId)
           ? workItems.find((workitem) => workitem.id === Number(data.workItemId)).fields['System.Title']
           : '',
-      date: data.date,
+      date: new Date(data.date).toLocaleDateString('sv-SE'),
       time: Number(getMinutesFromHours(data.timeHours)) + Number(data.timeMinutes),
       notes: data.notes,
       type: data.type ? data.type : undefined,
     };
     const hours = getHoursFromMinutes(timeEntry.time);
+
     GetWorkItemNodeAPI(Number(data.workItemId), [
       'Microsoft.VSTS.Scheduling.CompletedWork',
       'Microsoft.VSTS.Scheduling.RemainingWork',
@@ -283,6 +284,7 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
                       }}
                       ref={ref}
                       onDateChange={(e, data) => {
+                        console.log('dataChange', data);
                         onChange(e);
                         setValue('date', data && data?.value ? data.value.toLocaleDateString('sv-SE') : '');
                       }}
@@ -294,7 +296,41 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
             </Box>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Box display="flex" alignItems="center">
+            <Box ml={3} sx={{ display: { xs: 'block', md: 'none' } }}>
+              <Grid container flexDirection="column">
+                <Grid item xs={3}>
+                  {_VALUES.HOURS}
+                </Grid>
+                <Grid item xs={9}>
+                  <Controller
+                    control={control}
+                    defaultValue={'0'}
+                    render={({ field: { onChange, value, name, ref } }) => {
+                      if (value === '') setValue(name, '0');
+                      return (
+                        <Input
+                          placeholder={_VALUES.HOURS}
+                          name={name}
+                          value={value === '' ? '0' : value}
+                          ref={ref}
+                          error={!!errors.timeHours}
+                          type="number"
+                          min={0}
+                          onChange={(e, data) => {
+                            onChange(e);
+                            if (!data || (data && data.value === '')) setValue(name, '0');
+                            trigger('timeMinutes');
+                            trigger('timeHours');
+                          }}
+                        />
+                      );
+                    }}
+                    name={'timeHours'}
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+            <Box alignItems="center" sx={{ display: { xs: 'none', md: 'flex' } }}>
               <Box mr={1}>{_VALUES.HOURS}</Box>
               <Controller
                 control={control}
@@ -324,7 +360,42 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
             </Box>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Box display="flex" alignItems="center">
+            <Box ml={3} sx={{ display: { xs: 'block', md: 'none' } }}>
+              <Grid container flexDirection="column">
+                <Grid item xs={3}>
+                  {_VALUES.MINUTES}
+                </Grid>
+                <Grid item xs={9}>
+                  <Controller
+                    control={control}
+                    defaultValue={'0'}
+                    render={({ field: { onChange, value, name, ref } }) => {
+                      if (value === '') setValue(name, '0');
+                      return (
+                        <Input
+                          placeholder={_VALUES.MINUTES}
+                          name={name}
+                          value={value === '' ? '0' : value}
+                          ref={ref}
+                          error={!!errors.timeMinutes}
+                          type="number"
+                          min={0}
+                          step={15}
+                          onChange={(e, data) => {
+                            onChange(e);
+                            if (!data || (data && data.value === '')) setValue(name, '0');
+                            trigger('timeHours');
+                            trigger('timeMinutes');
+                          }}
+                        />
+                      );
+                    }}
+                    name={'timeMinutes'}
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+            <Box alignItems="center" sx={{ display: { xs: 'none', md: 'flex' } }}>
               <Box mr={1}>{_VALUES.MINUTES}</Box>
               <Controller
                 control={control}
@@ -357,7 +428,7 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
         </Grid>
       </Grid>
       {types && types?.length > 0 && !loadingTypes ? (
-        <Grid item md={12}>
+        <Grid item xs={12}>
           <Box display="flex" alignItems="center">
             <Box mr={1}>
               <OptionsIcon />
@@ -410,7 +481,7 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
       ) : (
         loadingTypes && <Loader />
       )}
-      <Grid item md={12}>
+      <Grid item xs={12}>
         <Box display="flex" alignItems="center">
           <Box mr={1}>
             <CalendarAgendaIcon />
@@ -433,7 +504,7 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
           />
         </Box>
       </Grid>
-      <Grid item md={12}>
+      <Grid item xs={12}>
         <Divider />
         <Box mt={2} display="flex" alignItems="center">
           <Button
