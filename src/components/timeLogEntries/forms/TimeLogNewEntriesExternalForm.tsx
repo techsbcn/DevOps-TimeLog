@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, Dropdown, Input, TextArea, Button, Header, Divider, Loader } from '@fluentui/react-northstar';
+import {
+  Flex,
+  Dropdown,
+  Input,
+  TextArea,
+  Button,
+  Header,
+  Divider,
+  Loader,
+  Datepicker,
+} from '@fluentui/react-northstar';
 import {
   EditIcon,
   ShiftActivityIcon,
@@ -23,7 +33,7 @@ import { WorkItemType } from '../../../enums/WorkItemType';
 import { TextSimpleComponent } from 'techsbcn-storybook';
 import { CreateDocumentNodeAPi, GetDocumentsAPI } from '../../../redux/extensionDataManager/extensionDataManagerAPI';
 import * as VSSInterfaces from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
-import { Box } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 
 interface TimeLogNewEntriesExternalFormProps {
   user: UserContext;
@@ -103,12 +113,13 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
         workItems && Number(data.workItemId)
           ? workItems.find((workitem) => workitem.id === Number(data.workItemId)).fields['System.Title']
           : '',
-      date: data.date,
+      date: new Date(data.date).toLocaleDateString('sv-SE'),
       time: Number(getMinutesFromHours(data.timeHours)) + Number(data.timeMinutes),
       notes: data.notes,
       type: data.type ? data.type : undefined,
     };
     const hours = getHoursFromMinutes(timeEntry.time);
+
     GetWorkItemNodeAPI(Number(data.workItemId), [
       'Microsoft.VSTS.Scheduling.CompletedWork',
       'Microsoft.VSTS.Scheduling.RemainingWork',
@@ -156,273 +167,363 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
       });
   };
   return (
-    <Flex gap="gap.small">
-      <Flex.Item grow>
-        <Flex column gap="gap.medium">
-          <Header as="h3" styles={{ fontWeight: 'bold' }} content={_VALUES.NEW_TIMELOG_ENTRY} />
-          <Divider />
-          <Flex gap="gap.small" vAlign="center">
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Header as="h3" styles={{ fontWeight: 'bold' }} content={_VALUES.NEW_TIMELOG_ENTRY} />
+        <Divider />
+      </Grid>
+      <Grid item xs={12}>
+        <Box display="flex" alignItems="center">
+          <Box mr={1}>
             <EditIcon />
-            <Controller
-              control={control}
-              render={({ field: { onChange, value, name, ref } }) => (
-                <TextSimpleComponent
-                  helperText={
-                    errors.workItemId?.message ?? (workItems && workItems.length === 0 && _VALUES.UNABLE_WORKITEMS)
-                  }
-                  error={!!errors.workItemId}
-                  value={
-                    <Dropdown
-                      loading={workItemsLoading}
-                      itemToString={(item) => {
-                        return item && item['id'] ? JSON.stringify(item['id']) : '';
-                      }}
-                      error={!!errors.workItemId}
-                      value={value}
-                      ref={ref}
-                      onChange={(e, data) => {
-                        const val = data.value
-                          ? data.value['id']
-                            ? data.value['id'].toString()
-                            : data.value
-                            ? data.value.toString()
-                            : ''
-                          : '';
-                        onChange(val);
-                        setValue('workItemId', val);
-                        trigger('workItemId');
-                      }}
-                      renderItem={(Component: React.ElementType, props: any): React.ReactNode => {
-                        let image = '';
-                        switch (props.fields['System.WorkItemType']) {
-                          case WorkItemType.bug:
-                            image = bug;
-                            break;
-                          case WorkItemType.epic:
-                            image = epic;
-                            break;
-                          case WorkItemType.feature:
-                            image = feature;
-                            break;
-                          case WorkItemType.product:
-                            image = product;
-                            break;
-                          case WorkItemType.task:
-                            image = task;
-                            break;
-                        }
-                        const assignedTo = props.fields['System.AssignedTo']
-                          ? props.fields['System.AssignedTo'].displayName
-                          : 'Undefined';
-                        return (
-                          <Component
-                            active={props.active}
-                            selected={props.selected}
-                            accessibilityItemProps={props.accessibilityItemProps}
-                            className="cursor-pointer"
-                            key={props.id}
-                            image={image}
-                            header={`${props.id} | ${props.fields['System.Title']}`}
-                            content={assignedTo}
-                          />
-                        );
-                      }}
-                      search={(filteredItemsByValue: any[], searchQuery: string) => {
-                        const search = searchQuery ? searchQuery.toString() : '';
-                        const result =
-                          filteredItemsByValue &&
-                          filteredItemsByValue.filter((item) => String(item.id).includes(search));
-                        if ((!result && workItems) || (result && result.length === 0 && workItems)) {
-                          setId(search);
-                        } else {
-                          if (id !== search) {
-                            setId('');
-                          }
-                        }
-                        return result;
-                      }}
-                      items={workItems && workItems.length > 0 ? workItems : []}
-                      placeholder={_VALUES.CHOOSE_WORKITEM}
-                      noResultsMessage={_VALUES.NO_RESULTS_MESSAGE}
-                    />
-                  }
-                />
-              )}
-              name={'workItemId'}
-            />
-          </Flex>
-          <Flex gap="gap.small" vAlign="center">
-            <ShiftActivityIcon />
-            <Controller
-              control={control}
-              defaultValue={new Date().toLocaleDateString('sv-SE')}
-              render={({ field: { onChange, value, name, ref } }) => {
-                return (
-                  <Input
-                    icon={false}
-                    name={name}
+          </Box>
+          <Controller
+            control={control}
+            render={({ field: { onChange, value, name, ref } }) => (
+              <TextSimpleComponent
+                helperText={
+                  errors.workItemId?.message ?? (workItems && workItems.length === 0 && _VALUES.UNABLE_WORKITEMS)
+                }
+                error={!!errors.workItemId}
+                value={
+                  <Dropdown
+                    loading={workItemsLoading}
+                    itemToString={(item) => {
+                      return item && item['id'] ? JSON.stringify(item['id']) : '';
+                    }}
+                    error={!!errors.workItemId}
                     value={value}
                     ref={ref}
-                    error={!!errors.date}
-                    type="date"
-                    inline
                     onChange={(e, data) => {
-                      onChange(e);
+                      const val = data.value
+                        ? data.value['id']
+                          ? data.value['id'].toString()
+                          : data.value
+                          ? data.value.toString()
+                          : ''
+                        : '';
+                      onChange(val);
+                      setValue('workItemId', val);
+                      trigger('workItemId');
                     }}
-                  />
-                );
-              }}
-              name={'date'}
-            />
-            <Controller
-              control={control}
-              defaultValue={'0'}
-              render={({ field: { onChange, value, name, ref } }) => {
-                if (value === '') setValue(name, '0');
-                return (
-                  <Input
-                    label={_VALUES.HOURS}
-                    placeholder={_VALUES.HOURS}
-                    name={name}
-                    value={value === '' ? '0' : value}
-                    ref={ref}
-                    labelPosition="inline"
-                    inline
-                    error={!!errors.timeHours}
-                    type="number"
-                    min={0}
-                    onChange={(e, data) => {
-                      onChange(e);
-                      if (!data || (data && data.value === '')) setValue(name, '0');
-                      trigger('timeMinutes');
-                      trigger('timeHours');
+                    renderItem={(Component: React.ElementType, props: any): React.ReactNode => {
+                      let image = '';
+                      switch (props.fields['System.WorkItemType']) {
+                        case WorkItemType.bug:
+                          image = bug;
+                          break;
+                        case WorkItemType.epic:
+                          image = epic;
+                          break;
+                        case WorkItemType.feature:
+                          image = feature;
+                          break;
+                        case WorkItemType.product:
+                          image = product;
+                          break;
+                        case WorkItemType.task:
+                          image = task;
+                          break;
+                      }
+                      const assignedTo = props.fields['System.AssignedTo']
+                        ? props.fields['System.AssignedTo'].displayName
+                        : 'Undefined';
+                      return (
+                        <Component
+                          active={props.active}
+                          selected={props.selected}
+                          accessibilityItemProps={props.accessibilityItemProps}
+                          className="cursor-pointer"
+                          key={props.id}
+                          image={image}
+                          header={`${props.id} | ${props.fields['System.Title']}`}
+                          content={assignedTo}
+                        />
+                      );
                     }}
-                  />
-                );
-              }}
-              name={'timeHours'}
-            />
-            <Controller
-              control={control}
-              defaultValue={'0'}
-              render={({ field: { onChange, value, name, ref } }) => {
-                if (value === '') setValue(name, '0');
-                return (
-                  <Input
-                    label={_VALUES.MINUTES}
-                    placeholder={_VALUES.MINUTES}
-                    name={name}
-                    value={value === '' ? '0' : value}
-                    ref={ref}
-                    labelPosition="inline"
-                    inline
-                    error={!!errors.timeMinutes}
-                    type="number"
-                    min={0}
-                    step={15}
-                    onChange={(e, data) => {
-                      onChange(e);
-                      if (!data || (data && data.value === '')) setValue(name, '0');
-                      trigger('timeHours');
-                      trigger('timeMinutes');
+                    search={(filteredItemsByValue: any[], searchQuery: string) => {
+                      const search = searchQuery ? searchQuery.toString() : '';
+                      const result =
+                        filteredItemsByValue && filteredItemsByValue.filter((item) => String(item.id).includes(search));
+                      if ((!result && workItems) || (result && result.length === 0 && workItems)) {
+                        setId(search);
+                      } else {
+                        if (id !== search) {
+                          setId('');
+                        }
+                      }
+                      return result;
                     }}
+                    items={workItems && workItems.length > 0 ? workItems : []}
+                    placeholder={_VALUES.CHOOSE_WORKITEM}
+                    noResultsMessage={_VALUES.NO_RESULTS_MESSAGE}
                   />
-                );
-              }}
-              name={'timeMinutes'}
-            />
-          </Flex>
-          {types && types?.length > 0 && !loadingTypes ? (
-            <Flex gap="gap.small" vAlign="center">
-              <OptionsIcon />
+                }
+              />
+            )}
+            name={'workItemId'}
+          />
+        </Box>
+      </Grid>
+      <Grid item xs={12}>
+        <Grid container spacing={1}>
+          <Grid item xs={12} md={4}>
+            <Box display="flex" alignItems="center">
+              <Box mr={1}>
+                <ShiftActivityIcon />
+              </Box>
               <Controller
                 control={control}
-                defaultValue={types[0].label}
+                defaultValue={new Date()}
                 render={({ field: { onChange, value, ref } }) => {
                   return (
-                    <Dropdown
-                      loading={loadingTypes}
-                      itemToString={(item) => {
-                        return item ? (item['label'] ? item['label'] : item.toString()) : '';
+                    <Datepicker
+                      input={{
+                        error: !!errors.date,
+                        value: new Date(value).toLocaleDateString(),
                       }}
-                      value={value}
                       ref={ref}
-                      onChange={(e, data) => {
-                        const val = data.value
-                          ? data.value['label']
-                            ? data.value['label'].toString()
-                            : data.value
-                            ? data.value.toString()
-                            : ''
-                          : '';
-                        onChange(val);
-                        setValue('type', val);
+                      onDateChange={(e, data) => {
+                        console.log('dataChange', data);
+                        onChange(e);
+                        setValue('date', data && data?.value ? data.value.toLocaleDateString('sv-SE') : '');
                       }}
-                      renderItem={(Component: React.ElementType, props: any): React.ReactNode => {
-                        return (
-                          <Component
-                            active={props.active}
-                            selected={props.selected}
-                            accessibilityItemProps={props.accessibilityItemProps}
-                            className="cursor-pointer"
-                            key={props.value}
-                            header={`${props.label}`}
-                          />
-                        );
-                      }}
-                      items={types && types?.length > 0 ? types : []}
-                      placeholder={_VALUES.CHOOSE_ACTIVITY}
-                      noResultsMessage={_VALUES.NO_RESULTS_MESSAGE}
                     />
                   );
                 }}
-                name={'type'}
+                name={'date'}
               />
-            </Flex>
-          ) : (
-            loadingTypes && <Loader />
-          )}
-          <Flex gap="gap.small" vAlign="center">
-            <CalendarAgendaIcon />
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Box ml={3} sx={{ display: { xs: 'block', md: 'none' } }}>
+              <Grid container flexDirection="column">
+                <Grid item xs={3}>
+                  {_VALUES.HOURS}
+                </Grid>
+                <Grid item xs={9}>
+                  <Controller
+                    control={control}
+                    defaultValue={'0'}
+                    render={({ field: { onChange, value, name, ref } }) => {
+                      if (value === '') setValue(name, '0');
+                      return (
+                        <Input
+                          placeholder={_VALUES.HOURS}
+                          name={name}
+                          value={value === '' ? '0' : value}
+                          ref={ref}
+                          error={!!errors.timeHours}
+                          type="number"
+                          min={0}
+                          onChange={(e, data) => {
+                            onChange(e);
+                            if (!data || (data && data.value === '')) setValue(name, '0');
+                            trigger('timeMinutes');
+                            trigger('timeHours');
+                          }}
+                        />
+                      );
+                    }}
+                    name={'timeHours'}
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+            <Box alignItems="center" sx={{ display: { xs: 'none', md: 'flex' } }}>
+              <Box mr={1}>{_VALUES.HOURS}</Box>
+              <Controller
+                control={control}
+                defaultValue={'0'}
+                render={({ field: { onChange, value, name, ref } }) => {
+                  if (value === '') setValue(name, '0');
+                  return (
+                    <Input
+                      placeholder={_VALUES.HOURS}
+                      name={name}
+                      value={value === '' ? '0' : value}
+                      ref={ref}
+                      error={!!errors.timeHours}
+                      type="number"
+                      min={0}
+                      onChange={(e, data) => {
+                        onChange(e);
+                        if (!data || (data && data.value === '')) setValue(name, '0');
+                        trigger('timeMinutes');
+                        trigger('timeHours');
+                      }}
+                    />
+                  );
+                }}
+                name={'timeHours'}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Box ml={3} sx={{ display: { xs: 'block', md: 'none' } }}>
+              <Grid container flexDirection="column">
+                <Grid item xs={3}>
+                  {_VALUES.MINUTES}
+                </Grid>
+                <Grid item xs={9}>
+                  <Controller
+                    control={control}
+                    defaultValue={'0'}
+                    render={({ field: { onChange, value, name, ref } }) => {
+                      if (value === '') setValue(name, '0');
+                      return (
+                        <Input
+                          placeholder={_VALUES.MINUTES}
+                          name={name}
+                          value={value === '' ? '0' : value}
+                          ref={ref}
+                          error={!!errors.timeMinutes}
+                          type="number"
+                          min={0}
+                          step={15}
+                          onChange={(e, data) => {
+                            onChange(e);
+                            if (!data || (data && data.value === '')) setValue(name, '0');
+                            trigger('timeHours');
+                            trigger('timeMinutes');
+                          }}
+                        />
+                      );
+                    }}
+                    name={'timeMinutes'}
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+            <Box alignItems="center" sx={{ display: { xs: 'none', md: 'flex' } }}>
+              <Box mr={1}>{_VALUES.MINUTES}</Box>
+              <Controller
+                control={control}
+                defaultValue={'0'}
+                render={({ field: { onChange, value, name, ref } }) => {
+                  if (value === '') setValue(name, '0');
+                  return (
+                    <Input
+                      placeholder={_VALUES.MINUTES}
+                      name={name}
+                      value={value === '' ? '0' : value}
+                      ref={ref}
+                      error={!!errors.timeMinutes}
+                      type="number"
+                      min={0}
+                      step={15}
+                      onChange={(e, data) => {
+                        onChange(e);
+                        if (!data || (data && data.value === '')) setValue(name, '0');
+                        trigger('timeHours');
+                        trigger('timeMinutes');
+                      }}
+                    />
+                  );
+                }}
+                name={'timeMinutes'}
+              />
+            </Box>
+          </Grid>
+        </Grid>
+      </Grid>
+      {types && types?.length > 0 && !loadingTypes ? (
+        <Grid item xs={12}>
+          <Box display="flex" alignItems="center">
+            <Box mr={1}>
+              <OptionsIcon />
+            </Box>
             <Controller
               control={control}
-              defaultValue={''}
-              render={({ field: { onChange, value, name, ref } }) => (
-                <TextArea
-                  fluid
-                  name={name}
-                  ref={ref}
-                  onChange={(e) => {
-                    onChange(e);
-                  }}
-                  value={value}
-                />
-              )}
-              name={'notes'}
+              defaultValue={types[0].label}
+              render={({ field: { onChange, value, ref } }) => {
+                return (
+                  <Dropdown
+                    loading={loadingTypes}
+                    itemToString={(item) => {
+                      return item ? (item['label'] ? item['label'] : item.toString()) : '';
+                    }}
+                    value={value}
+                    ref={ref}
+                    onChange={(e, data) => {
+                      const val = data.value
+                        ? data.value['label']
+                          ? data.value['label'].toString()
+                          : data.value
+                          ? data.value.toString()
+                          : ''
+                        : '';
+                      onChange(val);
+                      setValue('type', val);
+                    }}
+                    renderItem={(Component: React.ElementType, props: any): React.ReactNode => {
+                      return (
+                        <Component
+                          active={props.active}
+                          selected={props.selected}
+                          accessibilityItemProps={props.accessibilityItemProps}
+                          className="cursor-pointer"
+                          key={props.value}
+                          header={`${props.label}`}
+                        />
+                      );
+                    }}
+                    items={types && types?.length > 0 ? types : []}
+                    placeholder={_VALUES.CHOOSE_ACTIVITY}
+                    noResultsMessage={_VALUES.NO_RESULTS_MESSAGE}
+                  />
+                );
+              }}
+              name={'type'}
             />
-          </Flex>
-          <Divider />
-          <Flex>
-            <Box mt={2} display="flex" alignItems="center">
-              <Button
-                icon={<SaveIcon size="large" />}
-                primary={!loading}
-                secondary={loading}
-                loading={loading}
-                disabled={loading}
-                content={_VALUES.ADD_TIMELOG}
-                onClick={handleSubmit(onSubmit)}
+          </Box>
+        </Grid>
+      ) : (
+        loadingTypes && <Loader />
+      )}
+      <Grid item xs={12}>
+        <Box display="flex" alignItems="center">
+          <Box mr={1}>
+            <CalendarAgendaIcon />
+          </Box>
+          <Controller
+            control={control}
+            defaultValue={''}
+            render={({ field: { onChange, value, name, ref } }) => (
+              <TextArea
+                fluid
+                name={name}
+                ref={ref}
+                onChange={(e) => {
+                  onChange(e);
+                }}
+                value={value}
               />
-              {error && (
-                <Box ml={2} color="red">
-                  {error}
-                </Box>
-              )}
+            )}
+            name={'notes'}
+          />
+        </Box>
+      </Grid>
+      <Grid item xs={12}>
+        <Divider />
+        <Box mt={2} display="flex" alignItems="center">
+          <Button
+            icon={<SaveIcon size="large" />}
+            primary={!loading}
+            secondary={loading}
+            loading={loading}
+            disabled={loading}
+            content={_VALUES.ADD_TIMELOG}
+            onClick={handleSubmit(onSubmit)}
+          />
+          {error && (
+            <Box ml={2} color="red">
+              {error}
             </Box>
-          </Flex>
-        </Flex>
-      </Flex.Item>
-    </Flex>
+          )}
+        </Box>
+      </Grid>
+    </Grid>
   );
 };
 
