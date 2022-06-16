@@ -9,6 +9,7 @@ import * as vm from 'azure-devops-node-api';
 import * as lim from 'azure-devops-node-api/interfaces/LocationsInterfaces';
 import { TeamsExtensionType } from '../../enums/TeamsExtensionType';
 import TimeLogNewEntriesExternalForm from '../../components/timeLogEntries/forms/TimeLogNewEntriesExternalForm';
+import TimeLogDashboard from '../timeLogDashboard/TimeLogDashboard';
 
 interface TimeLogTeamsExtProps {
   projectId: string;
@@ -55,7 +56,7 @@ const TimeLogTeamsExt: React.FC<TimeLogTeamsExtProps> = (props) => {
     ) : props.extensionType === TeamsExtensionType.newTimeLog && user ? (
       <TimeLogNewEntriesExternalForm user={user} />
     ) : props.extensionType === TeamsExtensionType.dashboard ? (
-      <Box>Comming soon</Box>
+      <TimeLogDashboard user={user} projectId={props.projectId} />
     ) : (
       <></>
     )

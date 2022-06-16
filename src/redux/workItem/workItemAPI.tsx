@@ -170,14 +170,14 @@ export const GetWorkItems = async (id?: string) => {
   );
 };
 
-export const GetEpicsItems = async (id?: string) => {
+export const GetEpicsWorkItemsNode = async () => {
   const witApi: IWorkItemTrackingApi = await WorkItemNodeAPI();
-  const searchId = id ? `AND [System.Id] = ${Number(id)}` : 'AND [System.ChangedDate] >= @today - 7';
   return new Promise<WorkItemTrackingInterfaces.WorkItem[]>((resolve, reject) =>
     witApi
       .queryByWiql(
         {
-          query: `SELECT [System.Id] FROM workitems WHERE [System.TeamProject] = @project AND NOT [System.State] IN ('Completed', 'Closed', 'Cut', 'Resolved', 'Done') ${searchId}`,
+          query:
+            'SELECT [System.Id] FROM workitems WHERE [System.TeamProject] = @project AND System.WorkItemType = "Feature"',
         },
         { projectId: GetProjectTL() }
       )
@@ -186,7 +186,6 @@ export const GetEpicsItems = async (id?: string) => {
           ? witApi
               .getWorkItemsBatch({
                 $expand: 4,
-                //fields: ['System.Id', 'System.Title', 'System.State', 'System.WorkItemType', 'System.AssignedTo'],
                 ids: result.workItems
                   .slice(0, 200)
                   .filter((x) => x.id !== undefined)
