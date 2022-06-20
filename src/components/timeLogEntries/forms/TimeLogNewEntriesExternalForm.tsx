@@ -187,6 +187,7 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
                 error={!!errors.workItemId}
                 value={
                   <Dropdown
+                    fluid
                     loading={workItemsLoading}
                     itemToString={(item) => {
                       return item && item['id'] ? JSON.stringify(item['id']) : '';
@@ -439,6 +440,7 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
               render={({ field: { onChange, value, ref } }) => {
                 return (
                   <Dropdown
+                    fluid
                     loading={loadingTypes}
                     itemToString={(item) => {
                       return item ? (item['label'] ? item['label'] : item.toString()) : '';
