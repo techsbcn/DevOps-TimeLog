@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { _VALUES } from '../../resources/_constants/values';
 import { MainWrapperComponent, SimpleTableComponent } from 'techsbcn-storybook';
 import { TimeLogEntry } from '../../interfaces';
 import { getHoursAndMinutes } from '../../helpers';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 
 interface TimeLogTableProps {
   documents: TimeLogEntry[];
@@ -30,7 +32,8 @@ const TimeLogTable: React.FC<TimeLogTableProps> = (props) => {
             rowViewFormat: (row) =>
               props.urlWorkItem ? (
                 <a className="afn" target="_blank" href={`${props.urlWorkItem}/${row.workItemId}`} rel="noreferrer">
-                  {`${row.workItemId}${row.workItemName ? ` - ${row.workItemName}` : ''}`}
+                  {`${row.workItemId}${row.workItemName ? ` - ${row.workItemName}` : ''} `}
+                  <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
                 </a>
               ) : (
                 `${row.workItemId}${row.workItemName ? ` - ${row.workItemName}` : ''}`

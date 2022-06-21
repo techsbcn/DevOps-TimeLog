@@ -19,8 +19,9 @@ body{
     height: 100vh;
     font-size: $body-size;
     .sucessImg{
-        width: 350px;
-        height: 100%;
+        width: auto;
+        height: auto;
+        max-width: 100%;
     }
     .css-0 {
         overflow: inherit!important;
