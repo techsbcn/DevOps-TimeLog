@@ -1,15 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Flex,
-  Dropdown,
-  Input,
-  TextArea,
-  Button,
-  Header,
-  Divider,
-  Loader,
-  Datepicker,
-} from '@fluentui/react-northstar';
+import { Dropdown, Input, TextArea, Button, Header, Divider, Loader, Datepicker } from '@fluentui/react-northstar';
 import {
   EditIcon,
   ShiftActivityIcon,
@@ -21,7 +11,7 @@ import { _VALUES } from '../../../resources/_constants/values';
 import * as yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { getHoursFromMinutes, getMinutesFromHours, SelectAsyncHelper } from '../../../helpers';
+import { getHoursAndMinutes, getHoursFromMinutes, getMinutesFromHours, SelectAsyncHelper } from '../../../helpers';
 import { TimeLogEntry, UserContext } from '../../../interfaces';
 import { GetWorkItemNodeAPI, GetWorkItems, UpdateWorkItemNodeAPI } from '../../../redux/workItem/workItemAPI';
 import bug from './../../../../static/bug.png';
@@ -34,6 +24,8 @@ import { TextSimpleComponent } from 'techsbcn-storybook';
 import { CreateDocumentNodeAPi, GetDocumentsAPI } from '../../../redux/extensionDataManager/extensionDataManagerAPI';
 import * as VSSInterfaces from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
 import { Box, Grid } from '@mui/material';
+import { TimeLogSuccess } from '../../../Contributions/TimeLogSuccess/TimeLogSuccess';
+import * as microsoftTeams from '@microsoft/teams-js';
 
 interface TimeLogNewEntriesExternalFormProps {
   user: UserContext;
@@ -44,6 +36,8 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
   const [workItemsLoading, setWorkItemsLoading] = React.useState(false);
   const [id, setId] = React.useState('');
   const [loading, setLoading] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
+  const [timeLogEntryState, setTimeLogEntry] = React.useState<TimeLogEntry>();
   const [error, setError] = React.useState('');
 
   const EntrySchema = yup.object().shape(
@@ -79,6 +73,7 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
     setWorkItemsLoading(true);
     GetWorkItems(id)
       .then((result) => {
+        setError('');
         setWorkItems(result);
         setWorkItemsLoading(false);
       })
@@ -147,9 +142,8 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
             CreateDocumentNodeAPi(process.env.ENTRIES_COLLECTION_NAME as string, timeEntry)
               .then(() => {
                 setLoading(false);
-                window.location.href = `${
-                  window.location.href.split('/dist')[0]
-                }/dist/TimeLogSuccess/TimeLogSuccess.html`;
+                setTimeLogEntry(timeEntry);
+                setSuccess(true);
               })
               .catch((error) => {
                 setError(_VALUES.CREATE_DOCUMENT_FAILED);
@@ -166,7 +160,21 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
         setLoading(false);
       });
   };
-  return (
+
+  const postMessage = () => {
+    timeLogEntryState &&
+      microsoftTeams.tasks.submitTask({
+        user: timeLogEntryState.user,
+        workItem: `${timeLogEntryState.workItemId} - ${timeLogEntryState.workItemName}`,
+        time: getHoursAndMinutes(timeLogEntryState.time),
+        type: timeLogEntryState.type,
+        note: timeLogEntryState.notes,
+      });
+  };
+
+  return success ? (
+    <TimeLogSuccess actionButton={{ title: _VALUES.POST_MESSAGE, action: postMessage }} />
+  ) : (
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Header as="h3" styles={{ fontWeight: 'bold' }} content={_VALUES.NEW_TIMELOG_ENTRY} />
@@ -285,7 +293,6 @@ const TimeLogNewEntriesExternalForm: React.FC<TimeLogNewEntriesExternalFormProps
                       }}
                       ref={ref}
                       onDateChange={(e, data) => {
-                        console.log('dataChange', data);
                         onChange(e);
                         setValue('date', data && data?.value ? data.value.toLocaleDateString('sv-SE') : '');
                       }}

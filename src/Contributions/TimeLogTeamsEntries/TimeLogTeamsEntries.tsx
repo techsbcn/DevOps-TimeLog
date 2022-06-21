@@ -7,4 +7,4 @@ export const TimeLogTeamsEntries: React.FC = () => {
   return <TeamsInitializeAuth extensionType={TeamsExtensionType.newTimeLog} />;
 };
 
-showRootTeamsComponent(<TimeLogTeamsEntries />);
+showRootTeamsComponent(<TimeLogTeamsEntries />, true);
