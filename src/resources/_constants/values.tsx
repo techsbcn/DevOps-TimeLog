@@ -97,4 +97,5 @@ export const _VALUES: ObjectKey = {
   UNABLE_WORKITEMS: Translate.t('unableWorkItems'),
   CREATE_DOCUMENT_FAILED: Translate.t('CreateDocumentFailedException'),
   POST_MESSAGE: Translate.t('postMessage'),
+  STATS: Translate.t('stats'),
 };

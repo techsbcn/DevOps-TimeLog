@@ -2,7 +2,7 @@ import * as SDK from 'azure-devops-extension-sdk';
 import * as API from 'azure-devops-extension-api';
 import { IWorkItemFormService, WorkItemTrackingServiceIds } from 'azure-devops-extension-api/WorkItemTracking';
 import * as WorkItemTracking from 'azure-devops-extension-api/WorkItemTracking';
-import { ErrorHandler, GetProjectTL } from '../../helpers';
+import { AuthHeader, ErrorHandler, GetProjectTL, ResponseHandler } from '../../helpers';
 import { GetWebApi } from '../apiSlice';
 import * as nodeApi from 'azure-devops-node-api';
 import { IWorkItemTrackingApi } from 'azure-devops-node-api/WorkItemTrackingApi';
@@ -177,7 +177,7 @@ export const GetEpicsWorkItemsNode = async () => {
       .queryByWiql(
         {
           query:
-            'SELECT [System.Id] FROM workitems WHERE [System.TeamProject] = @project AND System.WorkItemType = "Feature"',
+            'SELECT [System.Id] FROM workitems WHERE [System.TeamProject] = @project AND System.WorkItemType = "Epic"',
         },
         { projectId: GetProjectTL() }
       )
@@ -196,6 +196,27 @@ export const GetEpicsWorkItemsNode = async () => {
                 reject(ErrorHandler({ Id: 'GetWorkItemsException' }));
               })
           : resolve([]);
+      })
+      .catch(() => {
+        reject(ErrorHandler({ Id: 'GetWorkItemsException' }));
+      })
+  );
+};
+
+export const GetParentsWorkItemsNode = async (workItemsIds: number[]) => {
+  const requestOptions: RequestInit = {
+    method: 'GET',
+    headers: AuthHeader(),
+  };
+
+  return new Promise<any[]>((resolve, reject) =>
+    fetch(
+      `https://analytics.dev.azure.com/TechsBCN/eb2348ad-61f6-4abe-a64c-0203e9674fae/_odata/v2.0//WorkItems?$select=WorkItemId,Title&$expand=Parent($select=WorkItemId,Title)&$filter=WorkItemId in (${workItemsIds})`,
+      requestOptions
+    )
+      .then(ResponseHandler)
+      .then((result: any[]) => {
+        resolve(result);
       })
       .catch(() => {
         reject(ErrorHandler({ Id: 'GetWorkItemsException' }));

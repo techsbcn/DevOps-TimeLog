@@ -56,7 +56,14 @@ const TimeLogTeamsExt: React.FC<TimeLogTeamsExtProps> = (props) => {
     ) : props.extensionType === TeamsExtensionType.newTimeLog && user ? (
       <TimeLogNewEntriesExternalForm user={user} />
     ) : props.extensionType === TeamsExtensionType.dashboard ? (
-      <TimeLogDashboard user={user} projectId={props.projectId} />
+      <TimeLogDashboard
+        user={user}
+        projectId={props.projectId}
+        documents={
+          useFetchDocuments.data && useFetchDocuments.data.items.length > 0 ? useFetchDocuments.data.items : []
+        }
+        loadingDocuments={useFetchDocuments.isFetching}
+      />
     ) : (
       <></>
     )

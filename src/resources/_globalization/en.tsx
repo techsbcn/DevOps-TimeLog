@@ -103,4 +103,5 @@ export const GLOBAL_EN = {
   unableProjects: 'Please make sure you have an account with access to a Azure DevOps project in order to continue.',
   unableWorkItems: 'Within the Azure DevOps organization there should be work Items available.',
   postMessage: 'Post message',
+  stats: 'Stats',
 };

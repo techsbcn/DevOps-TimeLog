@@ -104,4 +104,5 @@ export const GLOBAL_ES = {
     'Por favor, asegúrese de tener una cuenta con acceso a un proyecto de Azure DevOps para poder continuar.',
   unableWorkItems: 'Dentro de la organización de Azure DevOps debe haber elementos de trabajo disponibles.',
   postMessage: 'Publicar mensaje',
+  stats: 'Estadísticas',
 };
