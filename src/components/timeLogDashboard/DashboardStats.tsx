@@ -279,7 +279,12 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
                   series: [
                     {
                       name: '',
-                      data: chartMaps.sort((a, b) => a.id - b.id),
+                      data: _.cloneDeep(chartMaps)
+                        .sort((a, b) => a.id - b.id)
+                        .map((x) => {
+                          x.y = getDaysFromMinutes(x.y);
+                          return x;
+                        }),
                     },
                   ],
                 }}
