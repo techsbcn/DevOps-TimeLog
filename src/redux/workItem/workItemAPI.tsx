@@ -2,12 +2,13 @@ import * as SDK from 'azure-devops-extension-sdk';
 import * as API from 'azure-devops-extension-api';
 import { IWorkItemFormService, WorkItemTrackingServiceIds } from 'azure-devops-extension-api/WorkItemTracking';
 import * as WorkItemTracking from 'azure-devops-extension-api/WorkItemTracking';
-import { AuthHeader, ErrorHandler, GetProjectTL, ResponseHandler } from '../../helpers';
 import { GetWebApi } from '../apiSlice';
 import * as nodeApi from 'azure-devops-node-api';
 import { IWorkItemTrackingApi } from 'azure-devops-node-api/WorkItemTrackingApi';
 import * as WorkItemTrackingInterfaces from 'azure-devops-node-api/interfaces/WorkItemTrackingInterfaces';
 import * as VSSInterfaces from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
+import { GetProjectTL, AuthHeader } from '../../helpers/RequestHeaders';
+import { ErrorHandler, ResponseHandler } from '../../helpers/ResponseHandler';
 
 export const WorkItemFormService = (async () => {
   return await SDK.getService<IWorkItemFormService>(WorkItemTrackingServiceIds.WorkItemFormService);
@@ -152,7 +153,14 @@ export const GetWorkItems = async (id?: string) => {
         result.workItems && result.workItems.length > 0
           ? witApi
               .getWorkItemsBatch({
-                fields: ['System.Id', 'System.Title', 'System.State', 'System.WorkItemType', 'System.AssignedTo'],
+                fields: [
+                  'System.Id',
+                  'System.Title',
+                  'System.State',
+                  'System.WorkItemType',
+                  'System.AssignedTo',
+                  'System.Tags',
+                ],
                 ids: result.workItems
                   .slice(0, 200)
                   .filter((x) => x.id !== undefined)
@@ -170,14 +178,14 @@ export const GetWorkItems = async (id?: string) => {
   );
 };
 
-export const GetEpicsWorkItemsNode = async () => {
-  const witApi: IWorkItemTrackingApi = await WorkItemNodeAPI();
+export const GetWorkItemById = async (ids: string[], token?: string) => {
+  const witApi: IWorkItemTrackingApi = await WorkItemNodeAPI(token);
+  const searchId = `AND [System.Id] in (${ids})`;
   return new Promise<WorkItemTrackingInterfaces.WorkItem[]>((resolve, reject) =>
     witApi
       .queryByWiql(
         {
-          query:
-            'SELECT [System.Id] FROM workitems WHERE [System.TeamProject] = @project AND System.WorkItemType = "Epic"',
+          query: `SELECT [System.Id] FROM workitems WHERE [System.TeamProject] = @project AND NOT [System.State] IN ('Completed', 'Closed', 'Cut', 'Resolved', 'Done') ${searchId}`,
         },
         { projectId: GetProjectTL() }
       )
@@ -185,7 +193,14 @@ export const GetEpicsWorkItemsNode = async () => {
         result.workItems && result.workItems.length > 0
           ? witApi
               .getWorkItemsBatch({
-                $expand: 4,
+                fields: [
+                  'System.Id',
+                  'System.Title',
+                  'System.State',
+                  'System.WorkItemType',
+                  'System.AssignedTo',
+                  'System.Tags',
+                ],
                 ids: result.workItems
                   .slice(0, 200)
                   .filter((x) => x.id !== undefined)
@@ -203,23 +218,84 @@ export const GetEpicsWorkItemsNode = async () => {
   );
 };
 
-export const GetParentsWorkItemsNode = async (workItemsIds: number[]) => {
+export const GetTagsNodeAPI = async (project?: string, token?: string) => {
+  const projectStr = project ?? GetProjectTL();
+  const witApi: IWorkItemTrackingApi = await WorkItemNodeAPI(token);
+  return new Promise<WorkItemTrackingInterfaces.WorkItemTagDefinition[]>((resolve, reject) =>
+    witApi
+      .getTags(projectStr)
+      .then((result: WorkItemTrackingInterfaces.WorkItemTagDefinition[]) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(ErrorHandler(error));
+      })
+  );
+};
+
+export const GetEpicsWorkItemsNode = async (organizationName?: string, projectId?: string, accessToken?: string) => {
   const requestOptions: RequestInit = {
     method: 'GET',
-    headers: AuthHeader(),
+    headers: AuthHeader(accessToken),
   };
 
   return new Promise<any[]>((resolve, reject) =>
     fetch(
-      `https://analytics.dev.azure.com/TechsBCN/eb2348ad-61f6-4abe-a64c-0203e9674fae/_odata/v2.0//WorkItems?$select=WorkItemId,Title&$expand=Parent($select=WorkItemId,Title)&$filter=WorkItemId in (${workItemsIds})`,
+      `https://analytics.dev.azure.com/${organizationName}/${projectId}/_odata/v2.0//WorkItems?$select=WorkItemId,Title&$expand=Parent($select=WorkItemId,Title)&$filter=WorkItemType eq 'Epic'`,
       requestOptions
     )
       .then(ResponseHandler)
-      .then((result: any[]) => {
-        resolve(result);
+      .then((result: any) => {
+        resolve(result.value);
       })
       .catch(() => {
         reject(ErrorHandler({ Id: 'GetWorkItemsException' }));
       })
   );
+};
+
+export const GetParentsWorkItemsNode = async (
+  workItemsIds: number[],
+  organizationName?: string,
+  projectId?: string,
+  accessToken?: string
+) => {
+  const requestOptions: RequestInit = {
+    method: 'GET',
+    headers: AuthHeader(accessToken),
+  };
+
+  return new Promise<any[]>((resolve, reject) =>
+    fetch(
+      `https://analytics.dev.azure.com/${organizationName}/${projectId}/_odata/v2.0//WorkItems?$select=WorkItemId,Title,TagNames&$expand=Parent($select=WorkItemId,Title)&$filter=WorkItemId in (${workItemsIds})`,
+      requestOptions
+    )
+      .then(ResponseHandler)
+      .then((result: any) => {
+        resolve(result.value);
+      })
+      .catch(() => {
+        reject(ErrorHandler({ Id: 'GetWorkItemsException' }));
+      })
+  );
+};
+
+export const GetParentRecursive = async (
+  workItemId: number,
+  organizationName?: string,
+  projectId?: string,
+  accessToken?: string
+) => {
+  let workItem: any;
+  await GetParentsWorkItemsNode([workItemId], organizationName, projectId, accessToken)
+    .then((result) => {
+      workItem = result[0];
+    })
+    .catch((error) => {});
+
+  if (workItem && workItem.Parent) {
+    return GetParentRecursive(workItem.Parent.WorkItemId, organizationName, projectId, accessToken);
+  }
+
+  return workItem;
 };

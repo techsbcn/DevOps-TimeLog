@@ -1,8 +1,10 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { apiSlice } from './apiSlice';
+import coreReducer from './core/coreSlice';
 
 const store = configureStore({
   reducer: {
+    core: coreReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => {
@@ -11,6 +13,7 @@ const store = configureStore({
 });
 
 export const getState = (state: RootState) => state;
+export const getCoreState = (state: RootState) => state.core;
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;

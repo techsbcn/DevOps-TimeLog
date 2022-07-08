@@ -1,4 +1,5 @@
-import { AuthHeader, ErrorHandler, ResponseHandler } from '../../helpers';
+import { AuthHeader } from '../../helpers/RequestHeaders';
+import { ErrorHandler, ResponseHandler } from '../../helpers/ResponseHandler';
 
 export const GetPublicAlias = async (accessToken?: string) => {
   const requestOptions: RequestInit = {

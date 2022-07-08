@@ -1,37 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { _VALUES } from '../../resources/_constants/values';
 import { CircularProgress, Box, Avatar } from '@mui/material';
 import * as microsoftTeams from '@microsoft/teams-js';
 import { Button } from '@fluentui/react-northstar';
-import { GetTokenTL, GetProjectTL, GetOrganizationTL, GetValidationTOKEN } from '../../helpers';
 import ChooseInfo from './ChooseInfo';
 import { TeamsExtensionType } from '../../enums/TeamsExtensionType';
 import loginImg from './../../../static/loginImg.png';
 import CheckExtension from './CheckExtension';
 import { ErrorIcon } from '@fluentui/react-icons-northstar';
+import { GetValidationTOKEN, GetTokenTL, GetProjectTL, GetOrganizationTL } from '../../helpers/RequestHeaders';
+import { useAppDispatch } from '../../helpers/hooks';
+import { addToken } from '../../redux/core/coreSlice';
+import { ContextType } from '../../enums/ContextType';
+
 interface TeamsInitializeAuthProps {
   extensionType: TeamsExtensionType;
 }
 
 const TeamsInitializeAuth: React.FC<TeamsInitializeAuthProps> = (props) => {
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState<boolean>(true);
   const [accessToken, setAccessToken] = useState<any>();
   const [failureCallback, setFailureCallBack] = useState<boolean>(false);
 
-  useEffect(() => {
-    microsoftTeams.initialize();
-    microsoftTeams.appInitialization.notifySuccess();
-    GetValidationTOKEN().then((response) => {
-      if (response) {
-        setAccessToken(GetTokenTL());
-        setLoading(false);
-      } else {
-        handleLogin();
-      }
-    });
-  }, []);
-
-  const handleLogin = () => {
+  const handleLogin = useCallback(() => {
     microsoftTeams.initialize(() => {
       microsoftTeams.authentication.authenticate({
         url: `${window.location.href.split('/dist')[0]}/dist/auth-start.html`,
@@ -39,6 +31,7 @@ const TeamsInitializeAuth: React.FC<TeamsInitializeAuthProps> = (props) => {
         height: 535,
         successCallback: (result: any) => {
           setAccessToken(result.accessToken);
+          dispatch(addToken({ contextType: ContextType.TEAMS, token: result.accessToken }));
           localStorage.setItem('TL_TOKEN', JSON.stringify(result.accessToken));
           setFailureCallBack(false);
           setLoading(false);
@@ -53,7 +46,20 @@ const TeamsInitializeAuth: React.FC<TeamsInitializeAuthProps> = (props) => {
         },
       });
     });
-  };
+  }, [dispatch]);
+
+  useEffect(() => {
+    microsoftTeams.initialize();
+    microsoftTeams.appInitialization.notifySuccess();
+    GetValidationTOKEN().then((response) => {
+      if (response) {
+        setAccessToken(GetTokenTL());
+        setLoading(false);
+      } else {
+        handleLogin();
+      }
+    });
+  }, [handleLogin]);
 
   return !loading ? (
     accessToken ? (

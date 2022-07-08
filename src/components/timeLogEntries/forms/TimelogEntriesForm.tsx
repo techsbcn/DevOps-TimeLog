@@ -7,8 +7,8 @@ import { MainWrapperComponent, TextFieldComponent, ButtonComponent, SelectField 
 import { _VALUES } from '../../../resources/_constants/values';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { SelectAsyncHelper } from '../../../helpers';
 import { GetDocuments } from '../../../redux/extensionDataManager/extensionDataManagerAPI';
+import { SelectAsyncHelper } from '../../../helpers/SelectHelper';
 
 interface TimelogEntriesFormProps {
   action: (data: any) => void;

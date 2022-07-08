@@ -3945,7 +3945,7 @@ __metadata:
     stream-browserify: ^3.0.0
     stream-http: ^3.2.0
     style-loader: ^3.3.1
-    techsbcn-storybook: ^0.20.0
+    techsbcn-storybook: ^0.20.1
     tfx-cli: ^0.11.0
     ts-jest: ^27.1.4
     ts-loader: ^9.2.8
@@ -14030,9 +14030,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"techsbcn-storybook@npm:^0.20.0":
-  version: 0.20.0
-  resolution: "techsbcn-storybook@npm:0.20.0"
+"techsbcn-storybook@npm:^0.20.1":
+  version: 0.20.1
+  resolution: "techsbcn-storybook@npm:0.20.1"
   dependencies:
     "@emotion/react": ^11.7.0
     "@emotion/styled": ^11.6.0
@@ -14054,7 +14054,7 @@ __metadata:
     yup: ^0.32.11
   peerDependencies:
     react: "*"
-  checksum: 0b2999912f2a2b34445db7c650b914bf32cc3be6ba8f4c225fe6dd8f2e8d3b5d573dfecaaeddb136ee7b6250ef4122bd8de1532d5ca3f551d6640642197b47bb
+  checksum: 9bd6c5826075b1c3c30455252e6e87f8cd4d5c243aaf145cdc3e4e0644b541656c0d734b2e7ea399e5088eff75133b0e4c53ca03642d71770bde82df264441d0
   languageName: node
   linkType: hard
 

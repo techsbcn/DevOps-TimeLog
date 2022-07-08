@@ -108,4 +108,27 @@ body{
     .circular-progress-main-color{
         color: $main-color!important;
     }
+    .box-loading-relative{
+        position: relative;
+        height: 100%;
+        opacity: 0.5;
+        .MuiCircularProgress-root{
+            z-index: 5;
+            width: 80px !important;
+            height: 80px !important;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 5px;
+            margin: auto;
+        }
+    }
+    .table-dashboard{
+        .MuiTableCell-head{
+            background-color: $main-color!important;
+            .table-header-cell{
+                color: white !important;
+            }
+        }
+    }
 }

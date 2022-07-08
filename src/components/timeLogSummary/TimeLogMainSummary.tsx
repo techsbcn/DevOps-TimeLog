@@ -6,16 +6,17 @@ import TimeLogDetails from '../../components/timeLogSummary/TimeLogDetails';
 import TimeLogTable from '../../components/timeLogSummary/TimeLogTable';
 import TimeLogFilters from '../../components/timeLogSummary/TimeLogFilters';
 import { _VALUES } from '../../resources/_constants/values';
+import { useAppSelector } from '../../helpers';
+import { getCoreState } from '../../redux/store';
 
 interface TimeLogMainSummaryProps {
   documents: TimeLogEntry[];
   loadingDocuments: boolean;
   user?: UserContext;
-  projectId?: string;
-  urlWorkItem?: string;
 }
 
 const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
+  const { context, config } = useAppSelector(getCoreState);
   const [filters, setFilters] = useState<TimeLogEntryFilters>(() => {
     const curr = new Date();
     return {
@@ -58,7 +59,7 @@ const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
   const loadDocuments = React.useCallback(() => {
     if (filters && props.documents.length > 0) {
       setLoadingFilters(true);
-      let documents = filters && filters.userIds ? JSON.parse(JSON.stringify(props.documents)) : [];
+      let documents = filters && filters.userIds ? _.cloneDeep(props.documents) : [];
       documents = filterByDates(documents);
       documents = filterByUserIds(documents);
       setTimeLogEntries(_.orderBy(documents, 'date', 'asc'));
@@ -84,7 +85,8 @@ const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
           filters={filters}
           user={props.user}
           loading={loadingFilters}
-          projectId={props.projectId}
+          projectId={config.project?.value}
+          contextType={context}
         />
       </Grid>
       <Grid item xs={12}>
@@ -97,7 +99,7 @@ const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
         <TimeLogTable
           documents={timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
           loading={props.loadingDocuments || loadingFilters}
-          urlWorkItem={props.urlWorkItem}
+          urlWorkItem={`https://dev.azure.com/${config.organization?.label}/${config.project?.value}/_workitems/edit`}
         />
       </Grid>
     </Grid>
