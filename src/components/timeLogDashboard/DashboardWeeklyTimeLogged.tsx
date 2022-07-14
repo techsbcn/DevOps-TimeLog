@@ -50,7 +50,7 @@ const DashboardWeeklyTimeLogged: React.FC<DashboardWeeklyTimeLoggedProps> = (pro
   }, []);
 
   const endOfWeek = useCallback((dt: Date) => {
-    return new Date(new Date(dt.setDate(dt.getDate() - dt.getDay() + 7)).setHours(23, 59, 59));
+    return new Date(new Date(dt.setDate(dt.getDate() - dt.getDay() + (dt.getDay() == 0 ? 0 : 7))).setHours(23, 59, 59));
   }, []);
 
   const weeksBetween = useCallback(

@@ -21,7 +21,8 @@ const TimeLogDashboard: React.FC<TimeLogDashboardProps> = (props) => {
   const [timeLogEntries, setTimeLogEntries] = useState<TimeLogEntry[]>();
 
   const [filters, setFilters] = useState<TimeLogEntryFilters>(() => {
-    const curr = new Date('07/10/2022');
+    const curr = new Date();
+
     return {
       timeFrom: new Date(
         new Date(curr.setDate(curr.getDate() - curr.getDay() + (curr.getDay() == 0 ? -6 : 1))).setHours(0, 0, 0)

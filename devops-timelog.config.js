@@ -89,7 +89,7 @@ module.exports = (env) => {
         },
       },
     ],
-    scopes: ['vso.work', 'vso.project'],
+    scopes: ['vso.work', 'vso.project', '499b84ac-1321-427f-aa17-267ca6975798/user_impersonation'],
     screenshots: [
       {
         path: 'images/time-log-new-entry.png',
