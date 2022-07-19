@@ -12,12 +12,14 @@ import { _VALUES } from '../../resources/_constants/values';
 export const TimelogAdmin: React.FC = () => {
   const [timeLogType, setTimeLogType] = useState<TimeType>();
   const [activeTab, setActiveTab] = useState(0);
+  const [version, setVersion] = useState<string>('');
 
   useEffect(() => {
     SDK.init().then(async () => {
       SDK.register(SDK.getContributionId(), () => {});
       await SDK.ready();
       const user = SDK.getUser();
+      setVersion(SDK.getExtensionContext().version);
       user && setTimeLogType({ user: user.displayName, userId: user.id });
     });
   }, []);
@@ -41,7 +43,7 @@ export const TimelogAdmin: React.FC = () => {
       </Grid>
       <Grid item xs={12}></Grid>
     </Grid>,
-    <About key={1} />,
+    <About key={1} version={version} />,
   ];
 
   const renderTabContent = (tab: number) => {

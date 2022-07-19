@@ -234,8 +234,8 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
       <Grid container spacing={5}>
         <Grid item xs={12} md={6}>
           {chartMaps && chartMaps.length > 0 ? (
-            <Box className={!workItemsLoading ? 'box-loading-relative' : ''}>
-              {!workItemsLoading && <CircularProgress className="circular-progress-main-color" />}
+            <Box className={workItemsLoading ? 'box-loading-relative' : ''}>
+              {workItemsLoading && <CircularProgress className="circular-progress-main-color" />}
               <HighchartsReact
                 highcharts={Highcharts}
                 options={{
