@@ -17,7 +17,6 @@ interface TimeLogDashboardProps {
 
 const TimeLogDashboard: React.FC<TimeLogDashboardProps> = (props) => {
   const { context, config } = useAppSelector(getCoreState);
-
   const [timeLogEntries, setTimeLogEntries] = useState<TimeLogEntry[]>();
 
   const [filters, setFilters] = useState<TimeLogEntryFilters>(() => {

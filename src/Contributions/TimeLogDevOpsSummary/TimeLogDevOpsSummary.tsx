@@ -15,6 +15,7 @@ export const TimeLogDevOpsSummary: React.FC = () => {
   const dispatch = useAppDispatch();
   const [user, setUser] = useState<SDK.IUserContext>();
   const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
     setLoading(true);
     SDK.init().then(async () => {
@@ -64,28 +65,30 @@ export const TimeLogDevOpsSummary: React.FC = () => {
   return !loading ? (
     <>
       <Grid container>
-        <Grid item xs={6}>
+        <Grid item xs={3}>
           <Box
             fontWeight={'bold'}
             fontSize={'1rem'}
             className={` main-color hover-underline ${activeTab === 0 && 'text-main-underline'}`}
             onClick={() => setActiveTab(0)}
+            width="fit-content"
           >
             {_VALUES.LOG_ENTRIES}
           </Box>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={3}>
           <Box
             fontWeight={'bold'}
             fontSize={'1rem'}
             className={`main-color hover-underline ${activeTab === 1 && 'text-main-underline'}`}
             onClick={() => setActiveTab(1)}
+            width="fit-content"
           >
             {_VALUES.DASHBOARD}
           </Box>
         </Grid>
       </Grid>
-      <Box mt={4}>{renderTabContent(activeTab)}</Box>
+      <Box mt={activeTab === 0 ? 2 : 4}>{renderTabContent(activeTab)}</Box>
     </>
   ) : (
     <Box textAlign="center" display="flex" alignItems="center" justifyContent="center">

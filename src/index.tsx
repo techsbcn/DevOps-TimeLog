@@ -10,6 +10,7 @@ import React, { createContext } from 'react';
 import { useTeamsFx } from '@microsoft/teamsfx-react';
 import { Provider as ProviderFluent, teamsTheme, ThemePrepared } from '@fluentui/react-northstar';
 import { TeamsFx } from '@microsoft/teamsfx';
+import NavbarTechsbcnPoweredComponent from './components/shared/NavbarTechsbcnPoweredComponent';
 
 export const initSQL = () => {
   const worker = new Worker(new URL('./index.worker.js', import.meta.url));
@@ -23,7 +24,14 @@ export const showRootComponent = (component: React.ReactElement<any>) => {
   container &&
     createRoot(container).render(
       <Provider store={store}>
-        <MainLayoutSimple mainComponent={<Box mt={2}>{component}</Box>} />
+        <MainLayoutSimple
+          mainComponent={
+            <>
+              <NavbarTechsbcnPoweredComponent />
+              <Box mb={2}>{component}</Box>
+            </>
+          }
+        />
       </Provider>
     );
 };

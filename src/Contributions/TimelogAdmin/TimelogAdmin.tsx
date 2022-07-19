@@ -49,31 +49,33 @@ export const TimelogAdmin: React.FC = () => {
   };
 
   return (
-    <Container maxWidth={false}>
+    <>
       <Grid container>
-        <Grid item xs={6}>
+        <Grid item xs={3}>
           <Box
             fontWeight={'bold'}
             fontSize={'1rem'}
             className={` main-color hover-underline ${activeTab === 0 && 'text-main-underline'}`}
             onClick={() => setActiveTab(0)}
+            width="fit-content"
           >
             {_VALUES.ACTIVITY_MANAGEMENT}
           </Box>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={3}>
           <Box
             fontWeight={'bold'}
             fontSize={'1rem'}
             className={`main-color hover-underline ${activeTab === 1 && 'text-main-underline'}`}
             onClick={() => setActiveTab(1)}
+            width="fit-content"
           >
             {_VALUES.ABOUT}
           </Box>
         </Grid>
       </Grid>
       <Box mt={2}>{renderTabContent(activeTab)}</Box>
-    </Container>
+    </>
   );
 };
 

@@ -44,11 +44,16 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
 
   const LoadByAreaPath = useCallback(
     (chartMapList: ChartMap[]) => {
-      GetEpicsWorkItemsNode(config.organization?.label, config.project?.value, config.token).then((result: any) => {
-        result.map((x: any) => {
-          chartMapList.push({ id: x.WorkItemId, y: 0, name: x.Title });
+      GetEpicsWorkItemsNode(config.organization?.label, config.project?.value, config.token)
+        .then((result: any) => {
+          result.map((x: any) => {
+            chartMapList.push({ id: x.WorkItemId, y: 0, name: x.Title });
+          });
+        })
+        .catch(() => {
+          setChartMaps(chartMapList);
+          setWorkItemsLoading(false);
         });
-      });
       const workItemsParent: ChartMap[] = [];
       const workItemsGroup = Object.entries(GroupBy(_.cloneDeep(props.workItems), (s) => s.workItemId));
       let count = 0;
@@ -229,8 +234,8 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
       <Grid container spacing={5}>
         <Grid item xs={12} md={6}>
           {chartMaps && chartMaps.length > 0 ? (
-            <Box className={workItemsLoading ? 'box-loading-relative' : ''}>
-              {workItemsLoading && <CircularProgress className="circular-progress-main-color" />}
+            <Box className={!workItemsLoading ? 'box-loading-relative' : ''}>
+              {!workItemsLoading && <CircularProgress className="circular-progress-main-color" />}
               <HighchartsReact
                 highcharts={Highcharts}
                 options={{

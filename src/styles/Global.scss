@@ -105,6 +105,11 @@ body{
                 width: 170px;
         }
     }
+    .navbar-techsbcn-powered-component{
+        .techs-bcn-logo{
+                width: 100px;
+        }
+    }
     .circular-progress-main-color{
         color: $main-color!important;
     }
@@ -119,7 +124,7 @@ body{
             position: absolute;
             left: 0;
             right: 0;
-            top: 5px;
+            top: 115px;
             margin: auto;
         }
     }

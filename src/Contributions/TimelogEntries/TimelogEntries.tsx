@@ -89,16 +89,14 @@ export const TimelogEntries: React.FC = () => {
   };
 
   return (
-    <Container maxWidth={false}>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TimelogEntriesForm action={onSubmit} loading={isCreating} />
-        </Grid>
-        <Grid item xs={12}>
-          {workItemId && <TimelogEntriesTable workItemId={workItemId} />}
-        </Grid>
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <TimelogEntriesForm action={onSubmit} loading={isCreating} />
       </Grid>
-    </Container>
+      <Grid item xs={12}>
+        {workItemId && <TimelogEntriesTable workItemId={workItemId} />}
+      </Grid>
+    </Grid>
   );
 };
 
