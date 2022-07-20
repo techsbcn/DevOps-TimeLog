@@ -63,12 +63,13 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
             count++;
             let totalTime = 0;
             i[1].map((t: any) => (totalTime += t.time));
-            console.log(result);
-            workItemsParent.push({
-              id: result.WorkItemId,
-              y: totalTime,
-              name: result.Title,
-            });
+            if (result) {
+              workItemsParent.push({
+                id: result.WorkItemId,
+                y: totalTime,
+                name: result.Title,
+              });
+            }
           }
         );
         workItemsParent.length === workItemsGroup.length &&
@@ -126,15 +127,16 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
         await GetParentsWorkItemsNode([i[0]], config.organization?.label, config.project?.value, config.token).then(
           (result: any[]) => {
             count++;
-            console.log(result);
-            if (result && result[0].TagNames) {
-              let totalTime = 0;
-              i[1].map((t: any) => (totalTime += t.time));
-              workItemsParent.push({
-                id: result[0].WorkItemId,
-                y: totalTime,
-                name: result[0].TagNames,
-              });
+            if (result && result.length > 0) {
+              if (result[0].TagNames) {
+                let totalTime = 0;
+                i[1].map((t: any) => (totalTime += t.time));
+                workItemsParent.push({
+                  id: result[0].WorkItemId,
+                  y: totalTime,
+                  name: result[0].TagNames,
+                });
+              }
             }
           }
         );
