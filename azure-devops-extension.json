@@ -1,12 +1,12 @@
 {
     "manifestVersion": 1,
-    "id": "samples",
-    "publisher": "ms-samples",
-    "version": "1.0.389",
-    "name": "Extension Sample",
-    "description": "Azure DevOps extension sample",
+    "id": "DevOps-TimeLog",
+    "publisher": "TechsBCN",
+    "version": "1.0.0",
+    "name": "DevOps-TimeLog",
+    "description": "Azure DevOps extension for time logging",
     "categories": [
-        "Azure Pipelines"
+        "Azure Boards"
     ],
     "targets": [
         {

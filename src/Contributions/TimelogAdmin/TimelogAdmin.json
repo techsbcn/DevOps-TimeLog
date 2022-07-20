@@ -1,0 +1,19 @@
+{
+    "contributions": [
+        {
+            "id": "timelog-admin",
+            "type": "ms.vss-web.hub",
+            "targets": [
+                "ms.vss-web.project-admin-hub-group"
+            ],
+            "properties": {
+                "name": "Timelog Admin",
+                "uri": "dist/TimelogAdmin/TimelogAdmin.html"
+            }
+        }
+    ],
+    "scopes": [
+        "vso.work",
+        "vso.project"
+    ]
+}

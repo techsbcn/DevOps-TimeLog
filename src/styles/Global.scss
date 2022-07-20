@@ -1,0 +1,111 @@
+$main-color: #286FB7;
+$main-dark-grey: #666666;
+$body-background-color: #f4f7fa;
+
+$size-form: (calc(100vw - 300px) / (1600 - 300));
+$body-size: calc(12pt + (14 - 12) * #{$size-form});
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+*{
+    font-family: sans-serif !important;
+    font-weight: 400;
+}
+
+body{
+    margin: 0;
+    height: 100vh;
+    font-size: $body-size;
+    .sucessImg{
+        width: auto;
+        height: auto;
+        max-width: 100%;
+    }
+    .css-0 {
+        overflow: inherit!important;
+    }
+    a.afn { 
+        color: rgb(91, 95, 199)!important;
+        font-weight: 700;
+    }
+    .object-contain{
+        object-fit: contain;
+        img{
+            object-fit: contain;
+        }
+    }
+    #root {
+        height: 100%;
+    }
+    .cursor-pointer {
+        cursor: pointer;
+    }
+    .main-color{
+        color: $main-color !important;
+    }
+    .main-background-color{
+        background-color: $main-color !important;
+    }
+    .main-background-color-after{
+        &:after{
+            background-color: $main-color !important;
+        }
+    }
+    .main-background-body{
+        background-color: $body-background-color;
+    }
+    .main-color-hover { 
+        &:hover{
+            color: $main-color!important;
+        }
+    }
+    .main-border-color{
+        border-color: $main-color!important;
+    }
+    .custom-select.select {
+        &__control {
+            &:hover{
+                border-color: $main-color!important;
+            }
+            &--is-focused{
+                border-color: $main-color!important;
+            }
+        }
+        &__option {
+            &--is-selected {
+                background-color: $main-color!important;
+            }
+        }
+    }
+    .circular-progress-main-color{
+        color: $main-color!important;
+    }
+    .text-underline *{
+        color: $main-dark-grey;
+        text-decoration: underline;
+    }
+    .text-main-underline{
+        text-decoration: underline;
+    }
+    .hover-underline{
+        cursor: pointer;
+        &:hover{
+            text-decoration: underline;
+        }
+    }
+    .main-wrapper-component{
+        box-shadow: 0 1px 10px 0 RGB(69 90 100 / 35%)!important;
+        border: 1px solid #8080808c!important;
+        border-radius: 5px!important;
+    }
+    .techsbcn-powered-component{
+        .techs-bcn-logo{
+                width: 170px;
+        }
+    }
+    .circular-progress-main-color{
+        color: $main-color!important;
+    }
+}

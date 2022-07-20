@@ -1,27 +1,32 @@
 {
+    "include": ["src", "types", "./global.d.ts"],
     "compilerOptions": {
-        "charset": "utf8",
+       // "charset": "utf8",
         "experimentalDecorators": true,
-        "module": "amd",
+        "module": "esnext",
         "moduleResolution": "node",
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "noImplicitThis": true,
         "strict": true,
-        "target": "es5",
-        "rootDir": "src/",
-        "outDir": "dist/",
+        "target": "es6",
+        "rootDir": "./src",
+        "outDir": "./dist",
         "jsx": "react",
         "lib": [
           "es5",
           "es6",
           "dom",
-          "es2015.promise"
+          "esnext",
         ],
         "types": [
-            "react",
-            "jest",
-            "node"
+          "react",
+          "jest",
+          "node"
         ],
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "allowJs": true,
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
     }
 }
