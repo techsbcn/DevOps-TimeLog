@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TimeLogEntry, TimeLogEntryFilters } from '../../interfaces';
+import { Member, TimeLogEntry, TimeLogEntryFilters } from '../../interfaces';
 import { Grid, CircularProgress, Box } from '@mui/material';
 import { _VALUES } from '../../resources/_constants/values';
 import * as _ from 'lodash';

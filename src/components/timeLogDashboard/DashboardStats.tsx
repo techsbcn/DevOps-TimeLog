@@ -87,9 +87,13 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
   const LoadByUser = useCallback(
     (chartMapList: ChartMap[]) => {
       props.members &&
-        props.members.map((x: any) => {
-          chartMapList.push({ id: x.id, y: 0, name: x.displayName });
-        });
+        props.members
+          .sort((a, b) => {
+            return a.displayName.localeCompare(b.displayName);
+          })
+          .map((x: any) => {
+            chartMapList.push({ id: x.id, y: 0, name: x.displayName });
+          });
       const workItemsGroup = Object.entries(GroupBy(_.cloneDeep(props.workItems), (s) => s.userId));
       let count = 0;
       workItemsGroup.map(async (i: any) => {
@@ -167,9 +171,13 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
           break;
         case TimeLoggedGroupedType.USER:
           props.members &&
-            props.members.map((x: any) => {
-              chartMapList.push({ id: x.id, y: 0, name: x.displayName });
-            });
+            props.members
+              .sort((a, b) => {
+                return a.displayName.localeCompare(b.displayName);
+              })
+              .map((x: any) => {
+                chartMapList.push({ id: x.id, y: 0, name: x.displayName });
+              });
           setChartMaps(chartMapList);
           setWorkItemsLoading(false);
           break;
@@ -231,7 +239,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
         title: _VALUES.STATS,
       }}
     >
-      <Grid container spacing={5}>
+      <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
           {chartMaps && chartMaps.length > 0 ? (
             <Box className={workItemsLoading ? 'box-loading-relative' : ''}>

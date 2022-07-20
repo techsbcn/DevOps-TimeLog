@@ -45,16 +45,16 @@ export const TimeLogDevOpsSummary: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
 
   const tabs = [
-    <TimeLogMainSummary
+    <TimeLogDashboard
       key={0}
       documents={useFetchDocuments.data && useFetchDocuments.data.items.length > 0 ? useFetchDocuments.data.items : []}
       loadingDocuments={useFetchDocuments.isFetching}
-      user={user}
     />,
-    <TimeLogDashboard
+    <TimeLogMainSummary
       key={1}
       documents={useFetchDocuments.data && useFetchDocuments.data.items.length > 0 ? useFetchDocuments.data.items : []}
       loadingDocuments={useFetchDocuments.isFetching}
+      user={user}
     />,
   ];
 
@@ -69,26 +69,26 @@ export const TimeLogDevOpsSummary: React.FC = () => {
           <Box
             fontWeight={'bold'}
             fontSize={'1rem'}
-            className={` main-color hover-underline ${activeTab === 0 && 'text-main-underline'}`}
+            className={`main-color hover-underline ${activeTab === 0 && 'text-main-underline'}`}
             onClick={() => setActiveTab(0)}
             width="fit-content"
           >
-            {_VALUES.LOG_ENTRIES}
+            {_VALUES.DASHBOARD}
           </Box>
         </Grid>
         <Grid item xs={3}>
           <Box
             fontWeight={'bold'}
             fontSize={'1rem'}
-            className={`main-color hover-underline ${activeTab === 1 && 'text-main-underline'}`}
+            className={` main-color hover-underline ${activeTab === 1 && 'text-main-underline'}`}
             onClick={() => setActiveTab(1)}
             width="fit-content"
           >
-            {_VALUES.DASHBOARD}
+            {_VALUES.LOG_ENTRIES}
           </Box>
         </Grid>
       </Grid>
-      <Box mt={activeTab === 0 ? 2 : 4}>{renderTabContent(activeTab)}</Box>
+      <Box mt={activeTab === 1 ? 2 : 4}>{renderTabContent(activeTab)}</Box>
     </>
   ) : (
     <Box textAlign="center" display="flex" alignItems="center" justifyContent="center">

@@ -16,7 +16,7 @@ import { TimeLogEntry, TimeLogEntryFilters } from '../../interfaces';
 import { _VALUES } from '../../resources';
 import _ from 'lodash';
 import { GroupBy } from '../../helpers/GroupBy';
-import { getDaysFromMinutes, getHoursFromMinutes } from '../../helpers';
+import { getDaysFromMinutes, getHoursFromMinutes, usePrevious } from '../../helpers';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface DashboardWeeklyTimeLoggedProps {
@@ -29,10 +29,18 @@ interface DashboardWeeklyTimeLoggedProps {
 
 const DashboardWeeklyTimeLogged: React.FC<DashboardWeeklyTimeLoggedProps> = (props) => {
   const [checked, setChecked] = React.useState<{ id: string; name: string }[]>([]);
+  const [columns, setColumns] = React.useState<
+    { id: string; label: string; maxWidth?: number; rowViewFormat?: (row: any) => void; isUnique?: boolean }[]
+  >([{ id: 'week', label: _VALUES.WEEK, maxWidth: 100 }]);
 
-  const handleToggle = (value: string, name: string) => () => {
+  const handleToggle = (value: string, name: string) => {
     const currentIndex = checked.findIndex((x) => x.id === value);
     const newChecked = [...checked];
+    const initials = _.deburr(name)
+      .match(/\b(\w)/g)
+      ?.join('');
+    const currentColumnIndex = columns.findIndex((x) => x.id === initials);
+    const newColumn = [...columns];
 
     if (currentIndex === -1) {
       newChecked.push({ id: value, name: name });
@@ -40,6 +48,18 @@ const DashboardWeeklyTimeLogged: React.FC<DashboardWeeklyTimeLoggedProps> = (pro
       newChecked.splice(currentIndex, 1);
     }
 
+    if (currentColumnIndex === -1 && initials) {
+      newColumn.push({
+        id: initials,
+        label: initials,
+        isUnique: true,
+        rowViewFormat: (row) =>
+          `${getDaysFromMinutes(row[`${initials}`] ?? 0)}d (${getHoursFromMinutes(row[`${initials}`] ?? 0)}h)`,
+      });
+    } else {
+      newColumn.splice(currentColumnIndex, 1);
+    }
+    setColumns(newColumn);
     setChecked(newChecked);
   };
 
@@ -60,6 +80,33 @@ const DashboardWeeklyTimeLogged: React.FC<DashboardWeeklyTimeLoggedProps> = (pro
     },
     [startOfWeek]
   );
+  useEffect(() => {
+    if (props.members && props.members.length > 0) {
+      const users: { id: string; name: string }[] = [];
+      const newColumn = [...columns];
+      props.members
+        .sort((a, b) => {
+          return a.displayName.localeCompare(b.displayName);
+        })
+        .map((member) => {
+          users.push({ id: member.id, name: member.displayName });
+          const initials = _.deburr(member.displayName)
+            .match(/\b(\w)/g)
+            ?.join('');
+
+          initials &&
+            newColumn.push({
+              id: initials,
+              label: initials,
+              isUnique: true,
+              rowViewFormat: (row) =>
+                `${getDaysFromMinutes(row[`${initials}`] ?? 0)}d (${getHoursFromMinutes(row[`${initials}`] ?? 0)}h)`,
+            });
+        });
+      setColumns(newColumn);
+      setChecked(users);
+    }
+  }, [props.members]);
 
   useEffect(() => {
     if (props.filters && props.filters.timeTo && props.filters.timeFrom) {
@@ -84,76 +131,43 @@ const DashboardWeeklyTimeLogged: React.FC<DashboardWeeklyTimeLoggedProps> = (pro
   }, [endOfWeek, props.filters, startOfWeek, weeksBetween]);
 
   const [weekList, setWeekList] = React.useState<{ week: string }[]>([]);
-  const [columns, setColumns] = React.useState<{ id: string; label: string }[]>([]);
+
   const [weeksLoading, setLoadingWeeks] = React.useState(true);
 
   useEffect(() => {
-    if ((weeks && weeks.length > 0) || (weeks && weeks.length > 0 && checked.length > 0)) {
+    if (weeks && weeks.length > 0) {
       setLoadingWeeks(true);
       const arr: { week: string }[] = [];
-      const columns: { id: string; label: string; maxWidth?: number }[] = [
-        { id: 'week', label: _VALUES.WEEK, maxWidth: 100 },
-      ];
-      if (checked && checked.length > 0) {
-        checked.map((user) => {
-          const initials = _.deburr(user.name)
-            .match(/\b(\w)/g)
-            ?.join('');
-          if (initials) {
-            columns.push({
-              id: initials,
-              label: initials,
-            });
-          }
-        });
-      }
       weeks.map((week) => {
         const item: { week: string } = {
           week: `${new Date(week.startWeek).toLocaleDateString()} - ${new Date(week.endWeek).toLocaleDateString()}`,
         };
-        if (checked && checked.length > 0) {
-          const workItemsGroup = Object.entries(
-            GroupBy(
-              _.cloneDeep(props.workItems).filter(
-                (item: any) =>
-                  week.endWeek && week.startWeek && item.date >= week.startWeek && item.date <= week.endWeek
-              ),
-              (s) => s.userId
-            )
-          );
-          checked.map((user) => {
-            const initials = user
-              ? _.deburr(user.name)
-                  .match(/\b(\w)/g)
-                  ?.join('')
-              : '';
-            if (initials) {
-              item[`${initials}`] = `${getDaysFromMinutes(0)}d (${getHoursFromMinutes(0)}h)`;
-            }
-          });
-          workItemsGroup.map((i: any) => {
-            const user = checked.find((x) => x.id === i[0]);
-            const initials = user
-              ? _.deburr(user.name)
-                  .match(/\b(\w)/g)
-                  ?.join('')
-              : '';
-            if (initials) {
-              let totalTime = 0;
-              i[1].map((t: any) => (totalTime += t.time));
-              item[`${initials}`] = `${getDaysFromMinutes(totalTime)}d (${getHoursFromMinutes(totalTime)}h)`;
-            }
-          });
-        }
+        const workItemsGroup = Object.entries(
+          GroupBy(
+            _.cloneDeep(props.workItems).filter(
+              (item: any) => week.endWeek && week.startWeek && item.date >= week.startWeek && item.date <= week.endWeek
+            ),
+            (s) => s.userId
+          )
+        );
+        workItemsGroup.map((i: any) => {
+          const initials = _.deburr(i[1][0].user)
+            .match(/\b(\w)/g)
+            ?.join('');
+          if (initials) {
+            let totalTime = 0;
+            i[1].map((t: any) => (totalTime += t.time));
+            item[`${initials}`] = totalTime;
+          }
+        });
         arr.push(item);
       });
-      setColumns(columns);
       setWeekList(arr);
       setLoadingWeeks(false);
     }
-  }, [weeks, checked, props.workItems]);
+  }, [weeks, props.workItems]);
 
-  const [expand, setExpand] = useState<boolean>(true);
+  const [expand, setExpand] = useState<boolean>(false);
 
   const onToggle = () => {
     setExpand(!expand);
@@ -201,7 +215,7 @@ const DashboardWeeklyTimeLogged: React.FC<DashboardWeeklyTimeLoggedProps> = (pro
                           avatar={<Avatar alt={`Avatar n°${user.id + 1}`} src={member.imageUrl} />}
                           label={`${initials}`}
                           variant="outlined"
-                          onDelete={handleToggle(user.id, user.name)}
+                          onDelete={() => handleToggle(user.id, user.name)}
                         />
                       </Grid>
                     );
@@ -221,11 +235,11 @@ const DashboardWeeklyTimeLogged: React.FC<DashboardWeeklyTimeLoggedProps> = (pro
                       const labelId = `checkbox-list-secondary-label-${x.id}`;
                       return (
                         <ListItem key={x.id}>
-                          <ListItemButton onClick={handleToggle(x.id, x.displayName)}>
+                          <ListItemButton onClick={() => handleToggle(x.id, x.displayName)}>
                             <ListItemIcon>
                               <Checkbox
                                 edge="start"
-                                onChange={handleToggle(x.id, x.displayName)}
+                                onChange={() => handleToggle(x.id, x.displayName)}
                                 checked={checked.findIndex((item) => item.id === x.id) !== -1}
                                 inputProps={{ 'aria-labelledby': labelId }}
                               />

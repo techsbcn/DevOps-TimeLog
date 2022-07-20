@@ -79,7 +79,7 @@ export const GLOBAL_EN = {
   dashboard: 'Dashboard',
   logEntries: 'Log Entries',
   contact: 'Contact',
-  poweredBy: 'Power By',
+  poweredBy: 'Powered By',
   version: 'Version',
   aboutTimeLogForAzureDevOps: 'About Time Log For Azure DevOps',
   loading: 'Loading',
