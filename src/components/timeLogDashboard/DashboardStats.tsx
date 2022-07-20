@@ -60,10 +60,10 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
       workItemsGroup.map(async (i: any) => {
         await GetParentRecursive(i[0], config.organization?.label, config.project?.value, config.token).then(
           (result: any) => {
-            count++;
-            let totalTime = 0;
-            i[1].map((t: any) => (totalTime += t.time));
             if (result) {
+              count++;
+              let totalTime = 0;
+              i[1].map((t: any) => (totalTime += t.time));
               workItemsParent.push({
                 id: result.WorkItemId,
                 y: totalTime,
@@ -126,9 +126,9 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
       workItemsGroup.map(async (i: any) => {
         await GetParentsWorkItemsNode([i[0]], config.organization?.label, config.project?.value, config.token).then(
           (result: any[]) => {
-            count++;
             if (result && result.length > 0) {
               if (result[0].TagNames) {
+                count++;
                 let totalTime = 0;
                 i[1].map((t: any) => (totalTime += t.time));
                 workItemsParent.push({
