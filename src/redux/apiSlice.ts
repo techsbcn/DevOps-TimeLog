@@ -21,7 +21,11 @@ export const GetWebApi = async (token?: string, orgUri?: string) => {
     ? JSON.parse(localStorage.getItem('TL_TOKEN') || '')
     : null;
   return new Promise<nodeApi.WebApi>((resolve, reject) => {
-    const orgTL = orgUri ?? localStorage.getItem('TL_ORG') ? JSON.parse(localStorage.getItem('TL_ORG') || '') : null;
+    const orgTL = orgUri
+      ? JSON.parse(JSON.stringify(orgUri))
+      : localStorage.getItem('TL_ORG')
+      ? JSON.parse(localStorage.getItem('TL_ORG') || '')
+      : null;
     if (orgTL) {
       try {
         const authHandler = nodeApi.getPersonalAccessTokenHandler(tokenTL);

@@ -63,6 +63,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
             count++;
             let totalTime = 0;
             i[1].map((t: any) => (totalTime += t.time));
+            console.log(result);
             workItemsParent.push({
               id: result.WorkItemId,
               y: totalTime,
@@ -111,7 +112,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
 
   const LoadByTag = useCallback(
     async (chartMapList: ChartMap[]) => {
-      await GetTagsNodeAPI(config.project?.value, config.token).then((result: any[]) => {
+      await GetTagsNodeAPI(config.project?.value, config.token, config.organization?.label).then((result: any[]) => {
         result &&
           result.length > 0 &&
           result.map((x: any) => {
@@ -125,6 +126,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
         await GetParentsWorkItemsNode([i[0]], config.organization?.label, config.project?.value, config.token).then(
           (result: any[]) => {
             count++;
+            console.log(result);
             if (result && result[0].TagNames) {
               let totalTime = 0;
               i[1].map((t: any) => (totalTime += t.time));
@@ -182,7 +184,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
           setWorkItemsLoading(false);
           break;
         case TimeLoggedGroupedType.TAG:
-          GetTagsNodeAPI(config.project?.value, config.token)
+          GetTagsNodeAPI(config.project?.value, config.token, config.organization?.label)
             .then((result: any[]) => {
               if (result.length > 0) {
                 result.map((x: any) => {
