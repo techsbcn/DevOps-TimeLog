@@ -72,15 +72,20 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
             }
           }
         );
-        count === workItemsGroup.length &&
-          Object.entries(GroupBy(_.cloneDeep(workItemsParent), (s) => s.id)).map((g: any) => {
-            const workItem = chartMapList.findIndex((x) => x.id === Number(g[0]));
-            let totalTime = 0;
-            g[1].map((t: any) => (totalTime += t.y));
-            if (workItem !== -1) chartMapList[workItem].y = totalTime;
+        if (count === workItemsGroup.length) {
+          if (workItemsParent && workItemsParent.length > 0) {
+            Object.entries(GroupBy(_.cloneDeep(workItemsParent), (s) => s.id)).map((g: any) => {
+              const workItem = chartMapList.findIndex((x) => x.id === Number(g[0]));
+              let totalTime = 0;
+              g[1].map((t: any) => (totalTime += t.y));
+              if (workItem !== -1) chartMapList[workItem].y = totalTime;
+              setChartMaps(chartMapList);
+            });
+          } else {
             setChartMaps(chartMapList);
-          });
-        count === workItemsGroup.length && setWorkItemsLoading(false);
+          }
+          setWorkItemsLoading(false);
+        }
       });
     },
     [config.organization?.label, config.project?.value, config.token, props.workItems]
@@ -140,15 +145,20 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
             }
           }
         );
-        count === workItemsGroup.length &&
-          Object.entries(GroupBy(_.cloneDeep(workItemsParent), (s) => s.name)).map((g: any) => {
-            const workItem = chartMapList.findIndex((x) => x.name === g[0]);
-            let totalTime = 0;
-            g[1].map((t: any) => (totalTime += t.y));
-            if (workItem !== -1) chartMapList[workItem].y = totalTime;
+        if (count === workItemsGroup.length) {
+          if (workItemsParent && workItemsParent.length > 0) {
+            Object.entries(GroupBy(_.cloneDeep(workItemsParent), (s) => s.name)).map((g: any) => {
+              const workItem = chartMapList.findIndex((x) => x.name === g[0]);
+              let totalTime = 0;
+              g[1].map((t: any) => (totalTime += t.y));
+              if (workItem !== -1) chartMapList[workItem].y = totalTime;
+              setChartMaps(chartMapList);
+            });
+          } else {
             setChartMaps(chartMapList);
-          });
-        count === workItemsGroup.length && setWorkItemsLoading(false);
+          }
+          setWorkItemsLoading(false);
+        }
       });
     },
     [config.organization?.label, config.project?.value, config.token, props.workItems]
