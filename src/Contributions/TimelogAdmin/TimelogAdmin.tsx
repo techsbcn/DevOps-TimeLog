@@ -12,12 +12,14 @@ import { _VALUES } from '../../resources/_constants/values';
 export const TimelogAdmin: React.FC = () => {
   const [timeLogType, setTimeLogType] = useState<TimeType>();
   const [activeTab, setActiveTab] = useState(0);
+  const [version, setVersion] = useState<string>('');
 
   useEffect(() => {
     SDK.init().then(async () => {
       SDK.register(SDK.getContributionId(), () => {});
       await SDK.ready();
       const user = SDK.getUser();
+      setVersion(SDK.getExtensionContext().version);
       user && setTimeLogType({ user: user.displayName, userId: user.id });
     });
   }, []);
@@ -41,7 +43,7 @@ export const TimelogAdmin: React.FC = () => {
       </Grid>
       <Grid item xs={12}></Grid>
     </Grid>,
-    <About key={1} />,
+    <About key={1} version={version} />,
   ];
 
   const renderTabContent = (tab: number) => {
@@ -49,31 +51,33 @@ export const TimelogAdmin: React.FC = () => {
   };
 
   return (
-    <Container maxWidth={false}>
+    <>
       <Grid container>
-        <Grid item xs={6}>
+        <Grid item xs={3}>
           <Box
             fontWeight={'bold'}
             fontSize={'1rem'}
             className={` main-color hover-underline ${activeTab === 0 && 'text-main-underline'}`}
             onClick={() => setActiveTab(0)}
+            width="fit-content"
           >
             {_VALUES.ACTIVITY_MANAGEMENT}
           </Box>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={3}>
           <Box
             fontWeight={'bold'}
             fontSize={'1rem'}
             className={`main-color hover-underline ${activeTab === 1 && 'text-main-underline'}`}
             onClick={() => setActiveTab(1)}
+            width="fit-content"
           >
             {_VALUES.ABOUT}
           </Box>
         </Grid>
       </Grid>
       <Box mt={2}>{renderTabContent(activeTab)}</Box>
-    </Container>
+    </>
   );
 };
 

@@ -9,11 +9,9 @@ import * as vm from 'azure-devops-node-api';
 import * as lim from 'azure-devops-node-api/interfaces/LocationsInterfaces';
 import { TeamsExtensionType } from '../../enums/TeamsExtensionType';
 import TimeLogNewEntriesExternalForm from '../../components/timeLogEntries/forms/TimeLogNewEntriesExternalForm';
+import TimeLogDashboard from '../timeLogDashboard/TimeLogDashboard';
 
 interface TimeLogTeamsExtProps {
-  projectId: string;
-  organization: string;
-  token: string;
   extensionType: TeamsExtensionType;
 }
 
@@ -49,13 +47,16 @@ const TimeLogTeamsExt: React.FC<TimeLogTeamsExtProps> = (props) => {
         }
         loadingDocuments={useFetchDocuments.isFetching}
         user={user}
-        projectId={props.projectId}
-        urlWorkItem={`https://dev.azure.com/${props.organization}/${props.projectId}/_workitems/edit`}
       />
     ) : props.extensionType === TeamsExtensionType.newTimeLog && user ? (
       <TimeLogNewEntriesExternalForm user={user} />
     ) : props.extensionType === TeamsExtensionType.dashboard ? (
-      <Box>Comming soon</Box>
+      <TimeLogDashboard
+        documents={
+          useFetchDocuments.data && useFetchDocuments.data.items.length > 0 ? useFetchDocuments.data.items : []
+        }
+        loadingDocuments={useFetchDocuments.isFetching}
+      />
     ) : (
       <></>
     )

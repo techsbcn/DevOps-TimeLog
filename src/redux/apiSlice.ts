@@ -15,7 +15,11 @@ export const apiSlice = createApi({
 });
 
 export const GetWebApi = async (token?: string, orgUri?: string) => {
-  const tokenTL = token ?? localStorage.getItem('TL_TOKEN') ? JSON.parse(localStorage.getItem('TL_TOKEN') || '') : null;
+  const tokenTL = token
+    ? JSON.parse(JSON.stringify(token))
+    : localStorage.getItem('TL_TOKEN')
+    ? JSON.parse(localStorage.getItem('TL_TOKEN') || '')
+    : null;
   return new Promise<nodeApi.WebApi>((resolve, reject) => {
     const orgTL = orgUri ?? localStorage.getItem('TL_ORG') ? JSON.parse(localStorage.getItem('TL_ORG') || '') : null;
     if (orgTL) {

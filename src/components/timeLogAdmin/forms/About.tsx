@@ -5,7 +5,11 @@ import { _VALUES } from '../../../resources/_constants/values';
 import TechsbcnPoweredComponent from '../../shared/TechsbcnPoweredComponent';
 import { TextSimpleComponent } from 'techsbcn-storybook';
 
-const About: React.FC = () => {
+interface AboutProps {
+  version: string;
+}
+
+const About: React.FC<AboutProps> = (props) => {
   return (
     <MainWrapperComponent
       headerProps={{
@@ -21,7 +25,7 @@ const About: React.FC = () => {
                 {_VALUES.VERSION}
               </Box>
             }
-            value={<Box>1.0.0</Box>}
+            value={<Box>{props.version}</Box>}
           />
         </Grid>
         <Grid item>

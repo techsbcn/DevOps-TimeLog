@@ -3,18 +3,23 @@ import { _VALUES } from '../../resources/_constants/values';
 import { MainWrapperComponent, SelectField } from 'techsbcn-storybook';
 import { GetPublicAlias } from '../../redux/profile/profileAPI';
 import { GetOrganizations, GetProjects } from '../../redux/core/coreAPI';
-import { SelectAsyncHelper, GetProjectObjectTL, GetOrganizationObjectTL } from '../../helpers';
 import { Grid, Box, CircularProgress } from '@mui/material';
 import { Button } from '@fluentui/react-northstar';
 import CheckExtension from '../../components/teamsExt/CheckExtension';
 import { TeamsExtensionType } from '../../enums/TeamsExtensionType';
 import { ErrorIcon } from '@fluentui/react-icons-northstar';
+import { GetOrganizationObjectTL, GetProjectObjectTL } from '../../helpers/RequestHeaders';
+import { SelectAsyncHelper } from '../../helpers/SelectHelper';
+import { addOrganization, addProject } from '../../redux/core/coreSlice';
+import { ContextType } from '../../enums/ContextType';
+import { useAppDispatch } from '../../helpers/hooks';
 
 interface ChooseInfoProps {
   extensionType: TeamsExtensionType;
 }
 
 const ChooseInfo: React.FC<ChooseInfoProps> = (props) => {
+  const dispatch = useAppDispatch();
   const [activeTab, setActiveTab] = useState(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingProjects, setLoadingProjects] = useState<boolean>(true);
@@ -65,6 +70,8 @@ const ChooseInfo: React.FC<ChooseInfoProps> = (props) => {
   const saveInfo = () => {
     localStorage.setItem('TL_ORG', JSON.stringify(organizationSelected));
     localStorage.setItem('TL_PROJECT', JSON.stringify(projectSelected));
+    dispatch(addOrganization({ contextType: ContextType.TEAMS, organization: organizationSelected }));
+    dispatch(addProject({ contextType: ContextType.TEAMS, project: projectSelected }));
     props.extensionType !== TeamsExtensionType.config && setActiveTab(1);
   };
 
