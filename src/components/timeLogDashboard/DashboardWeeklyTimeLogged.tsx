@@ -39,7 +39,7 @@ const DashboardWeeklyTimeLogged: React.FC<DashboardWeeklyTimeLoggedProps> = (pro
     const initials = _.deburr(name)
       .match(/\b(\w)/g)
       ?.join('');
-    const currentColumnIndex = columns.findIndex((x) => x.id === initials);
+    const currentColumnIndex = columns.findIndex((x) => x.id === value);
     const newColumn = [...columns];
 
     if (currentIndex === -1) {
@@ -50,11 +50,11 @@ const DashboardWeeklyTimeLogged: React.FC<DashboardWeeklyTimeLoggedProps> = (pro
 
     if (currentColumnIndex === -1 && initials) {
       newColumn.push({
-        id: initials,
+        id: value,
         label: initials,
         isUnique: true,
         rowViewFormat: (row) =>
-          `${getDaysFromMinutes(row[`${initials}`] ?? 0)}d (${getHoursFromMinutes(row[`${initials}`] ?? 0)}h)`,
+          `${getDaysFromMinutes(row[`${value}`] ?? 0)}d (${getHoursFromMinutes(row[`${value}`] ?? 0)}h)`,
       });
     } else {
       newColumn.splice(currentColumnIndex, 1);
@@ -96,11 +96,11 @@ const DashboardWeeklyTimeLogged: React.FC<DashboardWeeklyTimeLoggedProps> = (pro
 
           initials &&
             newColumn.push({
-              id: initials,
+              id: member.id,
               label: initials,
               isUnique: true,
               rowViewFormat: (row) =>
-                `${getDaysFromMinutes(row[`${initials}`] ?? 0)}d (${getHoursFromMinutes(row[`${initials}`] ?? 0)}h)`,
+                `${getDaysFromMinutes(row[`${member.id}`] ?? 0)}d (${getHoursFromMinutes(row[`${member.id}`] ?? 0)}h)`,
             });
         });
       setColumns(newColumn);
@@ -151,13 +151,10 @@ const DashboardWeeklyTimeLogged: React.FC<DashboardWeeklyTimeLoggedProps> = (pro
           )
         );
         workItemsGroup.map((i: any) => {
-          const initials = _.deburr(i[1][0].user)
-            .match(/\b(\w)/g)
-            ?.join('');
-          if (initials) {
+          if (i[1][0].userId) {
             let totalTime = 0;
             i[1].map((t: any) => (totalTime += t.time));
-            item[`${initials}`] = totalTime;
+            item[`${i[1][0].userId}`] = totalTime;
           }
         });
         arr.push(item);
