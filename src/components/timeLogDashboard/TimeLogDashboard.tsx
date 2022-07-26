@@ -78,6 +78,9 @@ const TimeLogDashboard: React.FC<TimeLogDashboardProps> = (props) => {
             setLoadingFilters(false);
           }
         });
+      } else {
+        setTimeLogEntries(array);
+        setLoadingFilters(false);
       }
     },
     [config.organization?.label, config.project?.value, config.token, dispatch]
