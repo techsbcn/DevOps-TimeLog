@@ -6,8 +6,9 @@ import TimeLogDetails from '../../components/timeLogSummary/TimeLogDetails';
 import TimeLogTable from '../../components/timeLogSummary/TimeLogTable';
 import TimeLogFilters from '../../components/timeLogSummary/TimeLogFilters';
 import { _VALUES } from '../../resources/_constants/values';
-import { useAppSelector } from '../../helpers';
+import { GroupBy, useAppSelector } from '../../helpers';
 import { getCoreState } from '../../redux/store';
+import { GetParentsWorkItemsNode } from '../../redux/workItem/workItemAPI';
 
 interface TimeLogMainSummaryProps {
   documents: TimeLogEntry[];
@@ -30,7 +31,7 @@ const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
     };
   });
   const [timeLogEntries, setTimeLogEntries] = useState<TimeLogEntry[]>(props.documents);
-  const [loadingFilters, setLoadingFilters] = useState<boolean>(false);
+  const [loadingFilters, setLoadingFilters] = useState<boolean>(true);
 
   const filterByDates = React.useCallback(
     (array: any[]) => {
@@ -56,6 +57,37 @@ const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
     },
     [filters]
   );
+
+  const filterByProject = React.useCallback(
+    (array: any[]) => {
+      const workItemsGroup = Object.entries(GroupBy(_.cloneDeep(array), (s) => s.workItemId));
+      if (workItemsGroup && workItemsGroup.length > 0) {
+        let count = 0;
+        const workItemsIds: number[] = [];
+        workItemsGroup.map(async (i: any) => {
+          await GetParentsWorkItemsNode([i[0]], config.organization?.label, config.project?.value, config.token).then(
+            (result: any[]) => {
+              count++;
+              if (result && result.length > 0) {
+                if (result[0].WorkItemId) {
+                  workItemsIds.push(result[0].WorkItemId);
+                }
+              }
+            }
+          );
+          if (count === workItemsGroup.length) {
+            setTimeLogEntries(array.filter((item: any) => workItemsIds && workItemsIds.includes(item.workItemId)));
+            setLoadingFilters(false);
+          }
+        });
+      } else {
+        setTimeLogEntries(array);
+        setLoadingFilters(false);
+      }
+    },
+    [config.organization?.label, config.project?.value, config.token]
+  );
+
   const loadDocuments = React.useCallback(() => {
     if (filters && props.documents.length > 0) {
       setLoadingFilters(true);
@@ -63,6 +95,8 @@ const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
       documents = filterByDates(documents);
       documents = filterByUserIds(documents);
       setTimeLogEntries(_.orderBy(documents, 'date', 'asc'));
+      setLoadingFilters(false);
+    } else if (filters && props.documents.length === 0) {
       setLoadingFilters(false);
     }
   }, [filterByDates, filterByUserIds, filters, props.documents]);
@@ -84,20 +118,19 @@ const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
           onFiltersChange={setNewFilters}
           filters={filters}
           user={props.user}
-          loading={loadingFilters}
           projectId={config.project?.value}
           contextType={context}
         />
       </Grid>
       <Grid item xs={12}>
         <TimeLogDetails
-          timeLogEntries={timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
+          timeLogEntries={!loadingFilters && timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
           loading={props.loadingDocuments || loadingFilters}
         />
       </Grid>
       <Grid item xs={12}>
         <TimeLogTable
-          documents={timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
+          documents={!loadingFilters && timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
           loading={props.loadingDocuments || loadingFilters}
           urlWorkItem={`https://dev.azure.com/${config.organization?.label}/${config.project?.value}/_workitems/edit`}
         />

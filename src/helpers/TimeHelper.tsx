@@ -31,3 +31,7 @@ export const getDaysFromMinutes = (totalTime: number) => {
   const minutesPerDay = 60 * 8;
   return Number((totalTime / minutesPerDay).toFixed(1));
 };
+
+export const getHoursFromMinutesFixed = (minutes: number) => {
+  return Number((minutes / 60).toFixed(1));
+};

@@ -4,13 +4,14 @@ import { GetWebApi } from '../apiSlice';
 //import { ErrorHandler } from '../../helpers';
 import * as nodeApi from 'azure-devops-node-api';
 import * as ExtensionManagementApi from 'azure-devops-node-api/ExtensionManagementApi';
+import { TimeLogEntry } from '../../interfaces';
 
 export const ExtensionDataService = (async () => {
   return await SDK.getService<IExtensionDataService>(CommonServiceIds.ExtensionDataService);
 })();
 
-export const ExtensionDataManagerNodeAPI = async (token?: string) => {
-  const webApi: nodeApi.WebApi = await GetWebApi(token);
+export const ExtensionDataManagerNodeAPI = async (token?: string, organizationName?: string) => {
+  const webApi: nodeApi.WebApi = await GetWebApi(token, organizationName);
   return new Promise<ExtensionManagementApi.IExtensionManagementApi>((resolve, reject) =>
     webApi
       .getExtensionManagementApi()
@@ -80,8 +81,13 @@ export const GetDocuments = async (collectionName: string) => {
   );
 };
 
-export const CreateDocumentNodeAPi = async (collectionName: string, doc: any, token?: string) => {
-  const extensionDataManager = await ExtensionDataManagerNodeAPI(token);
+export const CreateDocumentNodeAPi = async (
+  collectionName: string,
+  doc: any,
+  token?: string,
+  organizationName?: string
+) => {
+  const extensionDataManager = await ExtensionDataManagerNodeAPI(token, organizationName);
   return new Promise<any>((resolve, reject) =>
     extensionDataManager
       .createDocumentByName(doc, 'TechsBCN', process.env.EXTENSION_ID as string, 'Default', 'Current', collectionName)

@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Member, TimeLogEntry, TimeLogEntryFilters } from '../../interfaces';
+import { TimeLogEntry, TimeLogEntryFilters } from '../../interfaces';
 import { Grid, CircularProgress, Box } from '@mui/material';
 import { _VALUES } from '../../resources/_constants/values';
 import * as _ from 'lodash';
 import DashboardStats from './DashboardStats';
 import DashboardWeeklyTimeLogged from './DashboardWeeklyTimeLogged';
 import { SearchComponent, SelectField, TextFieldComponent, AppHeader } from 'techsbcn-storybook';
-import { useAppSelector, SelectAsyncHelper } from '../../helpers';
+import { useAppSelector, SelectAsyncHelper, GroupBy } from '../../helpers';
 import { GetTeams, GetTeamMembers } from '../../redux/core/coreAPI';
 import { getCoreState } from '../../redux/store';
+import { GetParentsWorkItemsNode } from '../../redux/workItem/workItemAPI';
 
 interface TimeLogDashboardProps {
   documents: TimeLogEntry[];
@@ -48,12 +49,43 @@ const TimeLogDashboard: React.FC<TimeLogDashboardProps> = (props) => {
     [filters]
   );
 
+  const filterByProject = React.useCallback(
+    (array: any[]) => {
+      const workItemsGroup = Object.entries(GroupBy(_.cloneDeep(array), (s) => s.workItemId));
+      if (workItemsGroup && workItemsGroup.length > 0) {
+        let count = 0;
+        const workItemsIds: number[] = [];
+        workItemsGroup.map(async (i: any) => {
+          await GetParentsWorkItemsNode([i[0]], config.organization?.label, config.project?.value, config.token).then(
+            (result: any[]) => {
+              count++;
+              if (result && result.length > 0) {
+                if (result[0].WorkItemId) {
+                  workItemsIds.push(result[0].WorkItemId);
+                }
+              }
+            }
+          );
+          if (count === workItemsGroup.length) {
+            setTimeLogEntries(array.filter((item: any) => workItemsIds && workItemsIds.includes(item.workItemId)));
+            setLoadingFilters(false);
+          }
+        });
+      } else {
+        setTimeLogEntries(array);
+        setLoadingFilters(false);
+      }
+    },
+    [config.organization?.label, config.project?.value, config.token]
+  );
   const loadDocuments = React.useCallback(() => {
     if (filters && props.documents.length > 0) {
       setLoadingFilters(true);
       let documents = _.cloneDeep(props.documents);
       documents = filterByDates(documents);
       setTimeLogEntries(_.orderBy(documents, 'date', 'asc'));
+      setLoadingFilters(false);
+    } else if (filters && props.documents.length === 0) {
       setLoadingFilters(false);
     }
   }, [filterByDates, filters, props.documents]);
@@ -150,22 +182,22 @@ const TimeLogDashboard: React.FC<TimeLogDashboardProps> = (props) => {
     <Box mt={-2}>
       <AppHeader>
         <Box width="100%">
-          <SearchComponent filters={!loadingFilters ? ListFilters() : []} filtersSize={6} />
+          <SearchComponent filters={!loadingMembers ? ListFilters() : []} filtersSize={6} />
         </Box>
       </AppHeader>
       <Box mt={1}>
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <DashboardStats
-              loading={loadingFilters}
-              workItems={timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
+              loading={props.loadingDocuments || loadingFilters}
+              workItems={!loadingFilters && timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
               members={members}
             />
           </Grid>
           <Grid item xs={12}>
             <DashboardWeeklyTimeLogged
-              loading={loadingFilters}
-              workItems={timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
+              loading={props.loadingDocuments || loadingFilters}
+              workItems={!loadingFilters && timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
               members={members}
               filters={filters}
               loadingMembers={loadingMembers}
