@@ -6,10 +6,10 @@ import * as _ from 'lodash';
 import DashboardStats from './DashboardStats';
 import DashboardWeeklyTimeLogged from './DashboardWeeklyTimeLogged';
 import { SearchComponent, SelectField, TextFieldComponent, AppHeader } from 'techsbcn-storybook';
-import { useAppSelector, SelectAsyncHelper, GroupBy } from '../../helpers';
+import { useAppSelector, SelectAsyncHelper, GroupBy, useAppDispatch } from '../../helpers';
 import { GetTeams, GetTeamMembers } from '../../redux/core/coreAPI';
 import { getCoreState } from '../../redux/store';
-import { GetParentsWorkItemsNode } from '../../redux/workItem/workItemAPI';
+import { apiSlice } from '../../redux/apiSlice';
 
 interface TimeLogDashboardProps {
   documents: TimeLogEntry[];
@@ -17,6 +17,7 @@ interface TimeLogDashboardProps {
 }
 
 const TimeLogDashboard: React.FC<TimeLogDashboardProps> = (props) => {
+  const dispatch = useAppDispatch();
   const { context, config } = useAppSelector(getCoreState);
   const [timeLogEntries, setTimeLogEntries] = useState<TimeLogEntry[]>();
 
@@ -55,40 +56,44 @@ const TimeLogDashboard: React.FC<TimeLogDashboardProps> = (props) => {
       if (workItemsGroup && workItemsGroup.length > 0) {
         let count = 0;
         const workItemsIds: number[] = [];
+
         workItemsGroup.map(async (i: any) => {
-          await GetParentsWorkItemsNode([i[0]], config.organization?.label, config.project?.value, config.token).then(
-            (result: any[]) => {
-              count++;
-              if (result && result.length > 0) {
-                if (result[0].WorkItemId) {
-                  workItemsIds.push(result[0].WorkItemId);
-                }
+          await dispatch(
+            apiSlice.endpoints.fetchGetWorkItem.initiate({
+              workItem: Number(i[0]),
+              organizationName: config.organization?.label,
+              projectId: config.project?.value,
+              token: config.token,
+            })
+          ).then((result: any) => {
+            count++;
+            if (result.data && result.data.length > 0) {
+              if (result.data[0].WorkItemId) {
+                workItemsIds.push(result.data[0].WorkItemId);
               }
             }
-          );
+          });
           if (count === workItemsGroup.length) {
             setTimeLogEntries(array.filter((item: any) => workItemsIds && workItemsIds.includes(item.workItemId)));
             setLoadingFilters(false);
           }
         });
-      } else {
-        setTimeLogEntries(array);
-        setLoadingFilters(false);
       }
     },
-    [config.organization?.label, config.project?.value, config.token]
+    [config.organization?.label, config.project?.value, config.token, dispatch]
   );
   const loadDocuments = React.useCallback(() => {
     if (filters && props.documents.length > 0) {
       setLoadingFilters(true);
       let documents = _.cloneDeep(props.documents);
       documents = filterByDates(documents);
-      setTimeLogEntries(_.orderBy(documents, 'date', 'asc'));
-      setLoadingFilters(false);
+      filterByProject(_.orderBy(documents, 'date', 'asc'));
+      /*setTimeLogEntries(_.orderBy(documents, 'date', 'asc'));
+      setLoadingFilters(false);*/
     } else if (filters && props.documents.length === 0) {
       setLoadingFilters(false);
     }
-  }, [filterByDates, filters, props.documents]);
+  }, [filterByDates, filterByProject, filters, props.documents]);
 
   useEffect(() => {
     loadDocuments();

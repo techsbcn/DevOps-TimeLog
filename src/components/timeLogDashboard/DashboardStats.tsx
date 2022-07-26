@@ -1,12 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { MainWrapperComponent, SelectField, SimpleTableComponent } from 'techsbcn-storybook';
 import { _VALUES } from '../../resources/_constants/values';
-import {
-  GetParentRecursive,
-  GetEpicsWorkItemsNode,
-  GetTagsNodeAPI,
-  GetParentsWorkItemsNode,
-} from '../../redux/workItem/workItemAPI';
+import { GetEpicsWorkItemsNode, GetTagsNodeAPI } from '../../redux/workItem/workItemAPI';
 import { TimeLogEntry, ChartMap } from '../../interfaces';
 import { Grid, Box, CircularProgress } from '@mui/material';
 import HighchartsReact from 'highcharts-react-official';
@@ -17,9 +12,10 @@ import { TimeLoggedGroupedType } from '../../enums/TimeLoggedGroupedType';
 import { GroupBy } from '../../helpers/GroupBy';
 import { getDaysFromMinutes, getHoursFromMinutesFixed } from '../../helpers/TimeHelper';
 import { EnumToSelect, SelectEnum } from '../../helpers/EnumHelper';
-import { useAppSelector, usePrevious } from '../../helpers/hooks';
+import { useAppDispatch, useAppSelector, usePrevious } from '../../helpers/hooks';
 import { getCoreState } from '../../redux/store';
 import _ from 'lodash';
+import { apiSlice } from '../../redux/apiSlice';
 
 highcharts3d(Highcharts);
 
@@ -30,6 +26,7 @@ interface DashboardStatsProps {
 }
 
 const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
+  const dispatch = useAppDispatch();
   const { config } = useAppSelector(getCoreState);
   const [chartTye, setChartType] = React.useState<ChartType>(ChartType.TIME_LOGGED_GROUPED);
   const [timeLoggedGroupedType, setTimeLoggedGroupedType] = React.useState<TimeLoggedGroupedType>(
@@ -41,6 +38,28 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
 
   const prevWorkItemsState = usePrevious(JSON.stringify(props.workItems));
   const prevTimeLoggedGroupedType = usePrevious(timeLoggedGroupedType);
+
+  const GetParentRecursive = useCallback(
+    async (workItemId: number, organizationName?: string, projectId?: string, accessToken?: string) => {
+      let workItem: any;
+      await dispatch(
+        apiSlice.endpoints.fetchGetWorkItem.initiate({
+          workItem: Number(workItemId),
+          organizationName: organizationName,
+          projectId: projectId,
+          token: accessToken,
+        })
+      ).then((result) => {
+        workItem = result.data[0];
+      });
+      if (workItem && workItem.Parent) {
+        return GetParentRecursive(workItem.Parent.WorkItemId, organizationName, projectId, accessToken);
+      }
+
+      return workItem;
+    },
+    [dispatch]
+  );
 
   const LoadByAreaPath = useCallback(
     (chartMapList: ChartMap[]) => {
@@ -92,7 +111,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
         }
       });
     },
-    [config.organization?.label, config.project?.value, config.token, props.workItems]
+    [GetParentRecursive, config.organization?.label, config.project?.value, config.token, props.workItems]
   );
 
   const LoadByUser = useCallback(
@@ -145,22 +164,27 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
       const workItemsGroup = Object.entries(GroupBy(_.cloneDeep(props.workItems), (s) => s.workItemId));
       let count = 0;
       workItemsGroup.map(async (i: any) => {
-        await GetParentsWorkItemsNode([i[0]], config.organization?.label, config.project?.value, config.token).then(
-          (result: any[]) => {
-            count++;
-            if (result && result.length > 0) {
-              if (result[0].TagNames) {
-                let totalTime = 0;
-                i[1].map((t: any) => (totalTime += t.time));
-                workItemsParent.push({
-                  id: result[0].WorkItemId,
-                  y: totalTime,
-                  name: result[0].TagNames,
-                });
-              }
+        await dispatch(
+          apiSlice.endpoints.fetchGetWorkItem.initiate({
+            workItem: Number(i[0]),
+            organizationName: config.organization?.label,
+            projectId: config.project?.value,
+            token: config.token,
+          })
+        ).then((result: any) => {
+          count++;
+          if (result.data && result.data.length > 0) {
+            if (result.data[0].TagNames) {
+              let totalTime = 0;
+              i[1].map((t: any) => (totalTime += t.time));
+              workItemsParent.push({
+                id: result.data[0].WorkItemId,
+                y: totalTime,
+                name: result.data[0].TagNames,
+              });
             }
           }
-        );
+        });
         if (count === workItemsGroup.length) {
           if (workItemsParent && workItemsParent.length > 0) {
             Object.entries(GroupBy(_.cloneDeep(workItemsParent), (s) => s.name)).map((g: any) => {
@@ -181,7 +205,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
         }
       });
     },
-    [config.organization?.label, config.project?.value, config.token, props.workItems]
+    [config.organization?.label, config.project?.value, config.token, dispatch, props.workItems]
   );
 
   const LoadEmptyCharts = useCallback(
@@ -276,6 +300,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
       headerProps={{
         title: _VALUES.STATS,
       }}
+      loadingChildren={props.loading}
     >
       <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
