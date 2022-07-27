@@ -76,7 +76,6 @@ export const apiSlice = createApi({
         any,
         { workItem: number; organizationName?: string; projectId?: string; token?: string }
       >({
-        keepUnusedDataFor: 60,
         queryFn: async (request) => {
           const workItems = await GetWorkItemsNode(
             [request.workItem],
