@@ -107,7 +107,7 @@ const TimeLogMainSummary: React.FC<TimeLogMainSummaryProps> = (props) => {
     } else if (filters && props.documents.length === 0) {
       setLoadingFilters(false);
     }
-  }, [filterByDates, filterByProject, filterByUserIds, filters, props.documents]);
+  }, [filterByDates, filterByUserIds, filters, props.documents, filterByProject]);
 
   useEffect(() => {
     loadDocuments();

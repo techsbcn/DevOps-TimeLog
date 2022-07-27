@@ -90,13 +90,13 @@ const TimeLogDashboard: React.FC<TimeLogDashboardProps> = (props) => {
       setLoadingFilters(true);
       let documents = _.cloneDeep(props.documents);
       documents = filterByDates(documents);
-      filterByProject(_.orderBy(documents, 'date', 'asc'));
-      /*setTimeLogEntries(_.orderBy(documents, 'date', 'asc'));
-      setLoadingFilters(false);*/
+      //filterByProject(_.orderBy(documents, 'date', 'asc'));
+      setTimeLogEntries(_.orderBy(documents, 'date', 'asc'));
+      setLoadingFilters(false);
     } else if (filters && props.documents.length === 0) {
       setLoadingFilters(false);
     }
-  }, [filterByDates, filterByProject, filters, props.documents]);
+  }, [filterByDates, filters, props.documents]);
 
   useEffect(() => {
     loadDocuments();
