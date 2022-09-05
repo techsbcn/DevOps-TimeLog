@@ -28,7 +28,7 @@ module.exports = (env) => {
     categories: ['Azure Boards'],
     targets: [
       {
-        id: 'Microsoft.VisualStudio.Services',
+        id: 'Microsoft.VisualStudio.Services.Cloud',
       },
     ],
     icons: {
