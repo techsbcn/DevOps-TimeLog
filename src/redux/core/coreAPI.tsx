@@ -2,7 +2,6 @@ import * as CoreSDK from 'azure-devops-extension-api/Core';
 import * as API from 'azure-devops-extension-api/';
 import * as SDK from 'azure-devops-extension-sdk';
 import { CommonServiceIds, IProjectPageService } from 'azure-devops-extension-api';
-import { AuthHeader, ErrorHandler, ResponseHandler } from '../../helpers';
 import { TeamMember } from 'azure-devops-extension-api/WebApi';
 import { Member } from '../../interfaces';
 import * as nodeApi from 'azure-devops-node-api';
@@ -10,6 +9,9 @@ import { GetWebApi } from '../apiSlice';
 import { ICoreApi } from 'azure-devops-node-api/CoreApi';
 import * as CoreInterfaces from 'azure-devops-node-api/interfaces/CoreInterfaces';
 import * as VSSInterfaces from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
+import { AuthHeader, GetProjectTL } from '../../helpers/RequestHeaders';
+import { ErrorHandler, ResponseHandler } from '../../helpers/ResponseHandler';
+import { ContextType } from '../../enums/ContextType';
 
 export const GetProjectContext = async () => {
   return new Promise<API.IProjectInfo>((resolve, reject) =>
@@ -72,8 +74,8 @@ export const GetAllTeamsNodeAPI = async () => {
   );
 };
 
-export const GetTeams = async (projectId?: string) => {
-  return projectId ? await GetTeamsAPI(projectId) : await GetTeamsSDK();
+export const GetTeams = async (contextType: ContextType, projectId?: string) => {
+  return contextType === ContextType.DEVOPS ? await GetTeamsSDK() : await GetTeamsAPI(projectId ?? GetProjectTL());
 };
 
 const GetTeamsSDK = async () => {
@@ -103,8 +105,8 @@ const GetTeamsAPI = async (projectId: string) => {
   );
 };
 
-export const GetTeamMembersSDK = async (teamId: string, projectId?: string) => {
-  const pId = projectId ?? (await GetProjectContext()).id;
+export const GetTeamMembersSDK = async (teamId: string) => {
+  const pId = (await GetProjectContext()).id;
   return new Promise<Member[]>((resolve, reject) =>
     CoreSDKClient.getTeamMembersWithExtendedProperties(pId, teamId)
       .then((result: TeamMember[]) => {
@@ -120,8 +122,10 @@ export const GetTeamMembersSDK = async (teamId: string, projectId?: string) => {
       })
   );
 };
-export const GetTeamMembers = async (teamId: string, projectId?: string) => {
-  return projectId ? await GetTeamMembersNodeAPI(teamId, projectId) : await GetTeamMembersSDK(teamId);
+export const GetTeamMembers = async (teamId: string, contextType: ContextType, projectId?: string) => {
+  return contextType === ContextType.DEVOPS
+    ? await GetTeamMembersSDK(teamId)
+    : await GetTeamMembersNodeAPI(teamId, projectId ?? GetProjectTL());
 };
 
 export const GetTeamMembersNodeAPI = async (teamId: string, projectId: string) => {

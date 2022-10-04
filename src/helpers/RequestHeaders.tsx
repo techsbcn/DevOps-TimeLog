@@ -5,7 +5,11 @@ export const BasicHeader = () => {
 };
 
 export const AuthHeader = (token?: string) => {
-  const tokenTL = token ?? localStorage.getItem('TL_TOKEN') ? JSON.parse(localStorage.getItem('TL_TOKEN') || '') : null;
+  const tokenTL = token
+    ? JSON.parse(JSON.stringify(token))
+    : localStorage.getItem('TL_TOKEN')
+    ? JSON.parse(localStorage.getItem('TL_TOKEN') || '')
+    : null;
   if (tokenTL) {
     return {
       'Content-Type': 'application/json',

@@ -18,6 +18,7 @@
     ],
     "scopes": [
         "vso.work",
-        "vso.project"
+        "vso.project",
+        "vso.analytics"
     ]
 }

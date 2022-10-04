@@ -6,7 +6,8 @@ import TimeLogTeamsExt from './TimeLogTeamsExt';
 import noExtensionImg from './../../../static/notFoundExtension.png';
 import { CheckInstalledExtension } from '../../redux/extensionDataManager/extensionDataManagerAPI';
 import { TeamsExtensionType } from '../../enums/TeamsExtensionType';
-import { GetTokenTL, GetProjectTL, GetOrganizationTL } from '../../helpers';
+import { useAppSelector } from '../../helpers/hooks';
+import { getCoreState } from '../../redux/store';
 
 interface CheckExtensionProps {
   extensionType: TeamsExtensionType;
@@ -63,12 +64,7 @@ const CheckExtension: React.FC<CheckExtensionProps> = (props) => {
         <Button primary content={_VALUES.TRY_AGAIN} onClick={() => HandleCheckExtension()} />
       </Box>
     ) : (
-      <TimeLogTeamsExt
-        projectId={GetProjectTL()}
-        organization={GetOrganizationTL()}
-        token={GetTokenTL()}
-        extensionType={props.extensionType}
-      />
+      <TimeLogTeamsExt extensionType={props.extensionType} />
     )
   ) : (
     <Box textAlign="center" display="flex" alignItems="center" justifyContent="center">

@@ -3919,6 +3919,8 @@ __metadata:
     file-loader: ^6.2.0
     fs: ^0.0.1-security
     fs-extra: ^10.1.0
+    highcharts: ^10.1.0
+    highcharts-react-official: ^3.1.0
     https-browserify: ^1.0.0
     i18next: ^21.6.16
     i18next-browser-languagedetector: ^6.1.4
@@ -3943,7 +3945,7 @@ __metadata:
     stream-browserify: ^3.0.0
     stream-http: ^3.2.0
     style-loader: ^3.3.1
-    techsbcn-storybook: ^0.20.0
+    techsbcn-storybook: ^0.20.1
     tfx-cli: ^0.11.0
     ts-jest: ^27.1.4
     ts-loader: ^9.2.8
@@ -8123,6 +8125,23 @@ __metadata:
     inherits: ^2.0.3
     minimalistic-assert: ^1.0.1
   checksum: e350096e659c62422b85fa508e4b3669017311aa4c49b74f19f8e1bc7f3a54a584fdfd45326d4964d6011f2b2d882e38bea775a96046f2a61b7779a979629d8f
+  languageName: node
+  linkType: hard
+
+"highcharts-react-official@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "highcharts-react-official@npm:3.1.0"
+  peerDependencies:
+    highcharts: ">=6.0.0"
+    react: ">=16.8.0"
+  checksum: 13ea12e8f778d4b7dac735082b6f36ed3c852b7c31823812ba42ea78e72ce21b90e62daf0a2bc35bb6db07705a9f19cf7b21c03455c6f3fb14e7cab8d35b0ecf
+  languageName: node
+  linkType: hard
+
+"highcharts@npm:^10.1.0":
+  version: 10.1.0
+  resolution: "highcharts@npm:10.1.0"
+  checksum: 62b5e5ce33b93d31f18a1dc3192defa77aa12b19ee1809723bb4e206385e0ae7dbe31f2e4f8c4dc683c87550a9dcdd5ee760f3862845bfd2ca271ca0b54f4dd1
   languageName: node
   linkType: hard
 
@@ -14011,9 +14030,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"techsbcn-storybook@npm:^0.20.0":
-  version: 0.20.0
-  resolution: "techsbcn-storybook@npm:0.20.0"
+"techsbcn-storybook@npm:^0.20.1":
+  version: 0.20.1
+  resolution: "techsbcn-storybook@npm:0.20.1"
   dependencies:
     "@emotion/react": ^11.7.0
     "@emotion/styled": ^11.6.0
@@ -14035,7 +14054,7 @@ __metadata:
     yup: ^0.32.11
   peerDependencies:
     react: "*"
-  checksum: 0b2999912f2a2b34445db7c650b914bf32cc3be6ba8f4c225fe6dd8f2e8d3b5d573dfecaaeddb136ee7b6250ef4122bd8de1532d5ca3f551d6640642197b47bb
+  checksum: 9bd6c5826075b1c3c30455252e6e87f8cd4d5c243aaf145cdc3e4e0644b541656c0d734b2e7ea399e5088eff75133b0e4c53ca03642d71770bde82df264441d0
   languageName: node
   linkType: hard
 

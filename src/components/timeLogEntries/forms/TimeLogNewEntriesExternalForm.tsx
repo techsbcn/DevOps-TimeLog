@@ -11,7 +11,6 @@ import { _VALUES } from '../../../resources/_constants/values';
 import * as yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { getHoursAndMinutes, getHoursFromMinutes, getMinutesFromHours, SelectAsyncHelper } from '../../../helpers';
 import { TimeLogEntry, UserContext } from '../../../interfaces';
 import { GetWorkItemNodeAPI, GetWorkItems, UpdateWorkItemNodeAPI } from '../../../redux/workItem/workItemAPI';
 import bug from './../../../../static/bug.png';
@@ -26,6 +25,8 @@ import * as VSSInterfaces from 'azure-devops-node-api/interfaces/common/VSSInter
 import { Box, Grid } from '@mui/material';
 import { TimeLogSuccess } from '../../../Contributions/TimeLogSuccess/TimeLogSuccess';
 import * as microsoftTeams from '@microsoft/teams-js';
+import { getHoursAndMinutes, getHoursFromMinutes, getMinutesFromHours } from '../../../helpers/TimeHelper';
+import { SelectAsyncHelper } from '../../../helpers/SelectHelper';
 
 interface TimeLogNewEntriesExternalFormProps {
   user: UserContext;

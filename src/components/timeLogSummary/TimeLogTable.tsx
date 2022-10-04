@@ -2,9 +2,9 @@ import React from 'react';
 import { _VALUES } from '../../resources/_constants/values';
 import { MainWrapperComponent, SimpleTableComponent } from 'techsbcn-storybook';
 import { TimeLogEntry } from '../../interfaces';
-import { getHoursAndMinutes } from '../../helpers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
+import { getHoursAndMinutes } from '../../helpers/TimeHelper';
 
 interface TimeLogTableProps {
   documents: TimeLogEntry[];

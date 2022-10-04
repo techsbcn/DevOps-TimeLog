@@ -3,6 +3,7 @@ import { TimeLogEntry } from '../../interfaces';
 import { MainWrapperComponent, TextSimpleComponent } from 'techsbcn-storybook';
 import { _VALUES } from '../../resources/_constants/values';
 import { Grid, Box } from '@mui/material';
+import { setTimeFormat } from '../../helpers/TimeHelper';
 import { GroupBy } from '../../helpers/GroupBy';
 
 interface TimeLogDetailsProps {
@@ -13,20 +14,6 @@ interface TimeLogDetailsProps {
 const TimeLogDetails: React.FC<TimeLogDetailsProps> = (props) => {
   const [total, setTotal] = useState('');
   const [avarage, setAvarage] = useState('');
-
-  const setTimeFormat = (totalTime: number, complete?: boolean) => {
-    const minutesPerDay = 60 * (complete ? 24 : 8);
-    const days = Math.floor(totalTime / minutesPerDay);
-    totalTime -= minutesPerDay * days;
-    const hours = Math.floor(totalTime / 60);
-    const minuts = Math.floor(totalTime % 60);
-
-    if (days > 0) {
-      return `${days}d ${hours}h ${minuts}m`;
-    } else {
-      return `${hours}h ${minuts}m`;
-    }
-  };
 
   useEffect(() => {
     let totalTime = 0;
