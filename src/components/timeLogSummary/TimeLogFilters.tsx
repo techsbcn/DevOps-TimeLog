@@ -10,7 +10,6 @@ import { ContextType } from '../../enums/ContextType';
 interface TimeLogFiltersProps {
   onFiltersChange: (value: any, name: string) => void;
   user?: UserContext;
-  loading: boolean;
   filters?: TimeLogEntryFilters;
   projectId?: string;
   contextType: ContextType;
@@ -21,13 +20,19 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
   const [members, setMembers] = useState<any[]>([]);
   const [teamSelected, setTeamSelected] = useState<any>();
   const [memberSelected, setMemberSelected] = useState<any[]>();
+  const [loadingFilters, setLoadingFilters] = useState<boolean>(false);
 
   useEffect(() => {
-    GetTeams(props.contextType, props.projectId).then((result) => {
-      const resultTransform = SelectAsyncHelper(result);
-      setTeams(resultTransform);
-      setTeamSelected(resultTransform[0]);
-    });
+    setLoadingFilters(true);
+    GetTeams(props.contextType, props.projectId)
+      .then((result) => {
+        const resultTransform = SelectAsyncHelper(result);
+        setTeams(resultTransform);
+        setTeamSelected(resultTransform[0]);
+      })
+      .catch(() => {
+        setLoadingFilters(false);
+      });
   }, [props.contextType, props.projectId]);
 
   const loadMembers = React.useCallback(() => {
@@ -36,8 +41,10 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
         if (props.user && members.some((member) => props.user && member.id === props.user.id)) {
           setMembers(members);
           setMemberSelected([{ value: props.user.id, label: props.user.displayName }]);
+          setLoadingFilters(false);
         } else {
           setMemberSelected(undefined);
+          setLoadingFilters(false);
         }
       });
     }
@@ -147,9 +154,9 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
     <MainWrapperComponent
       headerProps={{
         title: _VALUES.FILTERS,
-        filters: !props.loading ? ListFilters() : [],
+        filters: !loadingFilters ? ListFilters() : [],
       }}
-      loading={props.loading}
+      loading={loadingFilters}
     />
   );
 };

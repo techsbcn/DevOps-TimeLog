@@ -29,5 +29,9 @@ export const setTimeFormat = (totalTime: number, complete?: boolean) => {
 
 export const getDaysFromMinutes = (totalTime: number) => {
   const minutesPerDay = 60 * 8;
-  return totalTime / minutesPerDay;
+  return Number((totalTime / minutesPerDay).toFixed(1));
+};
+
+export const getHoursFromMinutesFixed = (minutes: number) => {
+  return Number((minutes / 60).toFixed(1));
 };

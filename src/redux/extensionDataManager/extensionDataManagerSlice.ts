@@ -12,6 +12,7 @@ import {
 } from './extensionDataManagerAPI';
 import * as _ from 'lodash';
 import { reject } from 'lodash';
+import { GetParentsWorkItemsNode } from '../workItem/workItemAPI';
 
 const extensionDataEndpoints = apiSlice.injectEndpoints({
   endpoints(builder) {

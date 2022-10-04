@@ -16,7 +16,7 @@ import { TimeLogEntry, TimeLogEntryFilters } from '../../interfaces';
 import { _VALUES } from '../../resources';
 import _ from 'lodash';
 import { GroupBy } from '../../helpers/GroupBy';
-import { getDaysFromMinutes, getHoursFromMinutes, usePrevious } from '../../helpers';
+import { getDaysFromMinutes, getHoursFromMinutesFixed } from '../../helpers';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface DashboardWeeklyTimeLoggedProps {
@@ -39,7 +39,7 @@ const DashboardWeeklyTimeLogged: React.FC<DashboardWeeklyTimeLoggedProps> = (pro
     const initials = _.deburr(name)
       .match(/\b(\w)/g)
       ?.join('');
-    const currentColumnIndex = columns.findIndex((x) => x.id === initials);
+    const currentColumnIndex = columns.findIndex((x) => x.id === value);
     const newColumn = [...columns];
 
     if (currentIndex === -1) {
@@ -50,11 +50,11 @@ const DashboardWeeklyTimeLogged: React.FC<DashboardWeeklyTimeLoggedProps> = (pro
 
     if (currentColumnIndex === -1 && initials) {
       newColumn.push({
-        id: initials,
+        id: value,
         label: initials,
         isUnique: true,
         rowViewFormat: (row) =>
-          `${getDaysFromMinutes(row[`${initials}`] ?? 0)}d (${getHoursFromMinutes(row[`${initials}`] ?? 0)}h)`,
+          `${getDaysFromMinutes(row[`${value}`] ?? 0)}d (${getHoursFromMinutesFixed(row[`${value}`] ?? 0)}h)`,
       });
     } else {
       newColumn.splice(currentColumnIndex, 1);
@@ -80,8 +80,10 @@ const DashboardWeeklyTimeLogged: React.FC<DashboardWeeklyTimeLoggedProps> = (pro
     },
     [startOfWeek]
   );
+  const [weekList, setWeekList] = React.useState<{ week: string }[]>([]);
+
   useEffect(() => {
-    if (props.members && props.members.length > 0) {
+    if (weekList && weekList.length > 0 && props.members && props.members.length > 0) {
       const users: { id: string; name: string }[] = [];
       const newColumn = [...columns];
       props.members
@@ -89,24 +91,32 @@ const DashboardWeeklyTimeLogged: React.FC<DashboardWeeklyTimeLoggedProps> = (pro
           return a.displayName.localeCompare(b.displayName);
         })
         .map((member) => {
-          users.push({ id: member.id, name: member.displayName });
-          const initials = _.deburr(member.displayName)
-            .match(/\b(\w)/g)
-            ?.join('');
+          const currentColumnIndex = newColumn.findIndex((x) => x.id === member.id);
+          if (weekList.find((item: any) => item[`${member.id}`])) {
+            users.push({ id: member.id, name: member.displayName });
+            const initials = _.deburr(member.displayName)
+              .match(/\b(\w)/g)
+              ?.join('');
 
-          initials &&
-            newColumn.push({
-              id: initials,
-              label: initials,
-              isUnique: true,
-              rowViewFormat: (row) =>
-                `${getDaysFromMinutes(row[`${initials}`] ?? 0)}d (${getHoursFromMinutes(row[`${initials}`] ?? 0)}h)`,
-            });
+            currentColumnIndex === -1 &&
+              initials &&
+              newColumn.push({
+                id: member.id,
+                label: initials,
+                isUnique: true,
+                rowViewFormat: (row) =>
+                  `${getDaysFromMinutes(row[`${member.id}`] ?? 0)}d (${getHoursFromMinutesFixed(
+                    row[`${member.id}`] ?? 0
+                  )}h)`,
+              });
+          } else {
+            if (currentColumnIndex !== -1) newColumn.splice(currentColumnIndex, 1);
+          }
         });
       setColumns(newColumn);
       setChecked(users);
     }
-  }, [props.members]);
+  }, [props.members, weekList]);
 
   useEffect(() => {
     if (props.filters && props.filters.timeTo && props.filters.timeFrom) {
@@ -130,8 +140,6 @@ const DashboardWeeklyTimeLogged: React.FC<DashboardWeeklyTimeLoggedProps> = (pro
     }
   }, [endOfWeek, props.filters, startOfWeek, weeksBetween]);
 
-  const [weekList, setWeekList] = React.useState<{ week: string }[]>([]);
-
   const [weeksLoading, setLoadingWeeks] = React.useState(true);
 
   useEffect(() => {
@@ -151,13 +159,10 @@ const DashboardWeeklyTimeLogged: React.FC<DashboardWeeklyTimeLoggedProps> = (pro
           )
         );
         workItemsGroup.map((i: any) => {
-          const initials = _.deburr(i[1][0].user)
-            .match(/\b(\w)/g)
-            ?.join('');
-          if (initials) {
+          if (i[1][0].userId) {
             let totalTime = 0;
             i[1].map((t: any) => (totalTime += t.time));
-            item[`${initials}`] = totalTime;
+            item[`${i[1][0].userId}`] = totalTime;
           }
         });
         arr.push(item);

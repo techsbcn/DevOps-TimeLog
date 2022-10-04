@@ -18,8 +18,8 @@ export const WorkItemTrackingClient: WorkItemTracking.WorkItemTrackingRestClient
   return API.getClient(WorkItemTracking.WorkItemTrackingRestClient, {});
 })();
 
-export const WorkItemNodeAPI = async (token?: string) => {
-  const webApi: nodeApi.WebApi = await GetWebApi(token);
+export const WorkItemNodeAPI = async (token?: string, orgUri?: string) => {
+  const webApi: nodeApi.WebApi = await GetWebApi(token, orgUri);
   return new Promise<IWorkItemTrackingApi>((resolve, reject) =>
     webApi
       .getWorkItemTrackingApi()
@@ -218,9 +218,9 @@ export const GetWorkItemById = async (ids: string[], token?: string) => {
   );
 };
 
-export const GetTagsNodeAPI = async (project?: string, token?: string) => {
+export const GetTagsNodeAPI = async (project?: string, token?: string, organizationName?: string) => {
   const projectStr = project ?? GetProjectTL();
-  const witApi: IWorkItemTrackingApi = await WorkItemNodeAPI(token);
+  const witApi: IWorkItemTrackingApi = await WorkItemNodeAPI(token, organizationName);
   return new Promise<WorkItemTrackingInterfaces.WorkItemTagDefinition[]>((resolve, reject) =>
     witApi
       .getTags(projectStr)
