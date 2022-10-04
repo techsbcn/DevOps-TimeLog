@@ -34,7 +34,24 @@ const TimelogEntriesTable: React.FC<TimelogEntriesTableProps> = (props) => {
       <TableComponent
         rows={useFetchDocuments.data && useFetchDocuments.data.items.length > 0 ? useFetchDocuments.data.items : []}
         columns={[
-          { id: 'date', label: _VALUES.DATE, minWidth: 100, isDate: true },
+          {
+            id: 'date',
+            label: _VALUES.DATE,
+            minWidth: 100,
+            rowViewFormat: (row) => {
+              if (row.startTime) {
+                return new Date(row.date).toLocaleString([], {
+                  year: 'numeric',
+                  month: 'numeric',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                });
+              } else {
+                return new Date(row.date).toLocaleDateString();
+              }
+            },
+          },
           {
             id: 'time',
             label: _VALUES.TIME,

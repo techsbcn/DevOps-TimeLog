@@ -57,6 +57,7 @@ export const TimelogEntries: React.FC = () => {
       userId: user.id,
       workItemId: workItemId ?? 0,
       workItemName: workItemName ?? '',
+      startTime: data.startTime,
       date: data.date,
       time: Number(getMinutesFromHours(data.timeHours)) + Number(data.timeMinutes),
       notes: data.notes,

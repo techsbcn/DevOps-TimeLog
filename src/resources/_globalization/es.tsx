@@ -115,4 +115,5 @@ export const GLOBAL_ES = {
   weeklyTimeLogged: 'Tiempo semanal registrado',
   week: 'Semana',
   people: 'Miembros',
+  startTime: 'Hora inicial',
 };

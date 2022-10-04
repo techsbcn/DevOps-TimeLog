@@ -108,4 +108,5 @@ export const _VALUES: ObjectKey = {
   WEEKLY_TIME_LOGGED: Translate.t('weeklyTimeLogged'),
   WEEK: Translate.t('week'),
   PEOPLE: Translate.t('people'),
+  START_TIME: Translate.t('startTime'),
 };

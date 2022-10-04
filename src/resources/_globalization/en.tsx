@@ -114,4 +114,5 @@ export const GLOBAL_EN = {
   weeklyTimeLogged: 'Weekly Time Logged',
   week: 'Week',
   people: 'People',
+  startTime: 'Start time',
 };

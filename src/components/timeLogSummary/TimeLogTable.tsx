@@ -24,7 +24,24 @@ const TimeLogTable: React.FC<TimeLogTableProps> = (props) => {
         values={_VALUES}
         loading={props.loading}
         columns={[
-          { id: 'date', label: _VALUES.DATE, minWidth: 60, isDate: true },
+          {
+            id: 'date',
+            label: _VALUES.DATE,
+            minWidth: 60,
+            rowViewFormat: (row) => {
+              if (row.startTime) {
+                return new Date(row.date).toLocaleString([], {
+                  year: 'numeric',
+                  month: 'numeric',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                });
+              } else {
+                return new Date(row.date).toLocaleDateString();
+              }
+            },
+          },
           {
             id: 'workItemId',
             label: _VALUES.WORK_ITEM,

@@ -47,6 +47,15 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
   } = useForm({ resolver: yupResolver(EntrySchema), reValidateMode: 'onChange' });
 
   const onSubmit = (data: any) => {
+    if (data.startTime) {
+      data.date = new Date(data.date + ' ' + data.startTime).toLocaleString('sv-SE', {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    }
     props.action(data);
     reset();
   };
@@ -93,6 +102,25 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
               />
             )}
             name={'date'}
+          />
+        </Grid>
+        <Grid item md={1}>
+          <Controller
+            control={control}
+            defaultValue={''}
+            render={({ field: { onChange, value, name, ref } }) => (
+              <TextFieldComponent
+                label={_VALUES.START_TIME}
+                type="time"
+                name={name}
+                inputRef={ref}
+                onChange={(e) => {
+                  onChange(e);
+                }}
+                value={value}
+              />
+            )}
+            name={'startTime'}
           />
         </Grid>
         <Grid item md={1}>
@@ -175,7 +203,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
         ) : (
           loadingTypes && <CircularProgress />
         )}
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={5}>
           <Controller
             control={control}
             defaultValue={''}
