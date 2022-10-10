@@ -205,7 +205,11 @@ const TimeLogDashboard: React.FC<TimeLogDashboardProps> = (props) => {
           <Grid item xs={12}>
             <DashboardWeeklyTimeLogged
               loading={props.loadingDocuments || loadingFilters}
-              workItems={!loadingFilters && timeLogEntries && timeLogEntries.length > 0 ? timeLogEntries : []}
+              workItems={
+                !loadingFilters && members && members.length > 0 && timeLogEntries && timeLogEntries.length > 0
+                  ? timeLogEntries
+                  : []
+              }
               members={members}
               filters={filters}
               loadingMembers={loadingMembers}

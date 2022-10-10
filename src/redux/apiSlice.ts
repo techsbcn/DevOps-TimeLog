@@ -47,7 +47,34 @@ const GetWorkItemsNode = async (
 
   return new Promise<any[]>((resolve, reject) =>
     fetch(
-      `https://analytics.dev.azure.com/${organizationName}/${projectId}/_odata/v2.0//WorkItems?$select=WorkItemId,Title,TagNames&$expand=Parent($select=WorkItemId,Title)&$filter=WorkItemId in (${workItemsIds})`,
+      `https://analytics.dev.azure.com/${organizationName}/${projectId}/_odata/v2.0//WorkItems?$select=WorkItemId,Title,TagNames&$expand=Parent($select=WorkItemId,Title),Area($select=AreaPath), Iteration($select=IterationPath), Teams($select=TeamId,TeamName)&$filter=WorkItemId in (${workItemsIds})`,
+      requestOptions
+    )
+      .then(Response)
+      .then((result: any) => {
+        resolve(result.value);
+      })
+      .catch(() => {
+        resolve([]);
+      })
+  );
+};
+
+const GetWorkItemsByTeamsNode = async (
+  workItemsIds: number[],
+  organizationName?: string,
+  projectId?: string,
+  accessToken?: string,
+  teamsId?: string[]
+) => {
+  const requestOptions: RequestInit = {
+    method: 'GET',
+    headers: Header(accessToken),
+  };
+
+  return new Promise<any[]>((resolve, reject) =>
+    fetch(
+      `https://analytics.dev.azure.com/${organizationName}/${projectId}/_odata/v2.0//WorkItems?$select=WorkItemId,Title,TagNames&$expand=Parent($select=WorkItemId,Title),Area($select=AreaPath), Iteration($select=IterationPath), Teams($select=TeamId,TeamName)&$filter=WorkItemId in (${workItemsIds}) and Teams/any(x:x/TeamId in (${teamsId}))`,
       requestOptions
     )
       .then(Response)

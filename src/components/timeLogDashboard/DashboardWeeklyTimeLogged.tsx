@@ -113,8 +113,10 @@ const DashboardWeeklyTimeLogged: React.FC<DashboardWeeklyTimeLoggedProps> = (pro
             if (currentColumnIndex !== -1) newColumn.splice(currentColumnIndex, 1);
           }
         });
-      setColumns(newColumn);
+      setColumns(newColumn.filter((f) => props.members && props.members.find((m) => f.id === m.id || f.id === 'week')));
       setChecked(users);
+    } else {
+      setColumns([{ id: 'week', label: _VALUES.WEEK, maxWidth: 100 }]);
     }
   }, [props.members, weekList]);
 

@@ -260,8 +260,14 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
     [config.organization?.label, config.project?.value, config.token, props.members, timeLoggedGroupedType]
   );
 
+  const prevMembersState = usePrevious(JSON.stringify(props.members));
+
   useEffect(() => {
-    if (prevWorkItemsState != JSON.stringify(props.workItems) || prevTimeLoggedGroupedType != timeLoggedGroupedType) {
+    if (
+      prevWorkItemsState != JSON.stringify(props.workItems) ||
+      prevTimeLoggedGroupedType != timeLoggedGroupedType ||
+      prevMembersState !== JSON.stringify(props.members)
+    ) {
       const chartMapList: ChartMap[] = [];
       setWorkItemsLoading(true);
       if (props.workItems.length > 0) {
@@ -293,6 +299,8 @@ const DashboardStats: React.FC<DashboardStatsProps> = (props) => {
     prevTimeLoggedGroupedType,
     LoadByUser,
     LoadByTag,
+    props.members,
+    prevMembersState,
   ]);
 
   return (

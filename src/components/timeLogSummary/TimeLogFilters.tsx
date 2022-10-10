@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 import { TimeLogEntryFilters, UserContext } from '../../interfaces';
 import { SelectAsyncHelper } from '../../helpers/SelectHelper';
 import { ContextType } from '../../enums/ContextType';
+import { usePrevious } from '../../helpers';
 
 interface TimeLogFiltersProps {
   onFiltersChange: (value: any, name: string) => void;
@@ -22,6 +23,8 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
   const [memberSelected, setMemberSelected] = useState<any[]>();
   const [loadingFilters, setLoadingFilters] = useState<boolean>(false);
 
+  const prevMembersState = usePrevious(JSON.stringify(members));
+
   useEffect(() => {
     setLoadingFilters(true);
     GetTeams(props.contextType, props.projectId)
@@ -35,6 +38,21 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
       });
   }, [props.contextType, props.projectId]);
 
+  useEffect(() => {
+    if (prevMembersState && prevMembersState !== JSON.stringify(members)) {
+      props.onFiltersChange(
+        members.length === 0
+          ? undefined
+          : memberSelected
+          ? memberSelected.some((option: any) => option.value === 'all')
+            ? members.map((member: any) => member.id)
+            : memberSelected.map((item: any) => item.value)
+          : undefined,
+        'userIds'
+      );
+    }
+  }, [members, prevMembersState, props, memberSelected]);
+
   const loadMembers = React.useCallback(() => {
     if (teamSelected) {
       GetTeamMembers(teamSelected.value, props.contextType, props.projectId).then((members) => {
@@ -43,7 +61,8 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
           setMemberSelected([{ value: props.user.id, label: props.user.displayName }]);
           setLoadingFilters(false);
         } else {
-          setMemberSelected(undefined);
+          setMembers(members);
+          setMemberSelected([{ value: 'all', label: _VALUES.ALL }]);
           setLoadingFilters(false);
         }
       });
@@ -101,7 +120,10 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
                     name
                   );
                 } else if (Array.isArray(value) && value.some((option: any) => option.value === 'all')) {
-                  props.onFiltersChange([], name);
+                  props.onFiltersChange(
+                    members.map((member: any) => member.id),
+                    name
+                  );
                   setMemberSelected([allOption]);
                 } else {
                   props.onFiltersChange(
@@ -111,7 +133,10 @@ const TimeLogFilters: React.FC<TimeLogFiltersProps> = (props) => {
                   setMemberSelected(value);
                 }
               } else if (Array.isArray(value) && value.length === 0) {
-                props.onFiltersChange([], name);
+                props.onFiltersChange(
+                  members.map((member: any) => member.id),
+                  name
+                );
                 setMemberSelected([allOption]);
               }
             }}
