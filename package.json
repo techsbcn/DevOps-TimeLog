@@ -22,6 +22,7 @@
     "lint": "eslint src/**/*.{ts,tsx} --fix"
   },
   "dependencies": {
+    "@date-io/dayjs": "^2.16.0",
     "@fluentui/react-icons-northstar": "^0.62.0",
     "@fluentui/react-northstar": "^0.62.0",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
@@ -47,6 +48,7 @@
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
+    "dayjs": "^1.11.6",
     "dotenv-webpack": "^7.1.0",
     "es6-promise": "^4.2.8",
     "eslint": "^8.13.0",

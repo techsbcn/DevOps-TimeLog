@@ -9,6 +9,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { GetDocuments } from '../../../redux/extensionDataManager/extensionDataManagerAPI';
 import { SelectAsyncHelper } from '../../../helpers/SelectHelper';
+import dayjs from 'dayjs';
 
 interface TimelogEntriesFormProps {
   action: (data: any) => void;
@@ -48,14 +49,9 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
 
   const onSubmit = (data: any) => {
     if (data.startTime) {
-      data.date = new Date(data.date + ' ' + data.startTime).toLocaleString('sv-SE', {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      });
+      data.date = dayjs.utc(data.date + ' ' + data.startTime).format('YYYY-MM-DD HH:mm');
     }
+
     props.action(data);
     reset();
   };
@@ -85,7 +81,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
         <Grid item md={2}>
           <Controller
             control={control}
-            defaultValue={new Date().toLocaleDateString('sv-SE')}
+            defaultValue={dayjs().format('YYYY-MM-DD')}
             render={({ field: { onChange, value, name, ref } }) => (
               <TextFieldComponent
                 label={_VALUES.DATE}

@@ -5,6 +5,7 @@ import { TimeLogEntry } from '../../interfaces';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { getHoursAndMinutes } from '../../helpers/TimeHelper';
+import dayjs from 'dayjs';
 
 interface TimeLogTableProps {
   documents: TimeLogEntry[];
@@ -30,15 +31,9 @@ const TimeLogTable: React.FC<TimeLogTableProps> = (props) => {
             minWidth: 60,
             rowViewFormat: (row) => {
               if (row.startTime) {
-                return new Date(row.date).toLocaleString([], {
-                  year: 'numeric',
-                  month: 'numeric',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                });
+                return dayjs.utc(row.date).format('L HH:mm');
               } else {
-                return new Date(row.date).toLocaleDateString();
+                return dayjs.utc(row.date).format('L');
               }
             },
           },

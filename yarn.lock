@@ -704,6 +704,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@date-io/core@npm:^2.16.0":
+  version: 2.16.0
+  resolution: "@date-io/core@npm:2.16.0"
+  checksum: 336d0dd90fd0848116472cfb0e694e85860b2916952304201bb4d3a23d453d44589d346494584faba0fc05751cc38f1880889ce48cd982377aac2bfb20469b8a
+  languageName: node
+  linkType: hard
+
 "@date-io/date-fns@npm:^2.11.0":
   version: 2.13.1
   resolution: "@date-io/date-fns@npm:2.13.1"
@@ -729,6 +736,20 @@ __metadata:
     dayjs:
       optional: true
   checksum: c4f264bcae32eede7062627202abb52bf8f07102e7108f8477a9af18bf869d3904c8818d0b80146ee6eacbeeace7fa6842d534da4af9c998f86c00f30866ab11
+  languageName: node
+  linkType: hard
+
+"@date-io/dayjs@npm:^2.16.0":
+  version: 2.16.0
+  resolution: "@date-io/dayjs@npm:2.16.0"
+  dependencies:
+    "@date-io/core": ^2.16.0
+  peerDependencies:
+    dayjs: ^1.8.17
+  peerDependenciesMeta:
+    dayjs:
+      optional: true
+  checksum: bb8192207addbf6430c35da7664b97761f87d2c6cf4a3eaf464584a980e6cecaede581af1a40c5ba0a0189dc6bff2ac16408a95ec88e542b16915430191298c8
   languageName: node
   linkType: hard
 
@@ -3872,6 +3893,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "azure-devops-extension-sample@workspace:."
   dependencies:
+    "@date-io/dayjs": ^2.16.0
     "@fluentui/react-icons-northstar": ^0.62.0
     "@fluentui/react-northstar": ^0.62.0
     "@fortawesome/fontawesome-svg-core": ^6.1.1
@@ -3905,6 +3927,7 @@ __metadata:
     copy-webpack-plugin: ^10.2.4
     crypto-browserify: ^3.12.0
     css-loader: ^6.7.1
+    dayjs: ^1.11.6
     dotenv-webpack: ^7.1.0
     es6-promise: ^4.2.8
     eslint: ^8.13.0
@@ -5592,6 +5615,13 @@ __metadata:
   version: 1.11.1
   resolution: "dayjs@npm:1.11.1"
   checksum: d5fefd79935f64a3c262e67af7ebeca180bc402b3e99be4e12d20b6d438af3f86d507ba1cbaff95dc0b4e67f1067cea3eaf37b6b74f5494fdd4a6a2909514cd1
+  languageName: node
+  linkType: hard
+
+"dayjs@npm:^1.11.6":
+  version: 1.11.6
+  resolution: "dayjs@npm:1.11.6"
+  checksum: 18bdfd927009b68eab08dca578e421d4a581cefcbe9337f54c5d9e0d941ffb6b221c4b2c1cab15cdd9d419940e768ac4c984531461a90bbe1c158b75fe160580
   languageName: node
   linkType: hard
 

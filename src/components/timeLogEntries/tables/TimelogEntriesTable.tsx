@@ -10,6 +10,7 @@ import {
 } from '../../../redux/extensionDataManager/extensionDataManagerSlice';
 import { getHoursAndMinutes, getHoursFromMinutes } from '../../../helpers/TimeHelper';
 import { PatchWorkItem, WorkItemFormService } from '../../../redux/workItem/workItemAPI';
+import dayjs from 'dayjs';
 
 interface TimelogEntriesTableProps {
   workItemId: number;
@@ -40,15 +41,9 @@ const TimelogEntriesTable: React.FC<TimelogEntriesTableProps> = (props) => {
             minWidth: 100,
             rowViewFormat: (row) => {
               if (row.startTime) {
-                return new Date(row.date).toLocaleString([], {
-                  year: 'numeric',
-                  month: 'numeric',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                });
+                return dayjs.utc(row.date).format('L HH:mm');
               } else {
-                return new Date(row.date).toLocaleDateString();
+                return dayjs.utc(row.date).format('L');
               }
             },
           },
