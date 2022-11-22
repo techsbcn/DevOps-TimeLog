@@ -72,13 +72,15 @@ export const TimelogEntries: React.FC = () => {
     const workItemFormService = await WorkItemFormService;
     const newEntry = await createNewEntry(data);
     const hours = getHoursFromMinutes(newEntry.time);
-
-    PatchWorkItem(['Completed Work', 'Remaining Work'], (item: any) => {
-      item['Completed Work'] += hours;
-      item['Remaining Work'] -= hours;
-      if (item['Remaining Work'] < 0) item['Remaining Work'] = 0;
-      return item;
-    }).then(() => {
+    PatchWorkItem(
+      ['Microsoft.VSTS.Scheduling.CompletedWork', 'Microsoft.VSTS.Scheduling.RemainingWork'],
+      (item: any) => {
+        item['Microsoft.VSTS.Scheduling.CompletedWork'] += hours;
+        item['Microsoft.VSTS.Scheduling.RemainingWork'] -= hours;
+        if (item['Microsoft.VSTS.Scheduling.RemainingWork'] < 0) item['Microsoft.VSTS.Scheduling.RemainingWork'] = 0;
+        return item;
+      }
+    ).then(() => {
       create({ collectionName: process.env.ENTRIES_COLLECTION_NAME as string, doc: newEntry })
         .then(async () => {
           await workItemFormService.save();

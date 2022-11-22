@@ -60,6 +60,20 @@ export const GetWorkItemId = async () => {
   );
 };
 
+export const GetFieldsSimple = async () => {
+  const workItemFormService = await WorkItemFormService;
+  return new Promise<any>((resolve, reject) =>
+    workItemFormService
+      .getFields()
+      .then((result: any) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(ErrorHandler(error));
+      })
+  );
+};
+
 export const GetFields = async (fieldReferenceNames: string[]) => {
   const workItemFormService = await WorkItemFormService;
   return new Promise<any>((resolve, reject) =>

@@ -65,11 +65,14 @@ const TimelogEntriesTable: React.FC<TimelogEntriesTableProps> = (props) => {
                 onClick: async (row: any) => {
                   const workItemFormService = await WorkItemFormService;
                   const hours = getHoursFromMinutes(row.time);
-                  PatchWorkItem(['Completed Work', 'Remaining Work'], (item: any) => {
-                    item['Completed Work'] -= hours;
-                    item['Remaining Work'] += hours;
-                    return item;
-                  }).then(() => {
+                  PatchWorkItem(
+                    ['Microsoft.VSTS.Scheduling.CompletedWork', 'Microsoft.VSTS.Scheduling.RemainingWork'],
+                    (item: any) => {
+                      item['Microsoft.VSTS.Scheduling.CompletedWork'] -= hours;
+                      item['Microsoft.VSTS.Scheduling.RemainingWork'] += hours;
+                      return item;
+                    }
+                  ).then(() => {
                     remove({ collectionName: process.env.ENTRIES_COLLECTION_NAME as string, id: row.id })
                       .then(() => {
                         workItemFormService.save();
