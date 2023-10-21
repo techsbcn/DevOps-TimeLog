@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Container } from '@mui/material';
+import { Grid } from '@mui/material';
 import * as SDK from 'azure-devops-extension-sdk';
 import { showRootComponent } from '../..';
 import {
@@ -14,10 +14,12 @@ import { useFetchCreateDocumentMutation } from '../../redux/extensionDataManager
 import { _VALUES } from '../../resources';
 import { getHoursFromMinutes, getMinutesFromHours } from '../../helpers/TimeHelper';
 import { PatchWorkItem, WorkItemFormService } from '../../redux/workItem/workItemAPI';
+import { MainWrapperComponent } from 'techsbcn-storybook';
 
 export const TimelogEntries: React.FC = () => {
   const [workItemId, setWorkItemId] = useState<number>();
   const [workItemName, setWorkItemName] = useState<string>();
+  const [user, setUser] = useState<SDK.IUserContext>();
 
   useEffect(() => {
     SDK.init().then(async () => {
@@ -41,7 +43,8 @@ export const TimelogEntries: React.FC = () => {
           onRefreshed: (args: IWorkItemChangedArgs) => {},
         };
       });
-
+      const user = SDK.getUser();
+      setUser(user);
       const workItemFormService = await WorkItemFormService;
       const workItemId = await workItemFormService.getId();
       setWorkItemId(workItemId);
@@ -50,11 +53,13 @@ export const TimelogEntries: React.FC = () => {
     });
   }, []);
 
-  const createNewEntry = async (data: any): Promise<TimeLogEntry> => {
-    const user = SDK.getUser();
+  const [create, { isLoading: isCreating }] = useFetchCreateDocumentMutation();
+
+  const onSubmit = async (data: any) => {
+    const workItemFormService = await WorkItemFormService;
     const timeEntry: TimeLogEntry = {
-      user: user.displayName,
-      userId: user.id,
+      user: user?.displayName ?? '',
+      userId: user?.id ?? '',
       workItemId: workItemId ?? 0,
       workItemName: workItemName ?? '',
       startTime: data.startTime,
@@ -63,15 +68,7 @@ export const TimelogEntries: React.FC = () => {
       notes: data.notes,
       type: data.type ? data.type.name : undefined,
     };
-    return timeEntry;
-  };
-
-  const [create, { isLoading: isCreating }] = useFetchCreateDocumentMutation();
-
-  const onSubmit = async (data: any) => {
-    const workItemFormService = await WorkItemFormService;
-    const newEntry = await createNewEntry(data);
-    const hours = getHoursFromMinutes(newEntry.time);
+    const hours = getHoursFromMinutes(timeEntry.time);
     PatchWorkItem(
       ['Microsoft.VSTS.Scheduling.CompletedWork', 'Microsoft.VSTS.Scheduling.RemainingWork'],
       (item: any) => {
@@ -81,7 +78,7 @@ export const TimelogEntries: React.FC = () => {
         return item;
       }
     ).then(() => {
-      create({ collectionName: process.env.ENTRIES_COLLECTION_NAME as string, doc: newEntry })
+      create({ collectionName: process.env.ENTRIES_COLLECTION_NAME as string, doc: timeEntry })
         .then(async () => {
           await workItemFormService.save();
         })
@@ -94,10 +91,18 @@ export const TimelogEntries: React.FC = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <TimelogEntriesForm action={onSubmit} loading={isCreating} />
+        <MainWrapperComponent
+          headerProps={{
+            title: _VALUES.NEW_TIMELOG_ENTRY,
+          }}
+        >
+          <TimelogEntriesForm action={onSubmit} loading={isCreating} />
+        </MainWrapperComponent>
       </Grid>
       <Grid item xs={12}>
-        {workItemId && <TimelogEntriesTable workItemId={workItemId} />}
+        {workItemId && workItemName && user && (
+          <TimelogEntriesTable workItemId={workItemId} workItemName={workItemName} user={user} />
+        )}
       </Grid>
     </Grid>
   );

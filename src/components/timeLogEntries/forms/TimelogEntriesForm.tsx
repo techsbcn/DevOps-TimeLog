@@ -3,17 +3,19 @@ import { Grid, CircularProgress } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
-import { MainWrapperComponent, TextFieldComponent, ButtonComponent, SelectField } from 'techsbcn-storybook';
+import { TextFieldComponent, ButtonComponent, SelectField } from 'techsbcn-storybook';
 import { _VALUES } from '../../../resources/_constants/values';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { GetDocuments } from '../../../redux/extensionDataManager/extensionDataManagerAPI';
 import { SelectAsyncHelper } from '../../../helpers/SelectHelper';
 import dayjs from 'dayjs';
+import { getHoursAndMinutes } from '../../../helpers';
 
 interface TimelogEntriesFormProps {
   action: (data: any) => void;
   loading: boolean;
+  data?: any;
 }
 
 const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
@@ -53,7 +55,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
     }
 
     props.action(data);
-    reset();
+    if (!props.data) reset();
   };
 
   const [types, setTypes] = useState<any[]>([]);
@@ -72,16 +74,14 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
   }, []);
 
   return (
-    <MainWrapperComponent
-      headerProps={{
-        title: _VALUES.NEW_TIMELOG_ENTRY,
-      }}
-    >
-      <Grid container spacing={3}>
-        <Grid item md={2}>
+    <form id="timelog-form" onSubmit={handleSubmit(onSubmit)}>
+      <Grid container spacing={props.data ? 1 : 3}>
+        <Grid item md={props.data ? 6 : 2}>
           <Controller
             control={control}
-            defaultValue={dayjs().format('YYYY-MM-DD')}
+            defaultValue={
+              props.data?.date ? dayjs(props.data?.date).format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD')
+            }
             render={({ field: { onChange, value, name, ref } }) => (
               <TextFieldComponent
                 label={_VALUES.DATE}
@@ -100,10 +100,10 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
             name={'date'}
           />
         </Grid>
-        <Grid item md={1}>
+        <Grid item md={props.data ? 6 : 1}>
           <Controller
             control={control}
-            defaultValue={''}
+            defaultValue={props.data?.startTime ?? ''}
             render={({ field: { onChange, value, name, ref } }) => (
               <TextFieldComponent
                 label={_VALUES.START_TIME}
@@ -119,10 +119,10 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
             name={'startTime'}
           />
         </Grid>
-        <Grid item md={1}>
+        <Grid item md={props.data ? 6 : 1}>
           <Controller
             control={control}
-            defaultValue={0}
+            defaultValue={props.data ? getHoursAndMinutes(props.data.time).split(':')[0] : 0}
             render={({ field: { onChange, value, name, ref } }) => (
               <TextFieldComponent
                 label={_VALUES.HOURS}
@@ -145,10 +145,10 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
             name={'timeHours'}
           />
         </Grid>
-        <Grid item md={1}>
+        <Grid item md={props.data ? 6 : 1}>
           <Controller
             control={control}
-            defaultValue={0}
+            defaultValue={props.data ? getHoursAndMinutes(props.data.time).split(':')[1] : 0}
             render={({ field: { onChange, value, name, ref } }) => (
               <TextFieldComponent
                 label={_VALUES.MINUTES}
@@ -173,7 +173,7 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
           />
         </Grid>
         {types && types?.length > 0 && !loadingTypes ? (
-          <Grid item xs={12} md={2}>
+          <Grid item xs={12} md={props.data ? 12 : 2}>
             <Controller
               control={control}
               defaultValue={types[0]}
@@ -199,10 +199,10 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
         ) : (
           loadingTypes && <CircularProgress />
         )}
-        <Grid item xs={12} md={5}>
+        <Grid item xs={12} md={props.data ? 12 : 5}>
           <Controller
             control={control}
-            defaultValue={''}
+            defaultValue={props.data?.notes ?? ''}
             render={({ field: { onChange, value, name, ref } }) => (
               <TextFieldComponent
                 label={_VALUES.NOTES}
@@ -217,16 +217,18 @@ const TimelogEntriesForm: React.FC<TimelogEntriesFormProps> = (props) => {
             name={'notes'}
           />
         </Grid>
-        <Grid item xs={12} md={6}>
-          <ButtonComponent
-            label={_VALUES.ADD_TIMELOG}
-            startIcon={<FontAwesomeIcon icon={faFloppyDisk} />}
-            onClick={handleSubmit(onSubmit)}
-            loading={props.loading}
-          />
-        </Grid>
+        {!props.data && (
+          <Grid item xs={12} md={6}>
+            <ButtonComponent
+              label={_VALUES.ADD_TIMELOG}
+              startIcon={<FontAwesomeIcon icon={faFloppyDisk} />}
+              onClick={handleSubmit(onSubmit)}
+              loading={props.loading}
+            />
+          </Grid>
+        )}
       </Grid>
-    </MainWrapperComponent>
+    </form>
   );
 };
 
